@@ -1,0 +1,457 @@
+@extends('admin::layouts.master')
+@section('style')
+    <style>
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .product-form {
+            flex: 3;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 10px;
+        }
+
+        .form-section label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-section input[type="text"],
+        .form-section input[type="number"],
+        .form-section textarea,
+        .form-section select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .media-upload button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .variation-group {
+            margin-bottom: 10px;
+        }
+
+        .variation-group .variation {
+            margin-bottom: 20px;
+        }
+
+        .variation-group button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .variation-group button:hover {
+            background-color: #218838;
+        }
+
+        .remove-variation {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .remove-variation:hover {
+            background-color: #c0392b;
+        }
+
+        .drop-zone {
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        .drop-zone.dragging {
+            border-color: #333;
+            background-color: #eee;
+        }
+
+        #image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 5px;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .preview-img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: grab;
+        }
+
+        .preview-img:active {
+            cursor: grabbing;
+        }
+
+        .remove-variation {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            color: #333;
+            font-size: 14px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .remove-variation:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        /* Optional: Add styles for sorting */
+        .sorting .preview-img {
+            cursor: move;
+        }
+    </style>
+@endsection
+
+@section('content')
+    <div class="container">
+        <div class="header d-flex">
+            <button class="back-button">
+                <h4 class="main-title"><a class="text-decoration-none text-dark" href="{{ route('products.index') }}"><span>←
+                        </span></a> Add Product </h4>
+                <button class="search-button float-end" type="submit">Save</button>
+
+            </button>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <form class="product-form" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-section">
+                                <label for="title">Title</label>
+                                <input type="text" id="title" name="title" value="{{ old('title') }}"
+                                    placeholder="Short sleeve t-shirt">
+                            </div>
+                            <div class="form-section">
+                                <label for="description">Description</label>
+                                <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ old('description') }}</textarea>
+                            </div>
+                            <hr>
+                            <div class="form-section">
+                                <h5>Drag and Drop Images</h5>
+                                <div id="drop-zone" class="drop-zone">
+                                    <input type="file" id="file-input" name="images[]" multiple accept="image/*"
+                                    style="display: none;">
+                                    <p>Drag & drop your images here or <span id="upload-trigger">click to upload</span></p>
+                                 
+                                    <div id="image-preview" class="image-preview"></div>
+                                </div>
+                                <input type="hidden" id="files-data" name="files-data">
+                            </div>
+
+
+
+                            <hr>
+                            <div class="form-section">
+                                <h5>Pricing</h5>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label for="price">Price</label>
+                                        <input type="text" name="price" value="{{ old('price') }}" id="price"
+                                            placeholder="Rs. 0.00">
+
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label for="compare-price">Compare at price</label>
+                                        <input type="text" name="compare_price" value="{{ old('compare_price') }}"
+                                            id="compare-price" placeholder="Rs. 0.00">
+
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label for="cost">Cost per item</label>
+                                        <input type="text" name="cost" value="{{ old('cost') }}" id="cost"
+                                            placeholder="Rs. 0.00">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-section">
+                                <h3>Variations
+                                    <button type="button" class="search-button" id="add-variation">➕</button>
+                                </h3>
+                                <div class="variation-group">
+                                    <div class="variation">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label for="option-name-1">Name</label>
+                                                <input type="text" name="name[]" value="{{ old('name') }}"
+                                                    id="option-name-1" placeholder="Color/size/material, etc.">
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="option-sku-1">SKU</label>
+                                                <input type="text" name="sku[]" value="{{ old('sku') }}"
+                                                    id="option-sku-1" placeholder="code">
+                                            </div>
+                                            <div class="col-3">
+                                                <label for="option-barcode-1">Barcode</label>
+                                                <input type="number" name="barcode[]" value="{{ old('barcode') }}"
+                                                    id="option-barcode-1" placeholder="barcode">
+                                            </div>
+                                            <div class="col-2">
+                                                <label for="option-inventory-1">Inventory</label>
+                                                <input type="number" name="inventory[]" value="{{ old('inventory') }}"
+                                                    min="0" id="option-inventory-1" placeholder="0">
+                                            </div>
+                                            <div class="col-1 pb-2">
+                                                <button class="remove-variation">x</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4">
+                            <aside class="">
+                                <div class="sidebar-section card p-3">
+                                    <h5>Product Status</h5>
+                                    <select id="status" name="status">
+                                        <option {{ old('status') == 'draft' ? 'selected' : '' }} selected>Draft</option>
+                                        <option {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                    </select>
+                                    <div>
+                                        <input type="checkbox" id="online-store" checked>
+                                        <label for="online-store">Online Store</label>
+
+                                    </div>
+                                </div>
+                                <div class="sidebar-section card p-3 mt-2">
+                                    <div class="form-section">
+                                        <label for="vendor">Vendor/Brand</label>
+                                        <input type="text" id="vendor" placeholder="e.g. Nike">
+                                    </div>
+                                    <div class="form-section">
+                                        <label for="product-type">Product Type</label>
+                                        <input type="text" id="product-type" placeholder="Search types">
+                                    </div>
+                                    <div class="form-section">
+                                        <label for="collections">Collections</label>
+                                        <input type="text" id="collections" placeholder="Search for collections">
+                                    </div>
+                                    <div class="form-section">
+                                        <label for="tags">Tags</label>
+                                        <textarea name="tags" id="" placeholder="tag1, tag2"></textarea>
+                                    </div>
+
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+@endSection
+
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+
+    <script>
+        document.querySelector('#online-store').addEventListener('change', function() {
+            const status = this.checked ? 'Active' : 'Draft';
+            document.querySelector('select').value = status;
+        });
+
+        document.getElementById('add-variation').addEventListener('click', function() {
+            const variationGroup = document.querySelector('.variation-group');
+            const variationCount = variationGroup.querySelectorAll('.variation').length +
+                1; // Calculate the new index
+
+            const newVariation = document.createElement('div');
+            newVariation.className = 'variation';
+            newVariation.innerHTML = `
+                    <div class="row">
+                        <div class="col-3">
+                            <input type="text" name="name[]"  placeholder="Color/size/material, etc.">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" name="sku[]"  placeholder="code">
+                        </div>
+                        <div class="col-3">
+                            <input type="number" name="barcode[]"  placeholder="barcode">
+                        </div>
+                        <div class="col-2">
+                            <input type="number" name="inventory[]"  min="0" placeholder="0">
+                        </div>
+                        <div class="col-1 pb-2">
+                            <button class="remove-variation">x</button>
+                        </div>
+                    </div>
+                `;
+
+            variationGroup.insertBefore(newVariation, document.getElementById('variation'));
+        });
+
+        document.querySelector('.variation-group').addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-variation')) {
+                event.target.closest('.variation').remove();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const imagePreview = document.getElementById('image-preview');
+            const uploadTrigger = document.getElementById('upload-trigger');
+            const filesDataInput = document.getElementById('files-data');
+
+            // Trigger file input click when the user clicks on the drop zone or upload text
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Trigger file input click when the user clicks on the upload text
+            uploadTrigger.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Handle file input change event
+            fileInput.addEventListener('change', handleFiles);
+
+            // Handle drag and drop events
+            dropZone.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                dropZone.classList.add('dragging');
+            });
+
+            dropZone.addEventListener('dragleave', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                dropZone.classList.remove('dragging');
+            });
+
+            dropZone.addEventListener('drop', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                dropZone.classList.remove('dragging');
+                const files = event.dataTransfer.files;
+                fileInput.files = files;
+                handleFiles({
+                    target: {
+                        files
+                    }
+                });
+            });
+
+            function handleFiles(event) {
+                const files = event.target.files;
+                imagePreview.innerHTML = '';
+                const fileNames = [];
+                for (const file of files) {
+                    if (file.type.startsWith('image/')) {
+                        const container = document.createElement('div');
+                        container.classList.add('image-container');
+
+                        const img = document.createElement('img');
+                        img.classList.add('preview-img');
+                        img.file = file;
+                        img.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Prevent redirection
+                        });
+                        container.appendChild(img);
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.classList.add('remove-variation');
+                        removeBtn.textContent = '×';
+                        removeBtn.addEventListener('click', () => {
+                            container.remove();
+                            // updateFilesData();
+                        });
+                        container.appendChild(removeBtn);
+
+                        imagePreview.appendChild(container);
+
+                        const reader = new FileReader();
+                        reader.onload = ((aImg) => (e) => {
+                            aImg.src = e.target.result;
+                        })(img);
+                        reader.readAsDataURL(file);
+
+                        fileNames.push(file.name);
+                    } else {
+                        alert('Only image files are allowed.');
+                    }
+                }
+
+                // Update hidden input with file names
+                filesDataInput.value = fileNames.join(',');
+            }
+
+            // Initialize SortableJS on the image preview container
+            new Sortable(imagePreview, {
+                animation: 150,
+                onStart: function(evt) {
+                    // Optionally disable dragging during reordering if necessary
+                    evt.from.classList.add('sorting');
+                },
+                onEnd: function() {
+                    // Enable dragging after reordering
+                    imagePreview.classList.remove('sorting');
+                    // updateFilesData();
+                }
+            });
+
+            function updateFilesData() {
+                const images = Array.from(imagePreview.querySelectorAll('.preview-img'));
+                const fileNames = images.map(img => img.file.name);
+                filesDataInput.value = fileNames.join(',');
+            }
+        });
+    </script>
+@endsection
