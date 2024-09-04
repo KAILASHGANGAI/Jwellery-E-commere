@@ -5,7 +5,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="single_banner">
                     <div class="banner_thumb">
-                        <a href="#"><img src="{{ asset('images/banner/bg-1.jpg') }}" alt="banner1"></a>
+                        <a href="{{ route('collection') }}"><img src="{{ asset('images/banner/bg-1.jpg') }}" alt="banner1"></a>
                         <div class="banner_content">
                             <p>New Design</p>
                             <h2>Small design Rings</h2>

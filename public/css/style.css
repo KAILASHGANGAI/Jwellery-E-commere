@@ -2532,4 +2532,14 @@ p {
     padding: 0 !important;
   }
 }
+.banner-img{
+  width: 100%;
+  height: 30vh;
+}
+.banner-sm .banner_content{
+  left: 40%;
+}
+.about .banner_content{
+  top: 40%;
+}
 

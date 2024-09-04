@@ -26,7 +26,7 @@
                                     </div>
                                     <div class="product_content">
                                         <div class="tag_cate">
-                                            <a href="#">Ring, Necklace,</a>
+                                            <a href="{{ route('product-details') }}">Ring, Necklace,</a>
                                             <a href="#">Earrings</a>
                                         </div>
                                         <h3><a href="#">Necklace Set</a></h3>

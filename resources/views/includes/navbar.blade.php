@@ -17,7 +17,7 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="top_right text-right">
                         <ul>
-                            <li class="language">
+                            {{-- <li class="language">
                                 <a href="#">English <i class="ion-chevron-down"></i></a>
                                 <ul class="dropdown_language">
                                     <li><a href="#">French</a></li>
@@ -32,7 +32,7 @@
                                     <li><a href="#">EUR - Euro</a></li>
                                     <li><a href="#">GBP - British Pound</a></li>
                                 </ul>
-                            </li>
+                            </li> --}}
                             <li class="top_links">
                                 <a href="#">My Account <i class="ion-chevron-down"></i></a>
                                 <ul class="dropdown_links">
@@ -170,15 +170,8 @@
                             <nav>
                                 <ul>
                                     <li class="active">
-                                        <a href="#">Home <i class="ion-chevron-down"></i></a>
-                                        <ul class="sub_menu">
-                                            <li><a href="#">Banner</a></li>
-                                            <li><a href="#">Featured</a></li>
-                                            <li><a href="#">Collection</a></li>
-                                            <li><a href="#">Best Selling</a></li>
-                                            <li><a href="#">News</a></li>
-                                            <li><a href="#">Blog</a></li>
-                                        </ul>
+                                        <a href="{{ route('home') }}">Home </a>
+                                    
                                     </li>
                                     <li>
                                         <a href="#">Category <i class="ion-chevron-down"></i></a>
@@ -225,7 +218,6 @@
                                             <li><a href="#">Necklace Set</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#">About Us</a></li>
                                     <li>
                                         <a href="#">Special Collection <i class="ion-chevron-down"></i></a>
                                         <ul class="sub_menu pages">
@@ -235,6 +227,9 @@
                                             <li><a href="#">Silver</a></li>
                                         </ul>
                                     </li>
+                                    <li><a href="{{ route('about') }}">About Us</a></li>
+                                    <li><a href="{{ route('contact') }}">Contact Us</a></li>
+
                                 </ul>
                             </nav>
                         </div>
