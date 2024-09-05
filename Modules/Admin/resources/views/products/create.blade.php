@@ -124,7 +124,7 @@
             cursor: grabbing;
         }
 
-        .remove-variation {
+        .remove-img {
             position: absolute;
             top: 5px;
             right: 5px;
@@ -155,25 +155,41 @@
 
 @section('content')
     <div class="container">
-        <div class="header d-flex">
-            <button class="back-button">
-                <h4 class="main-title"><a class="text-decoration-none text-dark" href="{{ route('products.index') }}"><span>←
-                        </span></a> Add Product </h4>
-                <button class="search-button float-end" type="submit">Save</button>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-            </button>
-
-        </div>
         <div class="row">
             <div class="col-sm-12">
-                <form class="product-form" method="POST" enctype="multipart/form-data">
+                <form id="product-form" class="product-form" action="{{ route('products.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="row">
+                        <div class="col-sm-12">
+                            <div class="header d-flex">
+                                <button class="back-button">
+                                    <h4 class="main-title">
+                                        <a class="text-decoration-none text-dark" href="{{ route('products.index') }}">
+                                            <span>← </span></a> Add Product
+                                        <button class="search-button float-end" id="submit-btn" type="submit">Save</button>
+
+                                    </h4>
+
+                                </button>
+
+                            </div>
+                        </div>
                         <div class="col-sm-8">
                             <div class="form-section">
                                 <label for="title">Title</label>
                                 <input type="text" id="title" name="title" value="{{ old('title') }}"
-                                    placeholder="Short sleeve t-shirt">
+                                    placeholder="Short sleeve t-shirt" required>
                             </div>
                             <div class="form-section">
                                 <label for="description">Description</label>
@@ -184,15 +200,13 @@
                                 <h5>Drag and Drop Images</h5>
                                 <div id="drop-zone" class="drop-zone">
                                     <input type="file" id="file-input" name="images[]" multiple accept="image/*"
-                                    style="display: none;">
+                                        style="display: none;">
                                     <p>Drag & drop your images here or <span id="upload-trigger">click to upload</span></p>
-                                 
+
                                     <div id="image-preview" class="image-preview"></div>
                                 </div>
                                 <input type="hidden" id="files-data" name="files-data">
                             </div>
-
-
 
                             <hr>
                             <div class="form-section">
@@ -201,7 +215,7 @@
                                     <div class="col-sm-4">
                                         <label for="price">Price</label>
                                         <input type="text" name="price" value="{{ old('price') }}" id="price"
-                                            placeholder="Rs. 0.00">
+                                            placeholder="Rs. 0.00" required>
 
                                     </div>
                                     <div class="col-sm-4">
@@ -212,7 +226,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <label for="cost">Cost per item</label>
-                                        <input type="text" name="cost" value="{{ old('cost') }}" id="cost"
+                                        <input type="number" name="cost" value="{{ old('cost') }}" id="cost"
                                             placeholder="Rs. 0.00">
                                     </div>
                                 </div>
@@ -227,28 +241,74 @@
                                         <div class="row">
                                             <div class="col-3">
                                                 <label for="option-name-1">Name</label>
-                                                <input type="text" name="name[]" value="{{ old('name') }}"
+                                                <input type="text" name="name[]" value="{{ old('name.0') }}"
                                                     id="option-name-1" placeholder="Color/size/material, etc.">
                                             </div>
                                             <div class="col-3">
                                                 <label for="option-sku-1">SKU</label>
-                                                <input type="text" name="sku[]" value="{{ old('sku') }}"
+                                                <input type="text" name="sku[]" value="{{ old('sku.0') }}"
                                                     id="option-sku-1" placeholder="code">
                                             </div>
                                             <div class="col-3">
                                                 <label for="option-barcode-1">Barcode</label>
-                                                <input type="number" name="barcode[]" value="{{ old('barcode') }}"
+                                                <input type="number" name="barcode[]" value="{{ old('barcode.0') }}"
                                                     id="option-barcode-1" placeholder="barcode">
                                             </div>
                                             <div class="col-2">
                                                 <label for="option-inventory-1">Inventory</label>
-                                                <input type="number" name="inventory[]" value="{{ old('inventory') }}"
-                                                    min="0" id="option-inventory-1" placeholder="0">
+                                                <input type="number" name="inventory[]"
+                                                    value="{{ old('inventory.0') }}" min="0"
+                                                    id="option-inventory-1" placeholder="0">
                                             </div>
                                             <div class="col-1 pb-2">
-                                                <button class="remove-variation">x</button>
+
                                             </div>
                                         </div>
+                                       
+                                        @foreach (old('name', []) as $index => $oldName)
+                                            @if ($index == 0)
+                                                @continue
+                                            @endif
+                                            <div class="row variation-row">
+                                                <div class="col-3">
+                                                    <input type="text" name="name[]"
+                                                        value="{{ old('name.' . $index) }}"
+                                                        placeholder="Color/size/material, etc.">
+                                                    @if ($errors->has('name.' . $index))
+                                                        <span
+                                                            class="text-danger">{{ $errors->first('name.' . $index) }}</span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-3">
+                                                    <input type="text" name="sku[]"
+                                                        value="{{ old('sku.' . $index) }}" placeholder="code">
+                                                    @if ($errors->has('sku.' . $index))
+                                                        <span
+                                                            class="text-danger">{{ $errors->first('sku.' . $index) }}</span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-3">
+                                                    <input type="number" name="barcode[]"
+                                                        value="{{ old('barcode.' . $index) }}" placeholder="barcode">
+                                                    @if ($errors->has('barcode.' . $index))
+                                                        <span
+                                                            class="text-danger">{{ $errors->first('barcode.' . $index) }}</span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-2">
+                                                    <input type="number" name="inventory[]"
+                                                        value="{{ old('inventory.' . $index) }}" min="0"
+                                                        placeholder="0">
+                                                    @if ($errors->has('inventory.' . $index))
+                                                        <span
+                                                            class="text-danger">{{ $errors->first('inventory.' . $index) }}</span>
+                                                    @endif
+                                                </div>
+                                                <div class="col-1 pb-2">
+                                                    <button type="button" class="remove-variation">x</button>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -260,11 +320,13 @@
                                 <div class="sidebar-section card p-3">
                                     <h5>Product Status</h5>
                                     <select id="status" name="status">
-                                        <option {{ old('status') == 'draft' ? 'selected' : '' }} selected>Draft</option>
-                                        <option {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                        <option {{ old('status') == 'archived' ? 'selected' : '' }} value="archived"
+                                            selected>Archived</option>
+                                        <option {{ old('status') == 'active' ? 'selected' : '' }} value="active">Active
+                                        </option>
                                     </select>
                                     <div>
-                                        <input type="checkbox" id="online-store" checked>
+                                        <input type="checkbox" name="display" checked id="online-store">
                                         <label for="online-store">Online Store</label>
 
                                     </div>
@@ -272,19 +334,22 @@
                                 <div class="sidebar-section card p-3 mt-2">
                                     <div class="form-section">
                                         <label for="vendor">Vendor/Brand</label>
-                                        <input type="text" id="vendor" placeholder="e.g. Nike">
+                                        <input type="text" id="vendor" name="vendor" value="{{ old('vendor') }}"
+                                            placeholder="e.g. Nike">
                                     </div>
                                     <div class="form-section">
                                         <label for="product-type">Product Type</label>
-                                        <input type="text" id="product-type" placeholder="Search types">
+                                        <input type="text" name="product_type" value="{{ old('product_type') }}"
+                                            id="product-type" placeholder="Search types">
                                     </div>
                                     <div class="form-section">
                                         <label for="collections">Collections</label>
-                                        <input type="text" id="collections" placeholder="Search for collections">
+                                        <input type="text" name="collections" value="{{ old('collections') }}"
+                                            id="collections" placeholder="Search for collections">
                                     </div>
                                     <div class="form-section">
                                         <label for="tags">Tags</label>
-                                        <textarea name="tags" id="" placeholder="tag1, tag2"></textarea>
+                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ old('tags') }}</textarea>
                                     </div>
 
                                 </div>
@@ -317,16 +382,16 @@
             newVariation.innerHTML = `
                     <div class="row">
                         <div class="col-3">
-                            <input type="text" name="name[]"  placeholder="Color/size/material, etc.">
+                            <input type="text" name="name[]" value="{{ old('name.${variationCount}') }}"  placeholder="Color/size/material, etc.">
                         </div>
                         <div class="col-3">
-                            <input type="text" name="sku[]"  placeholder="code">
+                            <input type="text" name="sku[]" value="{{ old('sku.${variationCount}') }}"  placeholder="code">
                         </div>
                         <div class="col-3">
-                            <input type="number" name="barcode[]"  placeholder="barcode">
+                            <input type="number" name="barcode[]"  value="{{ old('barcode.${variationCount}') }}" placeholder="barcode">
                         </div>
                         <div class="col-2">
-                            <input type="number" name="inventory[]"  min="0" placeholder="0">
+                            <input type="number" name="inventory[]" value="{{ old('inventory.${variationCount}') }}" min="0" placeholder="0">
                         </div>
                         <div class="col-1 pb-2">
                             <button class="remove-variation">x</button>
@@ -337,9 +402,22 @@
             variationGroup.insertBefore(newVariation, document.getElementById('variation'));
         });
 
-        document.querySelector('.variation-group').addEventListener('click', function(event) {
+        // document.querySelector('.variation-group').addEventListener('click', function(event) {
+        //     if (event.target.classList.contains('remove-variation')) {
+        //         event.target.closest('.variation').remove();
+        //     }
+        // });
+
+        document.addEventListener('click', function(event) {
             if (event.target.classList.contains('remove-variation')) {
-                event.target.closest('.variation').remove();
+                event.preventDefault(); // Prevent default button behavior
+
+                const row = event.target.closest('.variation-row'); // Find the closest row to the clicked button
+                if (row) {
+                    row.remove(); // Remove only this specific row
+                }else{
+                    event.target.closest('.variation').remove();
+                }
             }
         });
 
@@ -407,7 +485,7 @@
                         container.appendChild(img);
 
                         const removeBtn = document.createElement('button');
-                        removeBtn.classList.add('remove-variation');
+                        removeBtn.classList.add('remove-img');
                         removeBtn.textContent = '×';
                         removeBtn.addEventListener('click', () => {
                             container.remove();

@@ -6,18 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator as FacadesValidator;
-use Modules\Admin\Http\Requests\ProductRequest;
-use Validator;
 
-class ProductController extends Controller
+class VariationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('admin::products.index');
+        return view('admin::index');
     }
 
     /**
@@ -25,18 +22,15 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin::products.create');
+        return view('admin::create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request)
+    public function store(Request $request): RedirectResponse
     {
-        
-       
-dd($request->all());    
-        return redirect()->route('admin.products.index');
+        //
     }
 
     /**
