@@ -24,7 +24,7 @@ class AdminComonService
         $image->move(public_path($path), $fileName);
 
         // Store the file path
-        $imagePaths = '/'.$path.'/' . $fileName;
+        $imagePaths = $path.'/' . $fileName;
 
         return $imagePaths;
     }
