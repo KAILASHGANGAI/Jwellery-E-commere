@@ -52,7 +52,7 @@ class CollectionController extends Controller
             $sort_type,
             $limit ?? null,
             $pagination ?? null
-          
+
         );
 
         return response()->json($data, 200);
@@ -123,7 +123,8 @@ class CollectionController extends Controller
      */
     public function edit($id)
     {
-        return view('admin::collections.edit');
+        $data = $this->comReo->find($id);
+        return view('admin::collections.edit', compact('data'));
     }
 
     /**
@@ -131,7 +132,7 @@ class CollectionController extends Controller
      */
     public function update(Request $request, $id): RedirectResponse
     {
-        //
+        dd($request->all());
     }
 
     /**

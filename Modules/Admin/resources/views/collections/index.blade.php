@@ -122,20 +122,25 @@
                         <td><input type="checkbox"></td>
                         <td>${order.id}</td>
                         <td><img src="${imgUrl}"  width="50"></td>
-                        <td>${order.title}</td>
+                        <td><a href="${edit}">${order.title}</a></td>
                         <td><span class="status-dot status-${order.status.toLowerCase()}"></span>${order.status}</td>
                         <td><span class="status-dot status-${order.display.toLowerCase()}"></span>${order.display}</td>
                         <td>${order.created_at}</td>
                         <td>
-                            <a href="${edit}" class="edit-button">Edit</a>
-                            <a href="${destroy}" class="delete-button">Delete</a>    
+                            <form action="${destroy}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <i class="fa-solid fa-trash text-danger" ></i>
+                            </form>
+
                         </td>
                     </tr>
                 `;
                 tableBody.innerHTML += row;
             });
         }
-
+        // <a href="${destroy}" class="delete-button">Delete</a>    
+        // <a href="${edit}" class="edit-button">Edit</a>
         function setupPagination(totalOrders, currentPage, totalPages) {
             const paginationElement = document.getElementById('pagination');
             paginationElement.innerHTML = '';

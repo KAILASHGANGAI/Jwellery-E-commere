@@ -22,7 +22,7 @@ class CommonRepository implements CommonRepositoryInterface
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->model::find($id);
     }
 
     public function create(array $data)
@@ -84,7 +84,7 @@ class CommonRepository implements CommonRepositoryInterface
             ->when($paginate, function ($query) use ($paginate) {
                 return $query->paginate($paginate);
             });
-            
+
            
            
     }

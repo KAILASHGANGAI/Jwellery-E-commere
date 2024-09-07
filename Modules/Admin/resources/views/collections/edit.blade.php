@@ -10,16 +10,17 @@
       @include('admin::includes.errors')
         <div class="row">
             <div class="col-sm-12">
-                <form id="product-form" class="product-form" action="{{ route('collections.store') }}" method="POST"
+                <form id="product-form" class="product-form" action="{{ route('collections.update', $data->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="header d-flex">
                                 <span class="back-button">
                                     <h4 class="main-title ">
                                         <a class="text-decoration-none text-dark" href="{{ route('collections.index') }}">
-                                            <span>← </span>Add Collection</a> 
+                                            <span>← </span>Edit Collection</a> 
                                             
                                     </h4>
 
@@ -31,17 +32,17 @@
                         <div class="col-sm-8">
                             <div class="form-section">
                                 <label for="title">Title</label>
-                                <input type="text" id="title" name="title" value="{{ old('title') }}"
+                                <input type="text" id="title" name="title" value="{{ $data->title ?? old('title') }}"
                                     placeholder="Short sleeve t-shirt" required>
                             </div>
                             <div class="form-section">
                                 <label for="slug">Slug</label>
-                                <input type="text" id="slug" name="slug" value="{{ old('slug') }}"
+                                <input type="text" id="slug" name="slug" value="{{ $data->slug ?? old('slug') }}"
                                     placeholder="short-sleeve-t-shirt" >
                             </div>
                             <div class="form-section">
                                 <label for="description">Description</label>
-                                <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ old('description') }}</textarea>
+                                <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ $data->description ?? old('description') }}</textarea>
                             </div>
                                                     
 
@@ -59,7 +60,8 @@
                                         </option>
                                     </select>
                                     <div>
-                                        <input type="checkbox" name="display" checked id="online-store">
+                                        <input type="checkbox" name="display" {{ $data->display ? 'checked' : '' }} 
+                                         id="online-store">
                                         <label for="online-store">Online Store</label>
 
                                     </div>
@@ -71,7 +73,7 @@
                                             style="display: none;">
                                         <p>Drag & drop your images here  <span id="upload-trigger"></span></p>
     
-                                        <div id="image-preview" class="image-preview"></div>
+                                        <div id="image-preview" class="image-preview"> <img src="{{ asset($data->file_path ?? '') }}" height="60" alt=""> </div>
                                     </div>
                                     <input type="hidden" id="files-data" >
                                 </div>
@@ -79,12 +81,12 @@
                                   
                                     <div class="form-section">
                                         <label for="collections">Parent Collections</label>
-                                        <input type="text" name="collections" value="{{ old('collections') }}"
+                                        <input type="text" name="collections" value="{{ $data->collection_id ?? old('collections') }}"
                                             id="collections" placeholder="Search for collections">
                                     </div>
                                     <div class="form-section">
                                         <label for="tags">Tags</label>
-                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ old('tags') }}</textarea>
+                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ $data->tags ?? old('tags') }}</textarea>
                                     </div>
 
                                 </div>
