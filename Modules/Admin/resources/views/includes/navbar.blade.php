@@ -14,6 +14,7 @@
             <li class="dropdown" onclick="toggleDropdown(this)">
                 Products
                 <ul class="dropdown-content">
+                    <li><a href="{{ route('collections.index') }}">Collections</a></li>
                     <li><a href="{{ route('products.index') }}">Products Lists</a></li>
                     <li>Inventory</li>
                     <li>Transfers</li>

@@ -28,7 +28,7 @@
         @include('admin::includes.navbar')
         <div class="main-content">
          @include('admin::includes.sidebar')
-            
+                   
          @yield('content')
         </div>
     </div>

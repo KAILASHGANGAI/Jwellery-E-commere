@@ -15,7 +15,9 @@ class CommonRepository implements CommonRepositoryInterface
 
     public function all($limit = 30)
     {
-        return $this->model->limit($limit)->get();
+        return $this->model::query()
+            ->orderBy('id', 'desc')
+            ->paginate($limit);
     }
 
     public function find($id)
@@ -25,7 +27,8 @@ class CommonRepository implements CommonRepositoryInterface
 
     public function create(array $data)
     {
-        return $this->model->create($data);
+
+        return $this->model::create($data);
     }
 
     public function update($id, array $data)
@@ -45,7 +48,7 @@ class CommonRepository implements CommonRepositoryInterface
 
     public function findByField($field, $value)
     {
-        return $this->model->where($field, $value)->first();
+        return $this->model::query()->where($field, $value)->first();
     }
 
     public function createOrUpdateByField($field, $value, $data)
@@ -56,5 +59,33 @@ class CommonRepository implements CommonRepositoryInterface
             return $data;
         }
         return $this->model->create($data);
+    }
+    public function getData($search=null, $filter=null, $sort='created_at', $direction = 'desc', $limit = null, $paginate=null){
+
+        return $this->model::query()
+           
+            ->when($search, function ($query) use ($search) {
+                return $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhere('status', 'like', '%' . $search . '%')
+                    ->orWhere('tags', 'like', '%' . $search . '%');
+
+            })
+            ->when($filter && $filter != 'all', function ($query) use ($filter) {
+
+                return $query->where('status', $filter);
+            })
+            ->when($sort, function ($query) use ($sort, $direction) {
+                return $query->orderBy($sort, $direction);
+            })
+            ->when($limit, function ($query) use ($limit) {
+                return $query->limit($limit);
+            })
+            ->when($paginate, function ($query) use ($paginate) {
+                return $query->paginate($paginate);
+            });
+            
+           
+           
     }
 }
