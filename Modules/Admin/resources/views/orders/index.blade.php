@@ -16,7 +16,7 @@
             <span class="order-tab" onclick="setActiveTab(this)">+</span>
         </div>
         <div class="order-actions">
-            <input type="text" id="table-search" placeholder="Search orders...">
+            <input type="text" id="table-search" placeholder="Search ...">
             <button class="search-button" onclick="searchOrders()">Search</button>
             <span>☰</span> 
             <span>⋮</span>

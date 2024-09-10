@@ -22,7 +22,7 @@
         </div>
         <div class="order-actions">
 
-            <input type="text" id="table-search" placeholder="Search orders...">
+            <input type="text" id="table-search" placeholder="Search ...">
             <button class="search-button" onclick="searchOrders()">Search</button>
             <span>☰</span>
             <span>⋮</span>
@@ -91,12 +91,12 @@
             tableBody.innerHTML = '';
             // Loop through each order and display it in the table
             if (datas.length == 0) {
-                tableBody.innerHTML = '<tr><td colspan="8">No datas found.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="11">No datas found.</td></tr>';
             }
             datas.forEach(data => {
-                const imgUrl = "{{ asset('') }}" + data.file_path;
-                let edit = "{{ route('collections.edit', ':id') }}".replace(':id', data.id);
-                let destroy = "{{ route('collections.destroy', ':id') }}".replace(':id', data.id);
+                const imgUrl = data.images.length > 0 ? "{{ asset('') }}" + data.images[0].image_path: '';
+                let edit = "{{ route('products.edit', ':id') }}".replace(':id', data.id);
+                let destroy = "{{ route('products.destroy', ':id') }}".replace(':id', data.id);
                 const formattedDate = new Date(data.created_at).toISOString().split('T')[0];
                 const display = data.display == 1 ? 'Yes' : 'No';
 
@@ -112,13 +112,21 @@
                             <td>${data.price}</td>
                             <td>${data.compare_price}</td>
                            
-                            <td>${data.quantity}</td>
+                            <td>${sum(data.variations)}</td>
                             <td>${formattedDate}</td>
                           
                         </tr>
                     `;
                 tableBody.innerHTML += row;
             });
+        }
+
+        function sum(variations) {
+            let sum = 0;
+            for (let i = 0; i < variations.length; i++) {
+                sum += parseInt(variations[i].inventory);
+            }
+            return sum;
         }
         init();
     </script>

@@ -13,6 +13,8 @@ use Modules\Admin\Models\Collection;
 use Modules\Admin\Models\Product;
 use Modules\Admin\Services\AdminComonService;
 use Illuminate\Support\Str;
+use Modules\Admin\Models\Image;
+use Modules\Admin\Models\Variation;
 
 class ProductController extends Controller
 {
@@ -58,11 +60,8 @@ class ProductController extends Controller
             $sort_type,
             $limit ?? null,
             $pagination,
+            ['images:id,product_id,image_path', 'variations:id,product_id,inventory']
         );
-        //add images to all and calculate inventory 
-        
-
-       
 
         return response()->json($data, 200);
     }
@@ -153,15 +152,76 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        return view('admin::edit');
+        $data = $this->comReo->find($id);
+        return view('admin::products.edit', compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+        try {
+            // dd($request->all());
+            DB::beginTransaction();
+            $collectionID = $this->adminService->findByField(
+                Collection::class,
+                'title',
+                $request->collections
+            );
+
+            $products = [
+                'title' => $request->title,
+                'slug' => Str::slug($request->title),
+                'description' => $request->description,
+                'status' => $request->status,
+                'price' => $request->price,
+                'compare_price' => $request->compare_price,
+                'cost' => $request->cost,
+                'display' => isset($request->display) && $request->display == 'on' ? 1 : 0,
+                'vendor' => $request->vendor,
+                'product_type' => $request->product_type,
+                'collections' => $request->collections,
+                'collection_id' => $collectionID ? $collectionID->id : 0,
+                'tags' => $request->tags,
+            ];
+            $product = $this->comReo->update($id,$products);
+            foreach ($request->name as $key => $value) {
+                $vdata = [
+                    'name' => $value,
+                    'barcode' => $request->barcode[$key],
+                    'inventory' => $request->inventory[$key],
+                ];
+                $condition = [
+                    'product_id' => $product->id,
+                    'sku' => $request->sku[$key],
+                ];
+                $this->adminService->createOrUpdateByField(Variation::class, $condition, $vdata);
+            }
+
+            if ($request->hasFile('images') && $images = $request->file('images')) {
+                Image::where('product_id', $product->id)->update(['is_deleted'=>1]);
+                foreach ($images as $key => $image) {
+
+                    $imageName = $image->getClientOriginalName();
+                    $imgPath = $this->adminService->ImageUpload($image,  'images/products');
+                    $idata = [
+                        'product_id' => $product->id,
+                        'name' => $imageName ?? null,
+                        'image_path' => $imgPath,
+                        'image_url' => config('app.url') . '/' . $imgPath
+                    ];
+
+                    $product->images()->create($idata);
+                }
+            }
+            DB::commit();
+            return back()->with('success', 'Product created successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return back()->withInput($request->all())->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -169,6 +229,15 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = $this->comReo->find($id);
+        $data->delete();
+        return back()->with('success', 'Product deleted successfully');
+        
+    }
+    public function bulkDelete(Request $request){
+
+        $ids = $request->ids;
+        $this->comReo->bulkDelete($ids);
+        return response()->json(['success' => 'Products deleted successfully.'], 200);
     }
 }

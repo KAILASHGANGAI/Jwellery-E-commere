@@ -1,14 +1,14 @@
 <div class="sidebar" id="sidebar">
-    <h2>Dashboard</h2>
+    <h2 ><a class="text-decoration-none" href="/">Dashboard</a></h2>
     <nav>
         <ul>
-            <li>Home</li>
+            <li class="bg-secondary text-white"><a class="text-white" href="{{ route('home') }}">View Site</a></li>
             <li class="dropdown" onclick="toggleDropdown(this)">
                 Orders
                 <ul class="dropdown-content">
-                    <li>All Orders</li>
-                    <li>Drafts</li>
-                    <li>Abandoned checkouts</li>
+                    <li><a href="{{ route('orders.index') }}" class="text-decoration-none">All Orders</a></li>
+                    <li><a href="{{ route('orders.index') }}">Drafts Orders</a></li>
+                  
                 </ul>   
             </li>
             <li class="dropdown" onclick="toggleDropdown(this)">
@@ -16,15 +16,16 @@
                 <ul class="dropdown-content">
                     <li><a href="{{ route('collections.index') }}">Collections</a></li>
                     <li><a href="{{ route('products.index') }}">Products Lists</a></li>
-                    <li>Inventory</li>
-                    <li>Transfers</li>
+                    {{-- <li>Inventory</li>
+                    <li>Transfers</li> --}}
                 </ul>
             </li>
-            <li>Customers</li>
-            <li>Content</li>
-            <li>Analytics</li>
-            <li>Marketing</li>
-            <li>Discounts</li>
+            <li><a class="text-decoration-none" href="{{ route('customers.index') }}">Customers</a></li>
+            <li><a class="text-decoration-none" href="#">Discounts</a></li>
+            <li><a class="text-decoration-none" href="#">Analytics</a></li>
+            <li><a class="text-decoration-none" href="#">Marketing</a></li>
+     
+       
         </ul>
     </nav>
 </div>

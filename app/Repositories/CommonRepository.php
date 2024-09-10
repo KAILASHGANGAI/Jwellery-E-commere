@@ -43,7 +43,7 @@ class CommonRepository implements CommonRepositoryInterface
 
     public function delete($id)
     {
-        return $this->model::destroy($id);  
+        return $this->model::destroy($id);
     }
     public function findBySlug($slug)
     {
@@ -73,9 +73,21 @@ class CommonRepository implements CommonRepositoryInterface
         }
         return $this->model->create($data);
     }
-    public function getData($select = null, $search=null, $filter=null, $sort='created_at', $direction = 'desc', $limit = null, $paginate=null){
+    public function getData(
+        $select = null,
+        $search = null,
+        $filter = null,
+        $sort = 'created_at',
+        $direction = 'desc',
+        $limit = null,
+        $paginate = null,
+        $with = null
+    ) {
 
         return $this->model::query()
+            ->when($with, function ($query) use ($with) {
+                return $query->with($with);
+            })
             ->when($select, function ($query) use ($select) {
                 return $query->select($select);
             })
@@ -84,7 +96,6 @@ class CommonRepository implements CommonRepositoryInterface
                     ->orWhere('description', 'like', '%' . $search . '%')
                     ->orWhere('status', 'like', '%' . $search . '%')
                     ->orWhere('tags', 'like', '%' . $search . '%');
-
             })
             ->when($filter && $filter != 'all', function ($query) use ($filter) {
 
@@ -99,11 +110,10 @@ class CommonRepository implements CommonRepositoryInterface
             ->when($paginate, function ($query) use ($paginate) {
                 return $query->paginate($paginate);
             });
-
-                   
     }
 
-    public function searchByField($field, $value){
+    public function searchByField($field, $value)
+    {
 
         return $this->model::query()->where($field, 'like', '%' . $value . '%')->get();
     }

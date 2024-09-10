@@ -54,7 +54,10 @@ body {
     padding-left: 5px;
 
 }
-
+.sidebar li a {
+    text-decoration: none;
+    color: #637381;
+}
 .sidebar .dropdown-content li a {
     text-decoration: none;
     color: #637381;

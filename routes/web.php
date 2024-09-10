@@ -11,3 +11,5 @@ Route::view('/collections', 'pages.collections')->name('collections');
 Route::view('/collection', 'pages.collection')->name('collection');
 Route::view('/contact', 'pages.contact')->name('contact');
 Route::view('/about-us', 'pages.about')->name('about');
+
+

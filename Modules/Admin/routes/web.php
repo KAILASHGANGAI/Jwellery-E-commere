@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Admin\Http\Controllers\AdminController;
 use Modules\Admin\Http\Controllers\CollectionController;
+use Modules\Admin\Http\Controllers\CustomerController;
+use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\ProductController;
 
 /*
@@ -16,9 +18,9 @@ use Modules\Admin\Http\Controllers\ProductController;
 |
 */
 
-Route::group([ 'prefix' => 'admin'], function () {
+Route::group(['prefix' => '/myadmin'], function () {
 
-    Route::resource('/dashboard', AdminController::class)->names('admin');
+    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     # Product routes
     Route::resource('/products', ProductController::class)->names('products');
     Route::get('/product-ajax', [ProductController::class, 'productAjax'])->name('products.indexAjax');
@@ -31,4 +33,9 @@ Route::group([ 'prefix' => 'admin'], function () {
     Route::post('/collection-bulk-delete', [CollectionController::class, 'bulkDelete'])->name('collections.bulkDelete');
     Route::get('/search-collections', [CollectionController::class, 'search'])->name('collections.search');
 
+    #customers routes
+    Route::resource('/customers', CustomerController::class)->names('customers');
+
+    #orders routes
+    Route::resource('/orders', OrderController::class)->names('orders');
 });
