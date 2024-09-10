@@ -33,19 +33,32 @@ class CommonRepository implements CommonRepositoryInterface
 
     public function update($id, array $data)
     {
-        $product = $this->model->find($id);
-        if ($product) {
-            $product->update($data);
-            return $product;
+        $mydata = $this->model::find($id);
+        if ($mydata) {
+            $mydata->update($data);
+            return $mydata;
         }
         return null;
     }
 
     public function delete($id)
     {
-        return $this->model->destroy($id);
+        return $this->model::destroy($id);  
     }
-
+    public function findBySlug($slug)
+    {
+        return $this->model::query()->where('slug', $slug)->first();
+    }
+    public function bulkDelete($ids)
+    {
+        foreach ($ids as $id) {
+            $data = $this->find($id);
+            if (file_exists($data->file_path)) {
+                unlink($data->file_path);
+            }
+        }
+        return $this->model::query()->whereIn('id', $ids)->delete();
+    }
     public function findByField($field, $value)
     {
         return $this->model::query()->where($field, $value)->first();
@@ -53,17 +66,19 @@ class CommonRepository implements CommonRepositoryInterface
 
     public function createOrUpdateByField($field, $value, $data)
     {
-        $data = $this->model->where($field, $value)->first();
+        $data = $this->model::where($field, $value)->first();
         if ($data) {
             $data->update($data);
             return $data;
         }
         return $this->model->create($data);
     }
-    public function getData($search=null, $filter=null, $sort='created_at', $direction = 'desc', $limit = null, $paginate=null){
+    public function getData($select = null, $search=null, $filter=null, $sort='created_at', $direction = 'desc', $limit = null, $paginate=null){
 
         return $this->model::query()
-           
+            ->when($select, function ($query) use ($select) {
+                return $query->select($select);
+            })
             ->when($search, function ($query) use ($search) {
                 return $query->where('title', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%')
@@ -85,7 +100,11 @@ class CommonRepository implements CommonRepositoryInterface
                 return $query->paginate($paginate);
             });
 
-           
-           
+                   
+    }
+
+    public function searchByField($field, $value){
+
+        return $this->model::query()->where($field, 'like', '%' . $value . '%')->get();
     }
 }

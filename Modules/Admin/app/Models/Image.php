@@ -10,13 +10,8 @@ class Image extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [];
-
-    protected static function newFactory(): ImageFactory
-    {
-        //return ImageFactory::new();
-    }
+   protected $guarded = [];
+   public function product(){
+       return $this->belongsTo(Product::class);
+   }
 }

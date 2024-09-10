@@ -14,6 +14,20 @@ class Collection extends Model
      * The attributes that are mass assignable.
      */
     protected $guarded = [];
+    // self relation 
 
+    public function products() {
+        return $this->hasMany(Product::class);
+    }
+
+    //parent child relation 
+
+    public function parent() {
+        return $this->belongsTo(Collection::class, 'collection_id');
+    }
+
+    public function children() {
+        return $this->hasMany(Collection::class, 'collection_id');
+    }
    
 }

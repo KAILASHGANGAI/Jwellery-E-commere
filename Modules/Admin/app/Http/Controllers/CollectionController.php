@@ -44,8 +44,17 @@ class CollectionController extends Controller
         $filter = $request->get('filter', null);
         $sort_field = $request->get('sort_field', 'created_at');
         $sort_type = $request->get('sort_type', 'desc');
-
+        $select  = [
+            'id',
+            'title',
+            'file_path',
+            'status',
+            'display',
+            'description',
+            'created_at',
+        ];
         $data = $this->comReo->getData(
+            $select,
             $search,
             $filter,
             $sort_field,
@@ -130,9 +139,50 @@ class CollectionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(CollectionRequest $request, $id): RedirectResponse
     {
-        dd($request->all());
+        try {
+            DB::beginTransaction();
+
+            $datas = $request->all();
+            unset($datas['images']);
+            unset($datas['collections']);
+            unset($datas['display']);
+
+            $data = $this->comReo->update($id, $datas);
+
+            if ($images = $request->file('images')) {
+                $imgPath =  $this->adminService
+                    ->ImageUpload($images,  'images/collections');
+                    if (file_exists(public_path($data->file_path))) {
+                        unlink(public_path($data->file_path));
+                                               
+                    }
+                $data->file_path = $imgPath;
+            }
+
+            if ($request->has('display')) {
+                $data->display = ($request->display == 'on') ? 1 : 0;
+            }
+
+            if ($request->has('collections')) {
+                $collection = $this->comReo->findByField('title', $request->collections);
+
+                $data->collection_id = (!empty($collection)) ? $collection->id : 0;
+            }
+            $data->save();
+            DB::commit();
+            return redirect()
+                ->back()
+                ->with('success', 'Collection updated successfully');
+        } catch (Exception $e) {
+            dd($e);
+            DB::rollBack();
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->with('error', 'Something went wrong!');
+        }
     }
 
     /**
@@ -140,6 +190,30 @@ class CollectionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = $this->comReo->find($id);
+        if (file_exists($data->file_path)) {
+            unlink($data->file_path);
+        }
+        $data->delete();
+        return redirect()
+            ->back()
+            ->with('success', 'Collection deleted successfully');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->ids;
+
+        $this->comReo->bulkDelete($ids);
+        return response()->json(['success' => 'Products Deleted successfully.']);
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $collections = $this->comReo->searchByField('title',$search);
+        
+        return response()->json($collections);
     }
 }

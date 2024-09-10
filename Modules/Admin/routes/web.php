@@ -17,8 +17,18 @@ use Modules\Admin\Http\Controllers\ProductController;
 */
 
 Route::group([ 'prefix' => 'admin'], function () {
+
     Route::resource('/dashboard', AdminController::class)->names('admin');
+    # Product routes
     Route::resource('/products', ProductController::class)->names('products');
+    Route::get('/product-ajax', [ProductController::class, 'productAjax'])->name('products.indexAjax');
+    Route::post('/product-bulk-delete', [ProductController::class, 'bulkDelete'])->name('products.bulkDelete');
+    Route::get('/search-products', [ProductController::class, 'search'])->name('products.search');
+
+    # Collection routes 
     Route::resource('/collections', CollectionController::class)->names('collections');
     Route::get('/collection-ajax', [CollectionController::class, 'collectionAjax'])->name('collections.indexAjax');
+    Route::post('/collection-bulk-delete', [CollectionController::class, 'bulkDelete'])->name('collections.bulkDelete');
+    Route::get('/search-collections', [CollectionController::class, 'search'])->name('collections.search');
+
 });

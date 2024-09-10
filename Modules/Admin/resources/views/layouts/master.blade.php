@@ -33,6 +33,10 @@
          @yield('content')
         </div>
     </div>
+    <div id="loader" style="display: none;">
+        <div class="spinner"></div> <!-- You can style this spinner using CSS -->
+      </div>
+      
     <script>
           function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');

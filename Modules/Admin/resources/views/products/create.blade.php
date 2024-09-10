@@ -155,15 +155,7 @@
 
 @section('content')
     <div class="container">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+       @include('admin::includes.errors')
 
         <div class="row">
             <div class="col-sm-12">
@@ -173,15 +165,15 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="header d-flex">
-                                <button class="back-button">
-                                    <h4 class="main-title">
+                                <span class="back-button">
+                                    <h4 class="main-title ">
                                         <a class="text-decoration-none text-dark" href="{{ route('products.index') }}">
-                                            <span>← </span></a> Add Product
-                                        <button class="search-button float-end" id="submit-btn" type="submit">Save</button>
-
+                                            <span>← </span>Add Product</a> 
+                                            
                                     </h4>
 
-                                </button>
+                                </span>
+                                <button class="search-button float-end" id="submit-btn" type="submit">Save</button>
 
                             </div>
                         </div>
@@ -205,7 +197,7 @@
 
                                     <div id="image-preview" class="image-preview"></div>
                                 </div>
-                                <input type="hidden" id="files-data" name="files-data">
+                                <input type="hidden" id="files-data" name="">
                             </div>
 
                             <hr>
@@ -344,8 +336,10 @@
                                     </div>
                                     <div class="form-section">
                                         <label for="collections">Collections</label>
-                                        <input type="text" name="collections" value="{{ old('collections') }}"
-                                            id="collections" placeholder="Search for collections">
+                                        <input type="text" id="collection-search" name="collections" value="{{ old('collections') }}"
+                                        id="collections" placeholder="Search for collections">
+                                        <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
+
                                     </div>
                                     <div class="form-section">
                                         <label for="tags">Tags</label>
@@ -529,6 +523,55 @@
                 const images = Array.from(imagePreview.querySelectorAll('.preview-img'));
                 const fileNames = images.map(img => img.file.name);
                 filesDataInput.value = fileNames.join(',');
+            }
+        });
+
+        document.getElementById('collection-search').addEventListener('input', function() {
+            const query = this.value;
+            var url = "{{ route('collections.search', ['search' => 'PLACEHOLDER']) }}";
+            if (query.length >= 2) { // Start searching after 2 characters
+                let searchUrl = url.replace('PLACEHOLDER', encodeURIComponent(query));
+
+                fetch(searchUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        //if no data found display no results
+                        if (data.length == 0) {
+                            document.getElementById('collection-options').style.display = 'none';
+                            document.getElementById('collection-search').value = '';
+                            alert('No results found');
+                            return;
+                        }
+                        // Display the search results
+                        const selectElement = document.getElementById('collection-options');
+                        selectElement.innerHTML = ''; // Clear previous results
+
+                        if (data.length > 0) {
+                            selectElement.style.display = 'block'; // Show the select dropdown
+
+                            data.forEach(collection => {
+                                const option = document.createElement('option');
+                                option.value = collection.id; // Store the collection ID as the value
+                                option.textContent = collection.title; // Show the collection name in the dropdown
+                                selectElement.appendChild(option);
+                            });
+
+                            // Handle selection of an option
+                            selectElement.addEventListener('change', function() {
+                                const selectedOption = selectElement.options[selectElement
+                                    .selectedIndex];
+                                document.getElementById('collection-search').value = selectedOption
+                                .text; // Set input value to selected option text
+                                selectElement.style.display =
+                                'none'; // Hide the dropdown after selection
+                            });
+                        } else {
+                            selectElement.style.display = 'none'; // Hide the select dropdown if no results
+                        }
+                    });
+            } else {
+                document.getElementById('collection-options').style.display =
+                'none'; // Hide the dropdown if query length is less than 2
             }
         });
     </script>

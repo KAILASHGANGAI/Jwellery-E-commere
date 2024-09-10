@@ -28,7 +28,7 @@ class ProductRequest extends FormRequest
             'inventory' => 'nullable|array',
             'inventory.*' => 'nullable|integer|min:0', // Validate each element in the inventory array
             'status' => 'required|string|in:active,archived', // Assuming 'active' and 'archived' are valid statuses
-            'display' => 'required|string|in:on,off', // Assuming 'on' and 'off' are valid options
+            'display' => 'nullable|string|in:on,off', // Assuming 'on' and 'off' are valid options
             'vendor' => 'nullable|string|max:255',
             'product_type' => 'nullable|string|max:255',
             'collections' => 'nullable|string|max:255',

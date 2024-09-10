@@ -1,17 +1,17 @@
 @extends('admin::layouts.master')
 @section('style')
     <style>
-       
+
     </style>
 @endsection
 
 @section('content')
     <div class="container">
-      @include('admin::includes.errors')
+        @include('admin::includes.errors')
         <div class="row">
             <div class="col-sm-12">
-                <form id="product-form" class="product-form" action="{{ route('collections.update', $data->id) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form id="product-form" class="product-form" action="{{ route('collections.update', $data->id) }}"
+                    method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -20,8 +20,8 @@
                                 <span class="back-button">
                                     <h4 class="main-title ">
                                         <a class="text-decoration-none text-dark" href="{{ route('collections.index') }}">
-                                            <span>← </span>Edit Collection</a> 
-                                            
+                                            <span>← </span>Edit Collection</a>
+
                                     </h4>
 
                                 </span>
@@ -32,21 +32,21 @@
                         <div class="col-sm-8">
                             <div class="form-section">
                                 <label for="title">Title</label>
-                                <input type="text" id="title" name="title" value="{{ $data->title ?? old('title') }}"
-                                    placeholder="Short sleeve t-shirt" required>
+                                <input type="text" id="title" name="title"
+                                    value="{{ $data->title ?? old('title') }}" placeholder="Short sleeve t-shirt" required>
                             </div>
                             <div class="form-section">
                                 <label for="slug">Slug</label>
                                 <input type="text" id="slug" name="slug" value="{{ $data->slug ?? old('slug') }}"
-                                    placeholder="short-sleeve-t-shirt" >
+                                    placeholder="short-sleeve-t-shirt">
                             </div>
                             <div class="form-section">
                                 <label for="description">Description</label>
                                 <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ $data->description ?? old('description') }}</textarea>
                             </div>
-                                                    
 
-                            
+
+
                         </div>
 
                         <div class="col-sm-4">
@@ -60,8 +60,8 @@
                                         </option>
                                     </select>
                                     <div>
-                                        <input type="checkbox" name="display" {{ $data->display ? 'checked' : '' }} 
-                                         id="online-store">
+                                        <input type="checkbox" name="display" {{ $data->display ? 'checked' : '' }}
+                                            id="online-store">
                                         <label for="online-store">Online Store</label>
 
                                     </div>
@@ -69,20 +69,25 @@
                                 <div class="form-section mt-2">
                                     <h5>Images</h5>
                                     <div id="drop-zone" class="drop-zone">
-                                        <input type="file" id="file-input" name="images"  accept="image/*"
+                                        <input type="file" id="file-input" name="images" accept="image/*"
                                             style="display: none;">
-                                        <p>Drag & drop your images here  <span id="upload-trigger"></span></p>
-    
-                                        <div id="image-preview" class="image-preview"> <img src="{{ asset($data->file_path ?? '') }}" height="60" alt=""> </div>
+                                        <p>Drag & drop your images here <span id="upload-trigger"></span></p>
+
+                                        <div id="image-preview" class="image-preview"> <img
+                                                src="{{ asset($data->file_path ?? '') }}" height="60" alt="">
+                                        </div>
                                     </div>
-                                    <input type="hidden" id="files-data" >
+                                    <input type="hidden" id="files-data">
                                 </div>
                                 <div class="sidebar-section card p-3 mt-2">
-                                  
+
                                     <div class="form-section">
                                         <label for="collections">Parent Collections</label>
-                                        <input type="text" name="collections" value="{{ $data->collection_id ?? old('collections') }}"
-                                            id="collections" placeholder="Search for collections">
+                                        <input type="text" id="collection-search" name="collections"
+                                            value="{{ ($data->collection_id !=0 ? $data->parent->title : '') ?? old('collections') }}" id="collections"
+                                            placeholder="Search for collections">
+                                            <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
+
                                     </div>
                                     <div class="form-section">
                                         <label for="tags">Tags</label>
@@ -116,7 +121,7 @@
                 const row = event.target.closest('.variation-row'); // Find the closest row to the clicked button
                 if (row) {
                     row.remove(); // Remove only this specific row
-                }else{
+                } else {
                     event.target.closest('.variation').remove();
                 }
             }
@@ -230,6 +235,55 @@
                 const images = Array.from(imagePreview.querySelectorAll('.preview-img'));
                 const fileNames = images.map(img => img.file.name);
                 filesDataInput.value = fileNames.join(',');
+            }
+        });
+
+        document.getElementById('collection-search').addEventListener('input', function() {
+            const query = this.value;
+            var url = "{{ route('collections.search', ['search' => 'PLACEHOLDER']) }}";
+            if (query.length >= 2) { // Start searching after 2 characters
+                let searchUrl = url.replace('PLACEHOLDER', encodeURIComponent(query));
+
+                fetch(searchUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        //if no data found display no results
+                        if (data.length == 0) {
+                            document.getElementById('collection-options').style.display = 'none';
+                            document.getElementById('collection-search').value = '';
+                            alert('No results found');
+                            return;
+                        }
+                        // Display the search results
+                        const selectElement = document.getElementById('collection-options');
+                        selectElement.innerHTML = ''; // Clear previous results
+
+                        if (data.length > 0) {
+                            selectElement.style.display = 'block'; // Show the select dropdown
+
+                            data.forEach(collection => {
+                                const option = document.createElement('option');
+                                option.value = collection.id; // Store the collection ID as the value
+                                option.textContent = collection.title; // Show the collection name in the dropdown
+                                selectElement.appendChild(option);
+                            });
+
+                            // Handle selection of an option
+                            selectElement.addEventListener('change', function() {
+                                const selectedOption = selectElement.options[selectElement
+                                    .selectedIndex];
+                                document.getElementById('collection-search').value = selectedOption
+                                .text; // Set input value to selected option text
+                                selectElement.style.display =
+                                'none'; // Hide the dropdown after selection
+                            });
+                        } else {
+                            selectElement.style.display = 'none'; // Hide the select dropdown if no results
+                        }
+                    });
+            } else {
+                document.getElementById('collection-options').style.display =
+                'none'; // Hide the dropdown if query length is less than 2
             }
         });
     </script>

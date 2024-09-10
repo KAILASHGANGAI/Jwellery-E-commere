@@ -11,13 +11,17 @@
  
     <div class="order-controls">
         <div class="order-tabs">
-            <span class="order-tab active" onclick="setActiveTab(this)">All</span>
-            <span class="order-tab" onclick="setActiveTab(this)">Active</span>
-            <span class="order-tab" onclick="setActiveTab(this)">Archived</span>
-            <span class="order-tab" onclick="setActiveTab(this)">Display</span>
+            <span class="order-tab active" onclick="setActiveTab('all')">All</span>
+            <span class="order-tab" onclick="setActiveTab('active')">Active</span>
+            <span class="order-tab" onclick="setActiveTab('archived')">Archived</span>
+           
             <span class="order-tab bg-success " ><a class="text-decoration-none text-white font-weight-bold" href="{{ route('products.create') }}">+</a></span>
+            <button id="bulk-delete-btn" class="btn text-danger" style="display: none;" onclick="bulkDelete()">Bulk
+                <i class="fa fa-trash"></i>
+            </button>
         </div>
         <div class="order-actions">
+
             <input type="text" id="table-search" placeholder="Search orders...">
             <button class="search-button" onclick="searchOrders()">Search</button>
             <span>☰</span>
@@ -25,10 +29,12 @@
             <div class="filter-dropdown">
                 <span onclick="toggleFilter()">↓</span>
                 <div id="filterDropdown" class="filter-content">
-                    <a href="#" onclick="applyFilter('all')">All</a>
-                    <a href="#" onclick="applyFilter('paid')">Paid</a>
-                    <a href="#" onclick="applyFilter('unfulfilled')">Unfulfilled</a>
-                    <a href="#" onclick="applyFilter('fulfilled')">Fulfilled</a>
+                    <a href="#" onclick="applySort('title', 'asc')">A -Z</a>
+                    <a href="#" onclick="applySort('title', 'desc')">Z -A</a>
+                    <a href="#" onclick="applySort('created_at', 'desc')">Newest</a>
+                    <a href="#" onclick="applySort('created_at', 'asc')">Oldest</a>
+                    <a href="#" onclick="applySort('updated_at', 'desc')">Last Updated</a>
+                    <a href="#" onclick="applySort('updated_at', 'asc')">First Updated</a>
                 </div>
             </div>
         </div>
@@ -37,18 +43,18 @@
         <table class="order-table" id="orderTable">
             <thead>
                 <tr>
-                    <th></th>
-                    <th>Order</th>
-                    <th>Date</th>
-                    <th>Customer</th>
-                    <th>Channel</th>
-                    <th>Total</th>
-                    <th>Payment status</th>
-                    <th>Fulfillment status</th>
-                    <th>Items</th>
-                    <th>Delivery status</th>
-                    <th>Delivery method</th>
-                    <th>Tags</th>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Display</th>
+                    <th>Price</th>
+                    <th>Compare at price</th>
+                    <th>Quantity</th>
+                    <th>created At</th>
+                  
                 </tr>
             </thead>
             <tbody id="orderTableBody">
@@ -62,103 +68,58 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/js/index.js') }}"></script>
     <script>
-        let currentPage = 1;
+        const apiBaseUrl = '{{ route('products.indexAjax') }}'; // Replace with your actual API base URL
+        const apiBaseDeleteUrl = '{{ route('products.bulkDelete') }}';
         const ordersPerPage = 10;
-        const apiBaseUrl = 'https://api.example.com'; // Replace with your actual API base URL
+        let currentPage = 1;
 
-      
 
-        function searchOrders() {
-            const searchTerm = document.getElementById('table-search').value;
-            currentPage = 1;
-            fetchOrders(searchTerm);
+
+        // Initialize the page
+        function init() {
+            initEventListeners();
+            fetchOrders();
         }
 
-        function applyFilter(filter) {
-            currentPage = 1;
-            fetchOrders('', filter);
-        }
 
-        async function fetchOrders(searchTerm = '', filter = 'all') {
-            try {
-                const response = await fetch(
-                    `${apiBaseUrl}/orders?page=${currentPage}&per_page=${ordersPerPage}&search=${searchTerm}&filter=${filter}`
-                    );
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                displayOrders(data.orders);
-                setupPagination(data.total, data.current_page, data.last_page);
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-                // Handle the error (e.g., display an error message to the user)
-            }
-        }
 
-        function displayOrders(orders) {
+        // Display orders in the table
+        function displayOrders(datas) {
             const tableBody = document.getElementById('orderTableBody');
             tableBody.innerHTML = '';
+            // Loop through each order and display it in the table
+            if (datas.length == 0) {
+                tableBody.innerHTML = '<tr><td colspan="8">No datas found.</td></tr>';
+            }
+            datas.forEach(data => {
+                const imgUrl = "{{ asset('') }}" + data.file_path;
+                let edit = "{{ route('collections.edit', ':id') }}".replace(':id', data.id);
+                let destroy = "{{ route('collections.destroy', ':id') }}".replace(':id', data.id);
+                const formattedDate = new Date(data.created_at).toISOString().split('T')[0];
+                const display = data.display == 1 ? 'Yes' : 'No';
 
-            orders.forEach(order => {
                 const row = `
-                    <tr>
-                        <td><input type="checkbox"></td>
-                        <td>${order.id}</td>
-                        <td>${order.date}</td>
-                        <td>${order.customer}</td>
-                        <td>${order.channel}</td>
-                        <td>${order.total}</td>
-                        <td><span class="status-dot status-${order.payment_status.toLowerCase()}"></span>${order.payment_status}</td>
-                        <td><span class="status-dot status-${order.fulfillment_status.toLowerCase()}"></span>${order.fulfillment_status}</td>
-                        <td>${order.items}</td>
-                        <td>${order.delivery_status}</td>
-                        <td>${order.delivery_method}</td>
-                        <td>${order.tags}</td>
-                    </tr>
-                `;
+                        <tr>
+                            <td><input type="checkbox" class="checkbox" name="ids[]" value="${data.id}"></td>
+                            <td>${data.id}</td>
+                            <td><img src="${imgUrl}" width="50"></td>
+                            <td><a class="nav-link" href="${edit}">${data.title}</a></td>
+                            <td>${data.product_type}</td>
+                            <td><span class="status-dot status-${data.status}"></span>${data.status}</td>
+                            <td><span class="status-dot status-${data.display}"></span>${display}</td>
+                            <td>${data.price}</td>
+                            <td>${data.compare_price}</td>
+                           
+                            <td>${data.quantity}</td>
+                            <td>${formattedDate}</td>
+                          
+                        </tr>
+                    `;
                 tableBody.innerHTML += row;
             });
         }
-
-        function setupPagination(totalOrders, currentPage, totalPages) {
-            const paginationElement = document.getElementById('pagination');
-            paginationElement.innerHTML = '';
-
-            // Previous button
-            const prevButton = document.createElement('button');
-            prevButton.innerText = 'Previous';
-            prevButton.onclick = () => changePage(currentPage - 1);
-            prevButton.disabled = currentPage === 1;
-            paginationElement.appendChild(prevButton);
-
-            // Page numbers
-            for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.innerText = i;
-                pageButton.onclick = () => changePage(i);
-                if (i === currentPage) {
-                    pageButton.classList.add('current-page');
-                }
-                paginationElement.appendChild(pageButton);
-            }
-
-            // Next button
-            const nextButton = document.createElement('button');
-            nextButton.innerText = 'Next';
-            nextButton.onclick = () => changePage(currentPage + 1);
-            nextButton.disabled = currentPage === totalPages;
-            paginationElement.appendChild(nextButton);
-        }
-
-        function changePage(newPage) {
-            currentPage = newPage;
-            const searchTerm = document.getElementById('table-search').value;
-            fetchOrders(searchTerm);
-        }
-
-        // Initial load
-        fetchOrders();
+        init();
     </script>
 @endsection

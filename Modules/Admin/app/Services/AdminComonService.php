@@ -4,9 +4,6 @@ namespace Modules\Admin\Services;
 
 class AdminComonService
 {
-
-    public function __construct() {}
-
     /**
      * Uploads an image to the specified path and generates a unique filename.
      *
@@ -24,12 +21,24 @@ class AdminComonService
         $image->move(public_path($path), $fileName);
 
         // Store the file path
-        $imagePaths = $path.'/' . $fileName;
+        $imagePaths = $path . '/' . $fileName;
 
         return $imagePaths;
     }
 
 
+    public function findByField($model = null, $field, $value)
+    {
+        return $model::query()->where($field, $value)->first();
+    }
+    public function create($model = null, $data)
+    {
+        return $model::create($data);
+    }
+    public function createOrUpdateByField($model = null, $condition, $data)
+    {
+        return $model::updateOrCreate($condition, $data);
+    }
     // public function ImageDelete($path){
     //     if ($request->hasFile('images')) {
     //         $Images = Image::where('product_id', $product->id)->get();
