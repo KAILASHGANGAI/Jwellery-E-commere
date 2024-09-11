@@ -8,7 +8,6 @@
                 <ul class="dropdown-content">
                     <li><a href="{{ route('orders.index') }}" class="text-decoration-none">All Orders</a></li>
                     <li><a href="{{ route('orders.index') }}">Drafts Orders</a></li>
-                  
                 </ul>   
             </li>
             <li class="dropdown" onclick="toggleDropdown(this)">
@@ -21,7 +20,8 @@
                 </ul>
             </li>
             <li><a class="text-decoration-none" href="{{ route('customers.index') }}">Customers</a></li>
-            <li><a class="text-decoration-none" href="#">Discounts</a></li>
+            <li><a class="text-decoration-none" href="{{ route('discounts.index') }}">Discounts</a></li>
+            <li><a class="text-decoration-none" href="{{ route('giftcards.index') }}">Gift Cards</a></li>
             <li><a class="text-decoration-none" href="#">Analytics</a></li>
             <li><a class="text-decoration-none" href="#">Marketing</a></li>
      

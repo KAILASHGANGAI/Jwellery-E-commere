@@ -13,7 +13,21 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('vendor_id')->nullable();
+            $table->unsignedBigInteger('customer_id')->nullable();
+
+            $table->string('orderNumber')->nullable();
+            $table->decimal('total_price', 8, 2);
+            $table->string('status')->default('pending');
+            $table->string('payment_method')->nullable();
+            $table->string('no_of_item')->default(1);
+            $table->string('subtotal')->nullable();
+            $table->string('delivaryCharge')->nullable();
+            $table->string('nettotal')->nullable();
+            $table->date('order_date');
+            $table->date('delivary_date')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

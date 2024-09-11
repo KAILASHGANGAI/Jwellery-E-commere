@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('delivary_locations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('vendor_id')->nullable();
-            $table->string('status')->default('active');
+            $table->unsignedBigInteger('order_id')->nullable();
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone');
@@ -27,7 +26,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->string('zip')->nullable();
-
+            $table->text('note')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -38,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('delivary_locations');
     }
 };

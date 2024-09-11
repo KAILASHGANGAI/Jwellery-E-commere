@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Admin\Http\Controllers\AdminController;
 use Modules\Admin\Http\Controllers\CollectionController;
 use Modules\Admin\Http\Controllers\CustomerController;
+use Modules\Admin\Http\Controllers\DiscountController;
 use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\ProductController;
 
@@ -35,7 +36,14 @@ Route::group(['prefix' => '/myadmin'], function () {
 
     #customers routes
     Route::resource('/customers', CustomerController::class)->names('customers');
+    Route::get('/customer-ajax', [CustomerController::class, 'customerAjax'])->name('customers.indexAjax');
 
     #orders routes
     Route::resource('/orders', OrderController::class)->names('orders');
+
+    #discount 
+    Route::resource('/discounts', DiscountController::class)->names('discounts');
+
+    #gift cards
+    Route::resource('/gift-cards', DiscountController::class)->names('giftcards');
 });
