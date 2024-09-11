@@ -4,19 +4,20 @@ namespace Modules\Admin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Admin\Database\Factories\CustomerFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [];
+    protected $guarded = [];
 
-    protected static function newFactory(): CustomerFactory
+    public function orders()
     {
-        //return CustomerFactory::new();
+        return $this->hasMany(Order::class, 'customer_id');
+    }
+    public function delivaryLocation()
+    {
+        return $this->hasMany(DelivaryLocation::class, 'customer_id');
     }
 }

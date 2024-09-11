@@ -26,9 +26,9 @@ class CustomerController extends Controller
     {
         return view('admin::customers.index');
     }
-    public function indexAjax(Request $request) 
+    public function indexAjax(Request $request)
     {
-        
+
         $pagination = $request->get('limit', 20);
         $search = $request->get('search', null);
         $filter = $request->get('filter', null);
@@ -40,12 +40,29 @@ class CustomerController extends Controller
             'email',
             'phone',
             'address',
+            'billingAddress',
+            'shippingAddress',
             'status',
             'created_at',
+        ];
+        $searchableFields = [
+            'name',
+            'email',
+            'phone',
+            'status',
+            'created_at',
+            'address',
+            'billingAddress',
+            'shippingAddress',
+            'city',
+            'zip',
+            'state',
+            'country'
         ];
         $data = $this->comRepo->getData(
             $select,
             $search,
+            $searchableFields,
             $filter,
             $sort_field,
             $sort_type,
@@ -74,7 +91,6 @@ class CustomerController extends Controller
             $data = $request->all();
             $this->comRepo->create($data);
             return back()->with('success', 'Customer created successfully');
-
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage())->withInput($request->all());
         }

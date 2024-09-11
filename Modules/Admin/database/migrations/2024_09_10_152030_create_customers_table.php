@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->string('name');
             $table->string('email')->nullable();
-            $table->string('phone');
-            $table->string('address');
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
             $table->string('billingAddress')->nullable();
             $table->string('shippingAddress')->nullable();
             $table->string('company')->nullable();
@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->string('zip')->nullable();
+            $table->string('image')->nullable();
+            $table->text('tags')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

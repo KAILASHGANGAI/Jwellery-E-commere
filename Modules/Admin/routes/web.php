@@ -36,7 +36,10 @@ Route::group(['prefix' => '/myadmin'], function () {
 
     #customers routes
     Route::resource('/customers', CustomerController::class)->names('customers');
-    Route::get('/customer-ajax', [CustomerController::class, 'customerAjax'])->name('customers.indexAjax');
+    Route::get('/customer-ajax', [CustomerController::class, 'indexAjax'])->name('customers.indexAjax');
+    Route::post('/customer-bulk-delete', [CustomerController::class, 'bulkDelete'])->name('customers.bulkDelete');
+    Route::get('/search-customers', [CustomerController::class, 'search'])->name('customers.search');
+
 
     #orders routes
     Route::resource('/orders', OrderController::class)->names('orders');

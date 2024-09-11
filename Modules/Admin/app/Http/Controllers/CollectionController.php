@@ -53,9 +53,17 @@ class CollectionController extends Controller
             'description',
             'created_at',
         ];
+        $searchableFields = [
+            'title',
+            'status',
+            'display',
+            'description',
+            'created_at',
+        ];
         $data = $this->comReo->getData(
             $select,
             $search,
+            $searchableFields,
             $filter,
             $sort_field,
             $sort_type,

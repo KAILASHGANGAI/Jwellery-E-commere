@@ -206,7 +206,7 @@ body {
     background-color: #50b83c;
 }
 
-.status-archived,
+.status-archived, .status-inactive, 
 .status-0 {
     background-color: #e74c3c;
 }
