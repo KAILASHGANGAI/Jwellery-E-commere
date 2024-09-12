@@ -364,7 +364,7 @@ body {
     margin-bottom: 5px;
 }
 
-.form-section input[type="text"],
+.form-section input,
 .form-section input[type="number"],
 .form-section textarea,
 .form-section select {

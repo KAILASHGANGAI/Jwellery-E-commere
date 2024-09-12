@@ -12,7 +12,12 @@ class DiscountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required |min:3|max:255',
+            'type' => 'required',
+            'value' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'discount_on' => 'required',
         ];
     }
 

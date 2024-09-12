@@ -15,18 +15,19 @@ return new class extends Migration
             $table->id();
             $table->string('name'); // Name of the discount
             
-            $table->enum('type', ['percentage', 'fixed']); // Type of discount
-            $table->decimal('value', 8, 2); // Discount value
-            $table->date('start_date'); // Discount start date
-            $table->date('end_date')->nullable(); // Discount end date, nullable for no end
-            $table->unsignedBigInteger('product_id')->nullable(); // Associated product (optional)
-            $table->unsignedBigInteger('collection_id')->nullable(); // Associated collection (optional)
-            
+            $table->enum('type', ['percentage', 'fixed']); 
+            $table->decimal('value', 8, 2); 
+            $table->date('start_date'); 
+            $table->date('end_date')->nullable(); 
+            $table->string('discount_on')->nullable();
+            $table->text('product_ids')->nullable(); 
+            $table->text('collection_ids')->nullable(); 
+            $table->enum('status', ['active', 'archived'])->default('archived');
+            $table->text('tags')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         
-            // Foreign key constraints
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('collection_id')->references('id')->on('collections')->onDelete('cascade');
+          
         });
         
     }

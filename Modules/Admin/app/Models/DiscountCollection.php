@@ -5,7 +5,7 @@ namespace Modules\Admin\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Discount extends Model
+class DiscountCollection extends Model
 {
     use HasFactory;
 

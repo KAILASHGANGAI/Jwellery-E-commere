@@ -46,7 +46,15 @@ Route::group(['prefix' => '/myadmin'], function () {
 
     #discount 
     Route::resource('/discounts', DiscountController::class)->names('discounts');
+    Route::get('/discount-ajax', [DiscountController::class, 'indexAjax'])->name('discounts.indexAjax');
+    Route::post('/discount-bulk-delete', [DiscountController::class, 'bulkDelete'])->name('discounts.bulkDelete');
+    Route::get('/search-discounts', [DiscountController::class, 'search'])->name('discounts.search');
+    Route::get('/get-lists', [DiscountController::class, 'getLists'])->name('discounts.getLists');
+
 
     #gift cards
     Route::resource('/gift-cards', DiscountController::class)->names('giftcards');
+    Route::get('/gift-card-ajax', [DiscountController::class, 'indexAjax'])->name('giftcards.indexAjax');
+    Route::post('/gift-card-bulk-delete', [DiscountController::class, 'bulkDelete'])->name('giftcards.bulkDelete');
+    Route::get('/search-giftcards', [DiscountController::class, 'search'])->name('giftcards.search');
 });
