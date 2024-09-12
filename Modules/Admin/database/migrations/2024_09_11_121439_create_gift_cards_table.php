@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable(); // Gift associated with a product (optional)
             $table->unsignedBigInteger('collection_id')->nullable(); // Gift associated with a collection (optional)
             $table->unsignedBigInteger('customer_id')->nullable(); // Gift associated with a specific customer (optional)
-        
+            $table->string('status')->default('archived');
             $table->timestamps();
         
             // Foreign key constraints

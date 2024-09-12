@@ -13,10 +13,6 @@ class GiftCard extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
-
-    protected static function newFactory(): GiftCardFactory
-    {
-        //return GiftCardFactory::new();
-    }
+    protected $guarded = [];
+    
 }

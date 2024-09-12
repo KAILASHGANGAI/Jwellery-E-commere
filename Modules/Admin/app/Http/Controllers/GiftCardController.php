@@ -85,10 +85,10 @@ class GiftCardController extends Controller
     {
         try {
             $data = $request->all();
-
+            unset($data['customer']);
             $this->comRepo->create($data);
 
-            return redirect()->route('admin.giftcard.index')->with('success', 'Gift card created successfully');
+            return redirect()->back()->with('success', 'Gift card created successfully');
         } catch (Exception $e) {
 
             return redirect()->back()->with('error', $e->getMessage());

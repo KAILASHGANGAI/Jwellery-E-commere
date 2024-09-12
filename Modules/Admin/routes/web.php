@@ -5,6 +5,7 @@ use Modules\Admin\Http\Controllers\AdminController;
 use Modules\Admin\Http\Controllers\CollectionController;
 use Modules\Admin\Http\Controllers\CustomerController;
 use Modules\Admin\Http\Controllers\DiscountController;
+use Modules\Admin\Http\Controllers\GiftCardController;
 use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\ProductController;
 
@@ -53,8 +54,8 @@ Route::group(['prefix' => '/myadmin'], function () {
 
 
     #gift cards
-    Route::resource('/gift-cards', DiscountController::class)->names('giftcards');
-    Route::get('/gift-card-ajax', [DiscountController::class, 'indexAjax'])->name('giftcards.indexAjax');
-    Route::post('/gift-card-bulk-delete', [DiscountController::class, 'bulkDelete'])->name('giftcards.bulkDelete');
-    Route::get('/search-giftcards', [DiscountController::class, 'search'])->name('giftcards.search');
+    Route::resource('/gift-cards', GiftCardController::class)->names('giftcards');
+    Route::get('/gift-card-ajax', [GiftCardController::class, 'indexAjax'])->name('giftcards.indexAjax');
+    Route::post('/gift-card-bulk-delete', [GiftCardController::class, 'bulkDelete'])->name('giftcards.bulkDelete');
+    Route::get('/search-giftcards', [GiftCardController::class, 'search'])->name('giftcards.search');
 });
