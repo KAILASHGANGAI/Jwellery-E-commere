@@ -24,6 +24,17 @@
             <li><a class="text-decoration-none" href="{{ route('giftcards.index') }}">Gift Cards</a></li>
             <li><a class="text-decoration-none" href="#">Analytics</a></li>
             <li><a class="text-decoration-none" href="#">Marketing</a></li>
+            <hr>
+            <li class="dropdown" onclick="toggleDropdown(this)">
+                User Management
+                <ul class="dropdown-content">
+                    <li><a href="{{ route('collections.index') }}">Admin Users List</a></li>
+                    <li><a href="{{ route('adminroles.index') }}">Admin Roles Lists</a></li>
+                    <li><a href="{{ route('products.index') }}">Permission Lists</a></li>
+                    {{-- <li>Inventory</li>
+                    <li>Transfers</li> --}}
+                </ul>
+            </li>
      
        
         </ul>

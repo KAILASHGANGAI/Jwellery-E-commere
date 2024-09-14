@@ -12,7 +12,11 @@ class AdminRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required',
+            'description' => 'nullable',
+            'status' => 'required',
+            'permissions' => 'required |array',
+            'permissions.*' => 'exists:admin_permissions,id'
         ];
     }
 

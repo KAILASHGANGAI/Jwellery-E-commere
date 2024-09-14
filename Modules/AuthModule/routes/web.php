@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\AuthModule\Http\Controllers\AdminRoleController;
 use Modules\AuthModule\Http\Controllers\AuthModuleController;
 
 /*
@@ -16,4 +17,11 @@ use Modules\AuthModule\Http\Controllers\AuthModuleController;
 
 Route::group([], function () {
     Route::resource('authmodule', AuthModuleController::class)->names('authmodule');
+});
+Route::group(['prefix' => '/myadmin'], function () {
+    Route::resource('/adminroles',AdminRoleController::class)->names('adminroles');
+    Route::get('/adminrole-ajax', [AdminRoleController::class, 'indexAjax'])->name('adminroles.indexAjax');
+    Route::post('/adminrole-bulk-delete', [AdminRoleController::class, 'bulkDelete'])->name('adminroles.bulkDelete');
+    Route::get('/search-adminroles', [AdminRoleController::class, 'search'])->name('adminroles.search');
+
 });

@@ -4,19 +4,12 @@ namespace Modules\AuthModule\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\AuthModule\Database\Factories\AdminRolePermissionFactory;
 
 class AdminRolePermission extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [];
-
-    protected static function newFactory(): AdminRolePermissionFactory
-    {
-        //return AdminRolePermissionFactory::new();
-    }
+    protected $guarded = [];
 }

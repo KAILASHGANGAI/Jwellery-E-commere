@@ -10,13 +10,5 @@ class AdminRoleUser extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = [];
-
-    protected static function newFactory(): AdminRoleUserFactory
-    {
-        //return AdminRoleUserFactory::new();
-    }
+    protected $guarded = [];
 }
