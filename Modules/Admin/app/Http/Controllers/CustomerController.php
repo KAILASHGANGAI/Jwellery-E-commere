@@ -74,6 +74,18 @@ class CustomerController extends Controller
         return response()->json($data, 200);
     }
 
+    public function search(Request $request)
+    {
+
+        // dd($request->input('search'));
+        $search = $request->input('search');
+        $select = [
+            'id',
+            'name',
+        ];
+        $data = $this->comRepo->searchByField('name', $search, $select);
+        return response()->json($data, 200);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -135,5 +147,14 @@ class CustomerController extends Controller
     {
         $this->comRepo->delete($id);
         return back()->with('success', 'Customer deleted successfully');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->get('ids');
+
+        $this->comRepo->bulkDelete($ids);
+
+        return response()->json(['success' => 'Deleted successfully.']);
     }
 }

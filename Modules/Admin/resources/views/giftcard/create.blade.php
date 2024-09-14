@@ -45,8 +45,10 @@
                                 <div class="form-section col-sm-12">
                                     <label for="title">Customer</label>
                                     <input type="hidden" id="customer_id" name="customer_id" value="{{ old('customer_id') }}">
-                                    <input type="text" id="customer" name="customer" value="{{ old('customer') }}"
+                                    <input type="text" id="customers" name="customer" value="{{ old('customer') }}"
                                         placeholder="Short sleeve t-shirt" required>
+                                        <select id="customer-options" class="form-select" size="5" style="display: none;"></select>
+
                                 </div>
                              
                             </div>
@@ -87,5 +89,55 @@
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
-  
+    <script>
+            document.getElementById('customers').addEventListener('input', function() {
+            const query = this.value;
+            var url = "{{ route('customers.search', ['search' => 'PLACEHOLDER']) }}";
+            if (query.length >= 2) { 
+                let searchUrl = url.replace('PLACEHOLDER', encodeURIComponent(query));
+
+                fetch(searchUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        //if no data found display no results
+                        if (data.length == 0) {
+                            document.getElementById('customer-options').style.display = 'none';
+                            document.getElementById('customers').value = '';
+                            alert('No results found');
+                            return;
+                        }
+                        // Display the search results
+                        const selectElement = document.getElementById('customer-options');
+                        selectElement.innerHTML = ''; 
+
+                        if (data.length > 0) {
+                            selectElement.style.display = 'block';
+
+                            data.forEach(customer => {
+                                const option = document.createElement('option');
+                                option.value = customer.id; 
+                                option.textContent = customer.name; 
+                                selectElement.appendChild(option);
+                            });
+
+                            // Handle selection of an option
+                            selectElement.addEventListener('change', function() {
+                                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                                console.log(selectedOption.text);
+                                console.log(selectedOption.value);
+                                
+                                document.getElementById('customers').value = selectedOption.text; 
+                                selectElement.style.display ='none'; 
+                                document.getElementById('customer_id').value = selectedOption.value; 
+                                selectElement.style.display ='none'; 
+                            });
+                        } else {
+                            selectElement.style.display = 'none'; 
+                        }
+                    });
+            } else {
+                document.getElementById('customer-options').style.display ='none'; 
+            }
+        });
+    </script>
 @endsection

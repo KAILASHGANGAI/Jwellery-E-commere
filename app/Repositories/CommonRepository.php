@@ -225,9 +225,14 @@ class CommonRepository implements CommonRepositoryInterface
      * @param string $value The value to be searched for in the specified field.
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model[]
      */
-    public function searchByField($field, $value)
+    public function searchByField($field, $value, $select=null)
     {
 
-        return $this->model::query()->where($field, 'like', '%' . $value . '%')->get();
+        return $this->model::query()
+        ->when($select, function ($query) use ($select) {
+
+            return $query->select($select);
+        })
+        ->where($field, 'like', '%' . $value . '%')->get();
     }
 }

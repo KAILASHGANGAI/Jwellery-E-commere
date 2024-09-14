@@ -247,4 +247,13 @@ class DiscountController extends Controller
         }
         return response()->json($data, 200);
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->get('ids');
+
+        $this->comRepo->bulkDelete($ids);
+
+        return response()->json(['success' => 'Deleted successfully.']);
+    }
 }

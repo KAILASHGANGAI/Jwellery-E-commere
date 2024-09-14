@@ -20,4 +20,8 @@ class Customer extends Model
     {
         return $this->hasMany(DelivaryLocation::class, 'customer_id');
     }
+    public function giftCards()
+    {
+        return $this->hasMany(GiftCard::class, 'customer_id');
+    }
 }

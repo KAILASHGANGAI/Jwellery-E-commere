@@ -63,6 +63,7 @@ function toggleBulkDeleteButton() {
 async function bulkDelete() {
     const selectedOrders = Array.from(document.querySelectorAll('.checkbox:checked')).map(checkbox => checkbox.value);
     showLoader();
+    
     if (selectedOrders.length > 0) {
         try {
             const response = await fetch(apiBaseDeleteUrl, {

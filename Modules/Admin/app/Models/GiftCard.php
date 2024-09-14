@@ -4,7 +4,7 @@ namespace Modules\Admin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Admin\Database\Factories\GiftCardFactory;
+
 
 class GiftCard extends Model
 {
@@ -15,4 +15,8 @@ class GiftCard extends Model
      */
     protected $guarded = [];
     
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

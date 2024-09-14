@@ -50,23 +50,24 @@ class GiftCardController extends Controller
             'id',
             'name',
             'code',
-            'type',
             'value',
             'status',
+            'expiry_date',
+            'customer_id',
             'created_at',
         ];
 
         $data = $this->comRepo->getData(
             $select,
             $search,
+            $select,
             $filter,
             $sort_field,
             $sort_type,
             $limit ?? null,
-            $pagination ?? null
-
+            $pagination ?? null,
+            ['customer']
         );
-
         return response()->json($data, 200);
     }
 
@@ -121,7 +122,7 @@ class GiftCardController extends Controller
         try {
             $data = $request->all();
             $this->comRepo->update($id, $data);
-            return redirect()->route('admin.giftcard.index')->with('success', 'Gift card updated successfully');
+            return redirect()->route('giftcards.index')->with('success', 'Gift card updated successfully');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -134,7 +135,12 @@ class GiftCardController extends Controller
     public function destroy($id)
     {
         $this->comRepo->delete($id);
-        return redirect()->route('admin.giftcard.index')->with('success', 'Gift card deleted successfully');
+        return redirect()->route('giftcards.index')->with('success', 'Gift card deleted successfully');
+    }
 
+    public function bulkDelete(Request $request)
+    {
+        $this->comRepo->bulkDelete($request->ids);
+        return response()->json(['success' => 'Deleted successfully.']);
     }
 }

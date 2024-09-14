@@ -49,12 +49,9 @@
                     <th><input type="checkbox" id="select-all"></th>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Type</th>
                     <th>Value</th>
                     <th>Status</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Discount On</th>
+                    <th>Expiry_date</th>
                     <th>created At</th>
                     <th>Action</th>
                 </tr>
@@ -90,25 +87,23 @@
             tableBody.innerHTML = '';
             // Loop through each order and display it in the table
             if (orders.length == 0) {
-                tableBody.innerHTML = '<tr><td colspan="8">No orders found.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="8">No data found.</td></tr>';
             }
             orders.forEach(data => {
-                let edit = "{{ route('discounts.edit', ':id') }}".replace(':id', data.id);
-                let destroy = "{{ route('discounts.destroy', ':id') }}".replace(':id', data.id);
+                let edit = "{{ route('giftcards.edit', ':id') }}".replace(':id', data.id);
+                let destroy = "{{ route('giftcards.destroy', ':id') }}".replace(':id', data.id);
                 const formattedDate = new Date(data.created_at).toISOString().split('T')[0];
                 const display = data.display == 1 ? 'Yes' : 'No';
-
+                
                 const row = `
                         <tr>
                             <td><input type="checkbox" class="checkbox" name="ids[]" value="${data.id}"></td>
                             <td>${data.id}</td>
                             <td><a class="nav-link" href="${edit}">${data.name}</a></td>
-                            <td>${data.type}</td>
+                           
                             <td>${data.value}</td>
                             <td><span class="status-dot status-${data.status}"></span>${data.status}</td>
-                            <td>${data.start_date}</td>
-                            <td>${data.end_date}</td>
-                            <td>${data.discount_on}</td>
+                            <td>${data.expiry_date}</td>
                             <td>${formattedDate}</td>
                             <td>
                                 <form action="${destroy}" method="POST">
