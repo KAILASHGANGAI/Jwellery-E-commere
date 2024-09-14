@@ -1,5 +1,4 @@
 {
     "Admin": true,
-    "Model": true,
-    "Product": true
+    "AuthModule": true
 }
