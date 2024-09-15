@@ -12,7 +12,13 @@ class AdminUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required |max:255',
+            'phone' => 'required |max:255',
+            'email' => 'required|email |max:255|unique:admin_users,email',
+            'password' => 'required |min:6 |confirmed',
+            'status' => 'required',
+            'is_super_admin' => 'nullable',
+       
         ];
     }
 

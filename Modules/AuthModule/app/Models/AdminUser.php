@@ -63,4 +63,11 @@ class AdminUser extends Authenticatable
         $this->last_logout = now();
         $this->save();
     }
+
+    //attach roles
+
+    public function adminUserRole()
+    {
+        return $this->hasOne(AdminRoleUser::class, 'admin_user_id', 'id');
+    }
 }

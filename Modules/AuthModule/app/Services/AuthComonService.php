@@ -40,7 +40,7 @@ class AuthComonService
         return $model::updateOrCreate($condition, $data);
     }
 
-    public function getData($model = null, $select=null, $condition=null, $order=null, $orderType=null, $limit=null)
+    public function getData($model = null, $select=null, $condition=null, $order=null, $orderType=null, $limit=null, $with=null)
     {
 
         return $model

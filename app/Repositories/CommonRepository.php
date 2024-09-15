@@ -157,6 +157,12 @@ class CommonRepository implements CommonRepositoryInterface
         }
         return $this->model->create($data);
     }
+
+    public function createOrUpdateByCondition($condition, $data){
+
+      return $this->model::updateOrCreate($condition, $data);
+    
+    }
     /**
      * Retrieves data from the model based on various parameters.
      *

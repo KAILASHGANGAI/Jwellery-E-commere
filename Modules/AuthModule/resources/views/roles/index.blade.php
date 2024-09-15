@@ -12,8 +12,8 @@
     <div class="order-controls">
         <div class="order-tabs">
             <span class="order-tab active" onclick="setActiveTab('all')">All</span>
-            <span class="order-tab" onclick="setActiveTab('active')">Active</span>
-            <span class="order-tab" onclick="setActiveTab('inactive')">Inactive</span>
+            <span class="order-tab" onclick="setActiveTab('1')">Active</span>
+            <span class="order-tab" onclick="setActiveTab('0')">Inactive</span>
             <span class=" ">
                 <a class="order-tab bg-success text-decoration-none text-white font-weight-bold"
                     href="{{ route('adminroles.create') }}">+</a>
@@ -89,7 +89,7 @@
                 tableBody.innerHTML = '<tr><td colspan="8">No Data found.</td></tr>';
             }
             orders.forEach(data => {
-                console.log(data);
+              
                 let edit = "{{ route('adminroles.edit', ':id') }}".replace(':id', data.id);
                 let destroy = "{{ route('adminroles.destroy', ':id') }}".replace(':id', data.id);           
                 const row = `

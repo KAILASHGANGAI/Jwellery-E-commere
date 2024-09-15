@@ -15,4 +15,14 @@ class AdminRole extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    public function role_permissions()
+    {
+        return $this->hasMany(AdminRolePermission::class, 'admin_role_id', 'id');
+    }
+
+    public function role_users()
+    {
+        return $this->hasMany(AdminRoleUser::class, 'admin_role_id', 'id');
+    }
+
 }
