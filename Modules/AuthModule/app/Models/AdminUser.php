@@ -10,6 +10,8 @@ class AdminUser extends Authenticatable
 {
     use HasFactory;
     use SoftDeletes;
+    protected $table = 'admin_users';
+
 
     // The attributes that are mass assignable
     protected $fillable = [

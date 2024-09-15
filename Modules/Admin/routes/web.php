@@ -20,7 +20,8 @@ use Modules\Admin\Http\Controllers\ProductController;
 |
 */
 
-Route::group(['prefix' => '/myadmin'], function () {
+Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function () {
+
 
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
     # Product routes

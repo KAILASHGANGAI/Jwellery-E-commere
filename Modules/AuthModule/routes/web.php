@@ -20,7 +20,12 @@ use Modules\AuthModule\Http\Controllers\AuthModuleController;
 Route::group([], function () {
     Route::resource('authmodule', AuthModuleController::class)->names('authmodule');
 });
-Route::group(['prefix' => '/myadmin'], function () {
+Route::get('/myadmin/login', [AuthModuleController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/login', [AuthModuleController::class, 'login'])->name('adminlogin');
+Route::post('/logout', [AuthModuleController::class, 'logout'])->name('admin.logout');
+
+
+Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function () {
     //users 
     Route::resource('/adminusers', AdminUserController::class)->names('adminusers');
     Route::get('/adminuser-ajax', [AdminUserController::class, 'indexAjax'])->name('adminusers.indexAjax');
@@ -28,7 +33,7 @@ Route::group(['prefix' => '/myadmin'], function () {
     Route::get('/search-adminusers', [AdminUserController::class, 'search'])->name('adminusers.search');
 
     // Roles 
-    Route::resource('/adminroles',AdminRoleController::class)->names('adminroles');
+    Route::resource('/adminroles', AdminRoleController::class)->names('adminroles');
     Route::get('/adminrole-ajax', [AdminRoleController::class, 'indexAjax'])->name('adminroles.indexAjax');
     Route::post('/adminrole-bulk-delete', [AdminRoleController::class, 'bulkDelete'])->name('adminroles.bulkDelete');
     Route::get('/search-adminroles', [AdminRoleController::class, 'search'])->name('adminroles.search');
@@ -38,5 +43,4 @@ Route::group(['prefix' => '/myadmin'], function () {
     Route::get('/adminpermission-ajax', [AdminPermissionController::class, 'indexAjax'])->name('adminpermissions.indexAjax');
     Route::post('/adminpermission-bulk-delete', [AdminPermissionController::class, 'bulkDelete'])->name('adminpermissions.bulkDelete');
     Route::get('/search-adminpermissions', [AdminPermissionController::class, 'search'])->name('adminpermissions.search');
-
 });

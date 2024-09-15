@@ -3,65 +3,51 @@
 namespace Modules\AuthModule\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class AuthModuleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function showLoginForm()
     {
-        return view('authmodule::index');
+        return view('authmodule::auth.login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Handle the login request
+    public function login(Request $request)
     {
-        return view('authmodule::create');
+        try {
+            // Validate the form data
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|min:6',
+            ]);
+
+            // Attempt to log the user in
+            if (Auth::guard('admin')->attempt($request->only('email', 'password'))) {
+                // Redirect to the admin dashboard
+                return redirect()->intended(route('admin.dashboard'));
+            }
+            // If unsuccessful, redirect back with an error message
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ]);
+        } catch (Exception $th) {
+           return back()->with('error', 'Something went wrong')->withInput($request->all());
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
+    public function logout(Request $request)
     {
-        //
-    }
+        Auth::guard('admin')->logout();
 
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('authmodule::show');
-    }
+        $request->session()->invalidate();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('authmodule::edit');
-    }
+        $request->session()->regenerateToken();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->route('admin.login');
     }
 }
