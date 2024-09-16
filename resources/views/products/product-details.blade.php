@@ -68,7 +68,7 @@
                             <button type="submit">Add To Cart</button>
                         </form>
                     </div>
-                    <div class=" text-white mb-15">
+                    <div class="  mb-15">
                         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ducimus quibusdam
                             nisi voluptas consequatur tempora, recusandae nemo blanditiis eaque odit
                             voluptatibus voluptatem, ipsa incidunt fugiat a.</p>
@@ -76,15 +76,15 @@
                     <div class="modal_social">
                         <h2>Share this Product</h2>
                         <ul>
-                            <li class="text-white"><a class="text-white" href="#"><i
+                            <li class=""><a class="" href="#"><i
                                         class="ion-social-facebook"></i></a></li>
-                            <li class="text-white"><a class="text-white" href="#"><i
+                            <li class=""><a class="" href="#"><i
                                         class="ion-social-twitter"></i></a></li>
-                            <li class="text-white"><a class="text-white" href="#"><i class="ion-social-rss"></i></a>
+                            <li class=""><a class="" href="#"><i class="ion-social-rss"></i></a>
                             </li>
-                            <li class="text-white"><a class="text-white" href="#"><i
+                            <li class=""><a class="" href="#"><i
                                         class="ion-social-googleplus"></i></a></li>
-                            <li class="text-white"><a class="text-white" href="#"><i
+                            <li class=""><a class="" href="#"><i
                                         class="ion-social-youtube"></i></a></li>
                         </ul>
                     </div>
