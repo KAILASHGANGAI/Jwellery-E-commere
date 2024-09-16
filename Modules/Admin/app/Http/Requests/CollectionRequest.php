@@ -17,7 +17,7 @@ class CollectionRequest extends FormRequest
         return [
             'title'=> 'required|min:3|max:255',
             'slug'=> 'nullable|min:3|max:255',
-            'description'=> 'nullable|min:3|max:255',
+            'description'=> 'required|min:3|max:255',
             'status'=> 'required|string|in:active,archived', // Assuming 'active' and 'archived' are valid statuses
             'tags'=> 'nullable|string',
         ];

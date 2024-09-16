@@ -2,7 +2,7 @@
     <input type="text" class="search-bar" placeholder="Search">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Admin Panel</a>
+        
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
