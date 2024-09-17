@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Admin\Services\AdminComonService;
 use Modules\Admin\Http\Requests\CollectionRequest;
 use Modules\Admin\Models\Collection;
-
+use Illuminate\Support\Str;
 class CollectionController extends Controller
 {
     private CommonRepository $comReo;
@@ -91,10 +91,14 @@ class CollectionController extends Controller
         try {
             DB::beginTransaction();
 
-            $datas = $request->all();
-            unset($datas['images']);
-            unset($datas['collections']);
-            unset($datas['display']);
+            $datas = [
+                'title' => Str::ucfirst($request->title),
+                'slug' =>  Str::slug($request->slug ?? $request->title),
+                'description' => $request->description ?? '',
+                'status' => $request->status,
+                'tags' => $request->tags ?? $request->title,
+            ];
+       
 
             $data = $this->comReo->create($datas);
             if ($images = $request->file('images')) {
@@ -152,10 +156,13 @@ class CollectionController extends Controller
         try {
             DB::beginTransaction();
 
-            $datas = $request->all();
-            unset($datas['images']);
-            unset($datas['collections']);
-            unset($datas['display']);
+            $datas = [
+                'title' => Str::ucfirst($request->title),
+                'slug' =>  Str::slug($request->slug ?? $request->title),
+                'description' => $request->description ?? '',
+                'status' => $request->status,
+                'tags' => $request->tags ?? $request->title,
+            ];
 
             $data = $this->comReo->update($id, $datas);
 

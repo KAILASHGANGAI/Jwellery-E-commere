@@ -52,6 +52,22 @@
                         <div class="col-sm-4">
                             <aside class="">
                                 <div class="sidebar-section card p-3">
+
+                                    <div class="form-section">
+                                        <label for="collections">Parent Collections</label>
+                                        <input type="text" id="collection-search" name="collections"
+                                            value="{{ ($data->collection_id !=0 ? $data->parent->title : '') ?? old('collections') }}" id="collections"
+                                            placeholder="Search for collections">
+                                            <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
+
+                                    </div>
+                                    <div class="form-section">
+                                        <label for="tags">Tags</label>
+                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ $data->tags ?? old('tags') }}</textarea>
+                                    </div>
+
+                                </div>
+                                <div class="sidebar-section card p-3 mt-2">
                                     <h5>Status</h5>
                                     <select id="status" name="status">
                                         <option {{ old('status') == 'archived' ? 'selected' : '' }} value=" archived"
@@ -79,22 +95,7 @@
                                     </div>
                                     <input type="hidden" id="files-data">
                                 </div>
-                                <div class="sidebar-section card p-3 mt-2">
-
-                                    <div class="form-section">
-                                        <label for="collections">Parent Collections</label>
-                                        <input type="text" id="collection-search" name="collections"
-                                            value="{{ ($data->collection_id !=0 ? $data->parent->title : '') ?? old('collections') }}" id="collections"
-                                            placeholder="Search for collections">
-                                            <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
-
-                                    </div>
-                                    <div class="form-section">
-                                        <label for="tags">Tags</label>
-                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ $data->tags ?? old('tags') }}</textarea>
-                                    </div>
-
-                                </div>
+                            
                             </aside>
                         </div>
                     </div>

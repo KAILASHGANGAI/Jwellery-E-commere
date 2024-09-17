@@ -1,13 +1,13 @@
 @extends('admin::layouts.master')
 @section('style')
     <style>
-       
+
     </style>
 @endsection
 
 @section('content')
     <div class="container">
-      @include('admin::includes.errors')
+        @include('admin::includes.errors')
         <div class="row">
             <div class="col-sm-12">
                 <form id="product-form" class="product-form" action="{{ route('collections.store') }}" method="POST"
@@ -19,8 +19,8 @@
                                 <span class="back-button">
                                     <h4 class="main-title ">
                                         <a class="text-decoration-none text-dark" href="{{ route('collections.index') }}">
-                                            <span>← </span>Add Collection</a> 
-                                            
+                                            <span>← </span>Add Collection</a>
+
                                     </h4>
 
                                 </span>
@@ -37,25 +37,42 @@
                             <div class="form-section">
                                 <label for="slug">Slug</label>
                                 <input type="text" id="slug" name="slug" value="{{ old('slug') }}"
-                                    placeholder="short-sleeve-t-shirt" >
+                                    placeholder="short-sleeve-t-shirt">
                             </div>
                             <div class="form-section">
                                 <label for="description">Description</label>
                                 <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ old('description') }}</textarea>
                             </div>
-                                                    
 
-                            
+
+
                         </div>
 
                         <div class="col-sm-4">
                             <aside class="">
-                                <div class="sidebar-section card p-3">
+                                <div class="sidebar-section card p-3 mt-2">
+
+                                    <div class="form-section">
+                                        <label for="collections">Parent Collections</label>
+                                        <input type="text" id="collection-search" name="collections"
+                                            value="{{ old('collections') }}" id="collections"
+                                            placeholder="Search for collections">
+                                        <select id="collection-options" class="form-select" size="5"
+                                            style="display: none;"></select>
+
+                                    </div>
+                                    <div class="form-section">
+                                        <label for="tags">Tags</label>
+                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ old('tags') }}</textarea>
+                                    </div>
+
+                                </div>
+                                <div class="sidebar-section card p-3 mt-2">
                                     <h5>Status</h5>
                                     <select id="status" name="status">
                                         <option {{ old('status') == 'archived' ? 'selected' : '' }} value=" archived"
-                                            selected>Archived</option>
-                                        <option {{ old('status') == 'active' ? 'selected' : '' }} value="active">Active
+                                            >Archived</option>
+                                        <option {{ old('status') == 'active' ? 'selected' : '' }} selected value="active">Active
                                         </option>
                                     </select>
                                     <div>
@@ -67,29 +84,15 @@
                                 <div class="form-section mt-2">
                                     <h5>Images</h5>
                                     <div id="drop-zone" class="drop-zone">
-                                        <input type="file" id="file-input" name="images"  accept="image/*"
+                                        <input type="file" id="file-input" name="images" accept="image/*"
                                             style="display: none;">
-                                        <p>Drag & drop your images here  <span id="upload-trigger"></span></p>
-    
+                                        <p>Drag & drop your images here <span id="upload-trigger"></span></p>
+
                                         <div id="image-preview" class="image-preview"></div>
                                     </div>
-                                    <input type="hidden" id="files-data" >
+                                    <input type="hidden" id="files-data">
                                 </div>
-                                <div class="sidebar-section card p-3 mt-2">
-                                  
-                                    <div class="form-section">
-                                        <label for="collections">Parent Collections</label>
-                                        <input type="text" id="collection-search" name="collections" value="{{ old('collections') }}"
-                                            id="collections" placeholder="Search for collections">
-                                            <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
 
-                                    </div>
-                                    <div class="form-section">
-                                        <label for="tags">Tags</label>
-                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ old('tags') }}</textarea>
-                                    </div>
-
-                                </div>
                             </aside>
                         </div>
                     </div>
@@ -116,7 +119,7 @@
                 const row = event.target.closest('.variation-row'); // Find the closest row to the clicked button
                 if (row) {
                     row.remove(); // Remove only this specific row
-                }else{
+                } else {
                     event.target.closest('.variation').remove();
                 }
             }
@@ -259,7 +262,8 @@
                             data.forEach(collection => {
                                 const option = document.createElement('option');
                                 option.value = collection.id; // Store the collection ID as the value
-                                option.textContent = collection.title; // Show the collection name in the dropdown
+                                option.textContent = collection
+                                .title; // Show the collection name in the dropdown
                                 selectElement.appendChild(option);
                             });
 
@@ -268,9 +272,9 @@
                                 const selectedOption = selectElement.options[selectElement
                                     .selectedIndex];
                                 document.getElementById('collection-search').value = selectedOption
-                                .text; // Set input value to selected option text
+                                    .text; // Set input value to selected option text
                                 selectElement.style.display =
-                                'none'; // Hide the dropdown after selection
+                                    'none'; // Hide the dropdown after selection
                             });
                         } else {
                             selectElement.style.display = 'none'; // Hide the select dropdown if no results
@@ -278,7 +282,7 @@
                     });
             } else {
                 document.getElementById('collection-options').style.display =
-                'none'; // Hide the dropdown if query length is less than 2
+                    'none'; // Hide the dropdown if query length is less than 2
             }
         });
     </script>
