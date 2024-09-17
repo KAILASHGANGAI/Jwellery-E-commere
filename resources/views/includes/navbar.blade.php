@@ -166,72 +166,8 @@
                                 {{-- <img src="images/logo/logo-ash.png" alt="logo"> --}}
                             </a>
                         </div>
-                        <div class="main_menu">
-                            <nav>
-                                <ul>
-                                    <li class="active">
-                                        <a href="{{ route('home') }}">Home </a>
-                                    
-                                    </li>
-                                    <li>
-                                        <a href="#">Category <i class="ion-chevron-down"></i></a>
-                                        <ul class="mega_menu">
-                                            <li>
-                                                <a href="#">Women</a>
-                                                <ul>
-                                                    <li><a href="#">Earring</a></li>
-                                                    <li><a href="#">Pendant</a></li>
-                                                    <li><a href="#">Rings</a></li>
-                                                    <li><a href="#">Chain</a></li>
-                                                    <li><a href="#">Bangles</a></li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                <a href="#">Men</a>
-                                                <ul>
-                                                    <li><a href="#">Ring</a></li>
-                                                    <li><a href="#">Pendant</a></li>
-                                                    <li><a href="#">Bracelet</a></li>
-                                                    <li><a href="#">Chain</a></li>
-                                                    <li><a href="#">Gemstone</a></li>
-                                                </ul>
-                                            </li>
-                                            <li>
-                                                <a href="#">Other</a>
-                                                <ul>
-                                                    <li><a href="#">Platinium</a></li>
-                                                    <li><a href="#">Silver</a></li>
-                                                    <li><a href="#">Coins</a></li>
-                                                    <li><a href="#">Gift Card</a></li>
-                                                </ul>
-                                            </li>
+                        <div class="main_menu" id="mainmenu">
 
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Uncut Diamonds <i class="ion-chevron-down"></i></a>
-                                        <ul class="sub_menu pages">
-                                            <li><a href="#">Earrings</a></li>
-                                            <li><a href="#">Pendant</a></li>
-                                            <li><a href="#">Ring</a></li>
-                                            <li><a href="#">Bracelet</a></li>
-                                            <li><a href="#">Necklace Set</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">Special Collection <i class="ion-chevron-down"></i></a>
-                                        <ul class="sub_menu pages">
-                                            <li><a href="#">Gemstone</a></li>
-                                            <li><a href="#">Gold</a></li>
-                                            <li><a href="#">Rose Gold</a></li>
-                                            <li><a href="#">Silver</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="{{ route('about') }}">About Us</a></li>
-                                    <li><a href="{{ route('contact') }}">Contact Us</a></li>
-
-                                </ul>
-                            </nav>
                         </div>
                         <div class="hem float-right">
                             <div class="col-lg-5 col-md-7 col-6">
@@ -348,33 +284,91 @@
     }
 
     /* Hide dropdown menu by default */
-.dropdown_menu {
-    display: none;
-    list-style: none;
-    padding-left: 20px; /* Indentation for the dropdown */
-    margin: 10px 0 0 0;
-}
+    .dropdown_menu {
+        display: none;
+        list-style: none;
+        padding-left: 20px;
+        /* Indentation for the dropdown */
+        margin: 10px 0 0 0;
+    }
 
-/* Show dropdown menu when active */
-.sidebar_menu li.active > .dropdown_menu {
-    display: block;
-}
+    /* Show dropdown menu when active */
+    .sidebar_menu li.active>.dropdown_menu {
+        display: block;
+    }
 
-/* Dropdown toggle icon */
-.dropdown-toggle i {
-    margin-left: 5px;
-    font-size: 16px;
-    color: #ccc;
-}
-
+    /* Dropdown toggle icon */
+    .dropdown-toggle i {
+        margin-left: 5px;
+        font-size: 16px;
+        color: #ccc;
+    }
 </style>
 <script>
     document.querySelectorAll('.dropdown-toggle').forEach(function(dropdownToggle) {
-    dropdownToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        const parentLi = this.parentElement;
-        // Toggle the active class
-        parentLi.classList.toggle('active');
+        dropdownToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const parentLi = this.parentElement;
+            // Toggle the active class
+            parentLi.classList.toggle('active');
+        });
     });
-});
+
+    var collectionUrl = '{{ route('all-collections') }}';
+
+    async function fetchData(searchTerm = '', filter = 'all') {
+        try {
+            const response = await fetch(
+                `${collectionUrl}`
+            );
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            displayData(data);
+            console.log(data);
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+            // Handle the error (e.g., display an error message to the user)
+        }
+    }
+
+    function displayData(collection) {
+        const tableBody = document.getElementById('mainmenu');
+        tableBody.innerHTML = ''; // Clear the existing content
+
+        let row = `<nav>
+                    <ul>
+                        <li class="active">
+                            <a href="{{ route('home') }}">Home</a>
+                        </li>`;
+
+        collection.forEach(coll => {
+            row += `
+            <li>
+                <a href="#">${coll.title} <i class="ion-chevron-down"></i></a>
+                <ul class="sub_menu pages">`;
+
+            coll.children.forEach(child => {
+                var childUrl = '{{ url("collection") }}/' + child.slug;
+
+                row += `
+                <li><a href="${childUrl}">${child.title}</a></li>`;
+            });
+
+            row += `</ul>
+            </li>`;
+        });
+
+        row += `
+        <li><a href="{{ route('about') }}">About Us</a></li>
+        <li><a href="{{ route('contact') }}">Contact Us</a></li>
+        </ul>
+        </nav>`;
+
+        // Append the generated menu to the tableBody
+        tableBody.innerHTML = row;
+    }
+
+    fetchData();
 </script>
