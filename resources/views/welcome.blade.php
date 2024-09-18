@@ -3,7 +3,11 @@
 @section('content') 
 
 @include('banners.welcome')
+
+@include('includes.collections')
+
 @include('banners.banner-collection')
+
 @include('products.offered-products')
 @include('products.featured-products')
 

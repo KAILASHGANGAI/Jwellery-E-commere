@@ -70,9 +70,9 @@
                                 <div class="sidebar-section card p-3 mt-2">
                                     <h5>Status</h5>
                                     <select id="status" name="status">
-                                        <option {{ old('status') == 'archived' ? 'selected' : '' }} value=" archived"
+                                        <option {{ old('status', $data->status) == 'archived' ? 'selected' : '' }} value=" archived"
                                             selected>Archived</option>
-                                        <option {{ old('status') == 'active' ? 'selected' : '' }} value="active">Active
+                                        <option {{ old('status', $data->status) == 'active' ? 'selected' : '' }} value="active">Active
                                         </option>
                                     </select>
                                     <div>

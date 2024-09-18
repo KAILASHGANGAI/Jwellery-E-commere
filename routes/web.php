@@ -12,6 +12,8 @@ Route::view('/collection', 'pages.collection')->name('collection');
 Route::view('/contact', 'pages.contact')->name('contact');
 Route::view('/about-us', 'pages.about')->name('about');
 
-Route::get('all-collections',[CollectionController::class, 'index'])->name('all-collections');
+Route::get('/all-collections',[CollectionController::class, 'index'])->name('all-collections');
+Route::get('/childrens-collections',[CollectionController::class, 'showAllChildrens'])->name('childCollections');
 Route::get('/collection/{slug}', [CollectionController::class, 'show'])->name('collections');
+
 

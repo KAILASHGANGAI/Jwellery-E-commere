@@ -169,8 +169,8 @@ class CollectionController extends Controller
             if ($images = $request->file('images')) {
                 $imgPath =  $this->adminService
                     ->ImageUpload($images,  'images/collections');
-                    if (file_exists(public_path($data->file_path))) {
-                        unlink(public_path($data->file_path));
+                    if (file_exists($data->file_path)) {
+                        unlink($data->file_path);
                                                
                     }
                 $data->file_path = $imgPath;

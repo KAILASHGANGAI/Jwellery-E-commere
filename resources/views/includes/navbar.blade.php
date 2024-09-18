@@ -174,8 +174,9 @@
                                 <div class="middel_right">
                                     <div class="cart_link_hem">
                                         <a href="#" class="d-flex hem-icon text-white float-right">
-                                            <i class="ion-navicon-round text-white"></i>
+                                            <i class="ion-navicon-round text-dark"></i>
                                         </a>
+                                        <!-- Sidebar -->
                                         <!-- Sidebar -->
                                         <div class="mini_cart_hem">
                                             <div class="cart_close">
@@ -188,20 +189,12 @@
                                                 </div>
                                             </div>
                                             <!-- Add your menu items here -->
-                                            <ul class="sidebar_menu">
-                                                <li><a href="#">Home</a></li>
-                                                <li>
-                                                    <a href="javascript:void(0)" class="dropdown-toggle">Shop </a>
-                                                    <ul class="dropdown_menu">
-                                                        <li><a href="#">Men</a></li>
-                                                        <li><a href="#">Women</a></li>
-                                                        <li><a href="#">Accessories</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a href="#">About Us</a></li>
-                                                <li><a href="#">Contact</a></li>
+                                            <ul id="sidebarMenu" class="sidebar_menu">
+                                                <!-- Dynamic menu will be inserted here -->
                                             </ul>
                                         </div>
+                                        <!-- Sidebar ends -->
+
                                         <!-- Sidebar ends -->
                                     </div>
                                 </div>
@@ -326,7 +319,8 @@
             }
             const data = await response.json();
             displayData(data);
-            console.log(data);
+            displaySidebarMenu(data);
+
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
             // Handle the error (e.g., display an error message to the user)
@@ -350,7 +344,7 @@
                 <ul class="sub_menu pages">`;
 
             coll.children.forEach(child => {
-                var childUrl = '{{ url("collection") }}/' + child.slug;
+                var childUrl = '{{ url('collection') }}/' + child.slug;
 
                 row += `
                 <li><a href="${childUrl}">${child.title}</a></li>`;
@@ -369,6 +363,53 @@
         // Append the generated menu to the tableBody
         tableBody.innerHTML = row;
     }
+
+    function displaySidebarMenu(collection) {
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        sidebarMenu.innerHTML = ''; // Clear the existing content
+
+        // Static links that are always present
+        let menuHtml = `<li><a href="{{ route('home') }}">Home</a></li>`;
+
+        collection.forEach(coll => {
+            menuHtml += `
+            <li class="has-dropdown">
+                <a href="javascript:void(0)" class="dropdown-toggle">${coll.title} </a>
+                <ul class="dropdown_menu" style="display: none;">`;
+
+            coll.children.forEach(child => {
+                let childUrl = '{{ url('collection') }}/' + child.slug;
+                menuHtml += `
+                <li><a href="${childUrl}">${child.title}</a></li>`;
+            });
+
+            menuHtml += `
+                </ul>
+            </li>`;
+        });
+
+        // Add static links for 'About Us' and 'Contact'
+        menuHtml += `
+        <li><a href="{{ route('about') }}">About Us</a></li>
+        <li><a href="{{ route('contact') }}">Contact</a></li>`;
+
+        // Insert the generated menu into the sidebar
+        sidebarMenu.innerHTML = menuHtml;
+
+        // Add event listeners for dropdown functionality
+        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const dropdownMenu = this.nextElementSibling;
+                if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+                    dropdownMenu.style.display = 'block'; // Show the dropdown
+                } else {
+                    dropdownMenu.style.display = 'none'; // Hide the dropdown
+                }
+            });
+        });
+    }
+
 
     fetchData();
 </script>

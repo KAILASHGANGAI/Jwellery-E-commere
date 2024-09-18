@@ -1765,7 +1765,7 @@ ul {
 .section_title::before {
   content: "";
   height: 2px;
-  background: #2d2d2d;
+  background: #a8741a;
   position: absolute;
   left: 0;
   right: 15px;
@@ -1779,7 +1779,7 @@ ul {
   line-height: 30px;
   text-transform: capitalize;
   padding-right: 20px;
-  background: #242424;
+  background: #a8741a;
   color: #fff;
   font-size: 24px;
   font-weight: 400;
@@ -1804,17 +1804,17 @@ ul {
 }
 
 .blog_black .section_title::before {
-  background: #2d2d2d;
+  background: #a8741a;
 }
 
 .blog_black .section_title h2 {
   color: #ffffff;
-  background: #242424;
+  background: #a8741a;
   font-weight: 400;
 }
 
 .blog_black .blog_wrapper .owl-nav {
-  background: #242424;
+  background: #a8741a;
 }
 
 .blog_black .blog_wrapper .owl-nav div {
@@ -2544,3 +2544,35 @@ p {
   top: 40%;
 }
 
+.myallCollection .own-prev, .myallCollection .owl-next {
+  background-color: #f2f2f2;  /* Light background for the circle */
+  border-radius: 50%;         /* Make it circular */
+  border: 2px solid #a8741a;      /* Optional border */
+  width: 40px;                /* Adjust size of the circle */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;                   /* Vertically center the arrows */
+  transform: translateY(-50%); /* Adjust for exact centering */
+  z-index: 1;
+}
+
+.myallCollection .own-prev {
+  left: -20px;                /* Position the left arrow */
+}
+
+.myallCollection .owl-next {
+  right: -20px;               /* Position the right arrow */
+}
+
+.myallCollection .own-prev i, .myallCollection .owl-next i {
+  font-size: 16px;            /* Adjust the icon size */
+  color: #333;                /* Icon color */
+}
+
+.myallCollection .own-prev:hover, .myallCollection .owl-next:hover {
+  background-color: #a8741a;  /* Change background color on hover */
+  color: #fff;                /* Change icon color on hover */
+}

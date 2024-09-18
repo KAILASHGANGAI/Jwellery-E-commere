@@ -39,6 +39,22 @@ class CollectionController extends Controller
         return response()->json($data);
     }
 
+    public function showAllChildrens(Request $request){
+
+        $select = ['id', 'title', 'slug', 'file_path', 'collection_id'];
+        $condition = ['status' => 'active', 'display' => 1];
+        $data = $this->comm->getData(
+            Collection::query()->where('collection_id', '!=', 0),
+            $select,
+            $condition,
+            0,
+            'id',
+            'asc',
+        );
+
+        return response()->json($data);
+    }
+
     public function show($slug){
 
         $select = ['id', 'title', 'slug', 'file_path', 'collection_id'];
