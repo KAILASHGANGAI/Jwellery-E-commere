@@ -5,38 +5,41 @@ namespace App\Services;
 class commonServices
 {
 
-    public function getData($model = null, $select=null, $condition=null, $limitflag=null, $order=null, $orderType=null,$paginate =null, $with=null)
+    public function getData($model = null, $select = null, $condition = null, $limitflag = null, $request = null)
     {
-        return $model
-            ->when($with, function ($query) use ($with) {
-                return $query->with($with);
-            })
+        $daat = $model
             ->when($condition, function ($query) use ($condition) {
                 return $query->where($condition);
             })
             ->when($select, function ($query) use ($select) {
                 return $query->select($select);
             })
-            ->when($order, function ($query) use ($order, $orderType) {
-                return $query->orderBy($order, $orderType);
+            ->when(@$request->order, function ($query) use ($request) {
+                return $query->orderBy($request->order, $request->orderType);
             })
-            ->when($order, function ($query) use ($order, $orderType) {
-                return $query->orderBy($order, $orderType);
+            ->when(@$request->pagination, function ($query) use ($request) {
+                return $query->paginate($request->pagination)->appends($request->query());
             })
-            ->when($paginate, function ($query) use ($paginate, $limitflag) {
-                if($limitflag == -1){
-                    return $query->paginate($paginate);
-                }
-                if ($limitflag == 1) {
+            ->when(($limitflag != null && !@$request->pagination), function ($query) use ($limitflag) {
+              
+                if ($limitflag  == -1) {
                     return $query->first();
                 }
-                if ($limitflag == 0) {
-                    return $query->get();
-                }
-                return $query->limit($paginate);
-            })
-            ->get();
+                return $query->get();
+            });
+           
+        return $daat;
     }
-    
-  
+
+    public function getSingleData($model = null, $select = null, $condition = null)
+    {
+        return $model
+            ->when($condition, function ($query) use ($condition) {
+                return $query->where($condition);
+            })
+            ->when($select, function ($query) use ($select) {
+                return $query->select($select);
+            })
+            ->first();
+    }
 }

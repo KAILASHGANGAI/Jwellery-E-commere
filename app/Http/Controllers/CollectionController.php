@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\commonServices;
 use Illuminate\Http\Request;
 use Modules\Admin\Models\Collection;
+use Modules\Admin\Models\Product;
 
 class CollectionController extends Controller
 {
@@ -25,11 +26,14 @@ class CollectionController extends Controller
             $q->where('display', 1);
             $q->where('collection_id', '!=', 0);
         }]);
+        $request['order'] = 'id';
+        $request['orderType'] = 'asc';
         $data = $this->comm->getData(
             $model,
             $select,
             $condition,
-            0,
+            1,
+            $request
         );
 
         if ($request->ajax()) {
@@ -39,33 +43,52 @@ class CollectionController extends Controller
         return response()->json($data);
     }
 
-    public function showAllChildrens(Request $request){
+    public function showAllChildrens(Request $request)
+    {
 
         $select = ['id', 'title', 'slug', 'file_path', 'collection_id'];
         $condition = ['status' => 'active', 'display' => 1];
+        $request['order'] = 'id';
+        $request['orderType'] = 'asc';
+        $limitflag = 1;
         $data = $this->comm->getData(
             Collection::query()->where('collection_id', '!=', 0),
             $select,
             $condition,
-            0,
-            'id',
-            'asc',
+            $limitflag,
+            $request
         );
 
         return response()->json($data);
     }
 
-    public function show($slug){
+    public function show($slug)
+    {
 
-        $select = ['id', 'title', 'slug', 'file_path', 'collection_id'];
+        $select = ['id', 'slug'];
         $condition = ['slug' => $slug];
-        $data = $this->comm->getData(
+        $collection = $this->comm->getData(
             Collection::query(),
             $select,
             $condition,
+            -1
+        );
+        $request['pagination'] = 5;
+        $request['order'] = 'id';
+        $request['orderType'] = 'asc';
+        $productCondition = ['status' => 'active', 'display' => 1, 'collection_id' => $collection->id];
+        $productselect = ['id', 'title', 'slug', 'price', 'compare_price', 'description'];
+        $products = $this->comm->getData(
+            Product::query()->with([
+                'images:id,product_id,image_path',
+                'variations:id,product_id,sku,barcode,inventory'
+            ]),
+            $productselect,
+            $productCondition,
             1
         );
 
-        return response()->json($data);
+        return view('pages.collection', compact('collection', 'products'));
+
     }
 }

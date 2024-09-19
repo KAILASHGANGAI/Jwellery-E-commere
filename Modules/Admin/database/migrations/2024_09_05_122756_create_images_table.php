@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('image_path')->nullable();
             $table->string('image_url')->nullable(); 
-            
+            $table->tinyInteger('is_deleted')->default(0);
             $table->timestamps();
         });
     }
