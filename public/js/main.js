@@ -111,47 +111,47 @@
     container: "body",
   });
 
-  //product row activation responsive
-  $(".product_row1").slick({
-    centerMode: true,
-    centerPadding: "0",
-    slidesToShow: 5,
-    arrows: true,
-    prevArrow:
-      '<button class="prev_arrow"><i class="ion-chevron-left"></i></button>',
-    nextArrow:
-      '<button class="next_arrow"><i class="ion-chevron-right"></i></button>',
-    responsive: [
-      {
-        breakpoint: 400,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 992,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        },
-      },
-      {
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-        },
-      },
-    ],
-  });
+  // //product row activation responsive
+  // $(".product_row1").slick({
+  //   centerMode: true,
+  //   centerPadding: "0",
+  //   slidesToShow: 5,
+  //   arrows: true,
+  //   prevArrow:
+  //     '<button class="prev_arrow"><i class="ion-chevron-left"></i></button>',
+  //   nextArrow:
+  //     '<button class="next_arrow"><i class="ion-chevron-right"></i></button>',
+  //   responsive: [
+  //     {
+  //       breakpoint: 400,
+  //       settings: {
+  //         slidesToShow: 1,
+  //         slidesToScroll: 1,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 768,
+  //       settings: {
+  //         slidesToShow: 2,
+  //         slidesToScroll: 2,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 992,
+  //       settings: {
+  //         slidesToShow: 3,
+  //         slidesToScroll: 3,
+  //       },
+  //     },
+  //     {
+  //       breakpoint: 1200,
+  //       settings: {
+  //         slidesToShow: 4,
+  //         slidesToScroll: 4,
+  //       },
+  //     },
+  //   ],
+  // });
   
 
 
