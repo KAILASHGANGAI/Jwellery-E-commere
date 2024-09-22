@@ -2045,7 +2045,7 @@ ul {
   width: 100%;
   border: 2px solid #2d2d2d;
   font-size: 12px;
-  color: #fff;
+  /* color: #fff; */
   padding: 0 20px;
   border-radius: 4px;
   padding: 10px 224px 10px 20px;
