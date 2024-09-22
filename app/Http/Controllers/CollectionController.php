@@ -62,7 +62,7 @@ class CollectionController extends Controller
         return response()->json($data);
     }
 
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
 
         $select = ['id', 'slug'];
@@ -73,11 +73,17 @@ class CollectionController extends Controller
             $condition,
             -1
         );
-        $request['pagination'] = 5;
-        $request['order'] = 'id';
-        $request['orderType'] = 'asc';
+        $request->pagination ? $request->pagination : $request['pagination'] = 1;
+        $request->order ?  $request->order : $request['order'] = 'id';
+        $request->orderType ?  $request->orderType : $request['orderType'] = 'asc';
+
         $productCondition = ['status' => 'active', 'display' => 1, 'collection_id' => $collection->id];
         $productselect = ['id', 'title', 'slug', 'price', 'compare_price', 'description'];
+
+        // Split the tags by commas to create an array
+        $tags = explode(',', $collection->tags);
+
+        // Query to get products by collection_id and matching tags
         $products = $this->comm->getData(
             Product::query()->with([
                 'images:id,product_id,image_path',
@@ -87,8 +93,24 @@ class CollectionController extends Controller
             $productCondition,
             1
         );
+//         $products2 = $this->comm->getData(
+//             Product::query()->with([
+//                 'images:id,product_id,image_path',
+//                 'variations:id,product_id,sku,barcode,inventory'
+//             ])
+//                 // Filter products that match collection_id
+//                 ->orWhere(function ($query) use ($tags) {
+//                     foreach ($tags as $tag) {
+//                         $query->orWhere('tags', 'like', '%' . trim($tag) . '%');
+//                     }
+//                 }),
+//             $productselect,
+//             null,
+//             1
+//         );
+// dd($products1, $products2);
+//         $products = array_merge($products1, $products2);
 
         return view('pages.collection', compact('collection', 'products'));
-
     }
 }
