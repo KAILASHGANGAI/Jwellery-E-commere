@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->string('barcode')->nullable();
             $table->string('color')->nullable();
-            $table->string('size')->nullable();
-            $table->integer('quantity');
+            $table->string('option1')->nullable();
+            $table->string('option2')->nullable();
+            $table->integer('quantity')->default(1);
             $table->decimal('unitPrice', 8, 2);
             $table->decimal('subtotal', 8, 2);
             $table->string('status')->default('pending');
