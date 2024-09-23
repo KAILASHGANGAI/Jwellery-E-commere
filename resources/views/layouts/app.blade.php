@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Jewelry</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('includes.metadata')
     @include('includes.links')
 </head>
@@ -99,7 +102,7 @@
     @include('includes.scripts')
     <script>
         // Reusable function to add a product to the cart
-        function addToCart(productId, quantity, element) {
+        function addToCart(cardDetails, element) {
             // Optional: Disable the button and show a loading state
             element.prop('disabled', true).text('Adding...');
 
@@ -107,10 +110,9 @@
             $.ajax({
                 url: "{{ route('cart.add') }}", // Laravel route for adding to cart
                 type: "POST",
-                data: {
-                    product_id: productId,
-                    quantity: quantity,
-                    _token: "{{ csrf_token() }}" // CSRF token for security
+                data: cardDetails,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token for security
                 },
                 success: function(response) {
                     // Handle success response, such as updating the cart UI
@@ -138,13 +140,26 @@
         // Handle Add to Cart button click (outside modal)
         $(document).on('click', '.add_to_cart_button', function(event) {
             event.preventDefault();
-
-            // Get product ID from data attribute and quantity
-            var productId = $(this).data('id');
-            var quantity = 1; // Assuming the default quantity is 1 outside modal
-
+            var product_id = $(this).data('id');
+            var variation_id = $(this).data('varination-id');
+            var sku = $(this).data('sku');
+            var unitPrice = $(this).data('price');
+            // var discount = $(this).data('discount');
+            // var discountCode = $(this).data('discount-code');
+            var quantity = 1;
+            var cardDetails = {
+                // "user_id": "{{ Auth::user()->id }}",
+                "product_id": product_id,
+                "variation_id": variation_id,
+                "sku": sku,
+                "quantity": quantity,
+                "unit_price": unitPrice,
+                // "discount": discount,
+                // "discountCode": discountCode
+            };
+            console.log(cardDetails);
             // Call reusable function to add the product to the cart
-            addToCart(productId, quantity, $(this));
+            addToCart(cardDetails, $(this));
         });
 
         // Handle Add to Cart form submission from the modal
@@ -152,11 +167,26 @@
             event.preventDefault();
 
             // Get product ID and quantity from the modal form
-            var productId = $('#modal_product_id').val();
+            var product_id = $('#modal_product_id').val();
+            var variation_id = $('#modal_product_variation_id').val();
+            var sku = $('#modal_product_sku').val();
+            var unitPrice = $('#modal_product_unit_price').val();
+            // var discount = $('#modal_product_discount').val();
+            // var discountCode = $('#modal_product_discount_code').val();
             var quantity = $('#modal_product_quantity').val();
-
+            var cardDetails = {
+                // "user_id": "{{ Auth::user()->id }}",
+                "product_id": product_id,
+                "variation_id": variation_id,
+                "sku": sku,
+                "quantity": quantity,
+                "unit_price": unitPrice,
+                // "discount": discount,
+                // "discountCode": discountCode
+            };
+            console.log(cardDetails);
             // Call reusable function to add the product to the cart
-            addToCart(productId, quantity, $(this).find('button'));
+            addToCart(cardDetails, $(this).find('button'));
         });
 
         // Function to update the cart UI (like cart item count)
@@ -191,66 +221,66 @@
             }
         }
 
-           // When "Quick View" button is clicked
-    $(document).on('click', '.quick_view_button', function() {
-        // Retrieve product data from data attributes
-        var productId = $(this).data('id');
-        var productName = $(this).data('name');
-        var productPrice = $(this).data('price');
-        var productOldPrice = $(this).data('old-price');
-        var productDescription = $(this).data('description');
-        var productImages = $(this).data('images');
-        var slug = $(this).data('slug');
-        console.log(slug);
-        var viewUrl = '{{ route('product-details', ':slug') }}' ;
-        viewUrl = viewUrl.replace(':slug', slug);
-        // Update the modal with product details
-        $('#modal_product_id').val(productId);
-        $('#modal_box .modal_title h2').text(productName);
-        $('#modal_box .modal_price .new_price').text('Rs. ' + productPrice);
-        $('#modal_box .modal_price .old_price').text('Rs. ' + productOldPrice);
-        $('#modal_box .modal_description p').html(productDescription);
-        $('#modal_box #see_all').attr('href', viewUrl);
-        // Update product images in the modal
+        // When "Quick View" button is clicked
+        $(document).on('click', '.quick_view_button', function() {
+            // Retrieve product data from data attributes
+            var productId = $(this).data('id');
+            var productName = $(this).data('name');
+            var productPrice = $(this).data('price');
+            var productOldPrice = $(this).data('old-price');
+            var productDescription = $(this).data('description');
+            var productImages = $(this).data('images');
+            var slug = $(this).data('slug');
+            console.log(slug);
+            var viewUrl = '{{ route('product-details', ':slug') }}';
+            viewUrl = viewUrl.replace(':slug', slug);
+            // Update the modal with product details
+            $('#modal_product_id').val(productId);
+            $('#modal_box .modal_title h2').text(productName);
+            $('#modal_box .modal_price .new_price').text('Rs. ' + productPrice);
+            $('#modal_box .modal_price .old_price').text('Rs. ' + productOldPrice);
+            $('#modal_box .modal_description p').html(productDescription);
+            $('#modal_box #see_all').attr('href', viewUrl);
+            // Update product images in the modal
 
 
-        var imageHtml = '';
-        var thumbnailHtml = '';
-        $.each(productImages, function(index, image) {
-            const imageSrc = '{{ asset('') }}' + image.image_path ??
-                '{{ asset('images/default-img.jpg') }}';
-            imageHtml += `
+            var imageHtml = '';
+            var thumbnailHtml = '';
+            $.each(productImages, function(index, image) {
+                const imageSrc = '{{ asset('') }}' + image.image_path ??
+                    '{{ asset('images/default-img.jpg') }}';
+                imageHtml += `
             <div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="tab${index + 1}" role="tabpanel">
                 <div class="modal_tab_img">
                     <a href="#"><img src="${imageSrc}" alt="${productName}"></a>
                 </div>
             </div>`;
-            thumbnailHtml += `
+                thumbnailHtml += `
             <li style="cursor: pointer; width: 50px; height: 50px;" class="nav-item">
                 <a href="#tab${index + 1}" class="nav-link ${index === 0 ? 'active' : ''}" data-toggle="tab" role="tab"
                    aria-controls="tab${index + 1}" aria-selected="${index === 0}">
                     <img src="${imageSrc}" height="50" alt="Product Thumbnail">
                 </a>
             </li>`;
+            });
+
+            // Append images to the modal
+            $('#modal_box .product-details-large').html(imageHtml);
+            $('#modal_box .product_navactive').html(thumbnailHtml);
+            // Open the modal
+            $('#modal_box').modal('show');
+
+            let wishlistBtn = $('#modal_box #wishlist-btn');
+
+            if (!wishlistBtn.attr('data-product-id')) {
+                // If no `data-product-id` exists, assign the new productId
+                wishlistBtn.attr('data-product-id', productId);
+                console.log(`Product ID ${productId} assigned to the wishlist button.`);
+            } else {
+                console.log(`Wishlist button already has a product ID: ${wishlistBtn.attr('data-product-id')}`);
+            }
+
         });
-
-        // Append images to the modal
-        $('#modal_box .product-details-large').html(imageHtml);
-        $('#modal_box .product_navactive').html(thumbnailHtml);
-        // Open the modal
-        $('#modal_box').modal('show');
-
-        let wishlistBtn = $('#modal_box #wishlist-btn');
-
-        if (!wishlistBtn.attr('data-product-id')) {
-            // If no `data-product-id` exists, assign the new productId
-            wishlistBtn.attr('data-product-id', productId);
-            console.log(`Product ID ${productId} assigned to the wishlist button.`);
-        } else {
-            console.log(`Wishlist button already has a product ID: ${wishlistBtn.attr('data-product-id')}`);
-        }
-
-    });
     </script>
 
 </body>

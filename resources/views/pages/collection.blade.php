@@ -98,7 +98,7 @@
                                         <!-- Add to Cart button with dynamic product data -->
                                         <li class="add_to_cart">
                                             <a href="javascript:void(0)" data-id="{{ $product->id }}"
-                                                data-price="{{ $product->price }}" data-sku=""
+                                                data-price="{{ $product->price }}" data-sku="{{ $product->variations[0]->sku }}" data-varination-id="{{ $product->variations[0]->id }}"
                                                 class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
                                         </li>
                                     </ul>

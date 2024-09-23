@@ -11,7 +11,7 @@ class AddTOCard extends Model
 {
     use HasFactory;
     protected $guarded = [];
-
+    protected    $table = 'add_to_cards';
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -22,9 +22,10 @@ class AddTOCard extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function order()
+    public function calculateTotalPrice($quantity, $unit_price, $discount = 0)
     {
-        return $this->belongsTo(Order::class);
+        $subtotal = $quantity * $unit_price;
+        return $subtotal - $discount;
     }
 
 }

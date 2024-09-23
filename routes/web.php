@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddTOCardController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -21,5 +22,7 @@ Route::get('/product-details/{sku}', [ProductController::class, 'show'])->name('
 
 
 // routes/web.php
-Route::post('/cart/add', [ProductController::class, 'add'])->name('cart.add');
+Route::post('/cart/add', [AddTOCardController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart/{userId}', [AddTOCardController::class, 'getCart'])->name('cart.get');
+Route::delete('/cart/{cartId}', [AddTOCardController::class, 'removeItem'])->name('cart.remove');
 
