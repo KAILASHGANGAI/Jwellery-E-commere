@@ -37,7 +37,7 @@
                         <h2>{{ $data->title }}</h2>
                     </div>
                     <div class="modal_price mb-10">
-                        <span class="new_price">Rs. {{ $data->price }}</span>
+                        <span class="new_price" id="modal_product_price" data-price="{{ $data->price }}" >Rs. {{ $data->price }}</span>
                         <span class="old_price">Rs. {{ $data->compare_price }}</span>
                     </div>
 
@@ -46,6 +46,7 @@
                             <input type="number" id="modal_product_quantity" min="1" value="1">
                             <input type="hidden" id="modal_product_id"  value="{{ $data->id }}">
                             <input type="hidden" id="modal_product_sku"  value="{{ $data->variations[0]['sku'] }}">
+                            <input type="hidden" id="modal_variation_id"  value="{{ $data->variations[0]['id'] }}">
                             <button type="submit">Add To Cart</button>
                             <a class="add_to_wishlist btn btn-dark" href="javascript:void(0)" id="wishlist-btn"
                                 data-placement="top" title="Add to Wishlist" data-product-id="{{ $data->id }}" data-toggle="tooltip">

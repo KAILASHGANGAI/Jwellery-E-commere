@@ -65,6 +65,8 @@
                                             <input type="number" id="modal_product_quantity" min="1"
                                                 value="1">
                                             <input type="hidden" id="modal_product_id">
+                                            <input type="hidden" id="modal_product_sku">
+                                            <input type="hidden" id="modal_variation_id">
                                             <button type="submit">Add To Cart</button>
                                             <a class="add_to_wishlist btn btn-dark" href="javascript:void(0)"
                                                 id="wishlist-btn" data-placement="top" title="Add to Wishlist"
@@ -101,8 +103,14 @@
     <!-- modal section ends -->
     @include('includes.scripts')
     <script>
+        window.isAuthenticated = @json(auth()->check());
         // Reusable function to add a product to the cart
         function addToCart(cardDetails, element) {
+
+            if (!window.isAuthenticated) {
+                window.location.href = "{{ route('login') }}";
+            }
+
             // Optional: Disable the button and show a loading state
             element.prop('disabled', true).text('Adding...');
 
@@ -140,6 +148,8 @@
         // Handle Add to Cart button click (outside modal)
         $(document).on('click', '.add_to_cart_button', function(event) {
             event.preventDefault();
+            //check auth of laravel auth
+    
             var product_id = $(this).data('id');
             var variation_id = $(this).data('varination-id');
             var sku = $(this).data('sku');
@@ -148,7 +158,6 @@
             // var discountCode = $(this).data('discount-code');
             var quantity = 1;
             var cardDetails = {
-                // "user_id": "{{ Auth::user()->id }}",
                 "product_id": product_id,
                 "variation_id": variation_id,
                 "sku": sku,
@@ -168,14 +177,15 @@
 
             // Get product ID and quantity from the modal form
             var product_id = $('#modal_product_id').val();
-            var variation_id = $('#modal_product_variation_id').val();
+            var variation_id = $('#modal_variation_id').val();
             var sku = $('#modal_product_sku').val();
-            var unitPrice = $('#modal_product_unit_price').val();
+            var unitPrice = $('#modal_product_price').attr('data-price')
             // var discount = $('#modal_product_discount').val();
             // var discountCode = $('#modal_product_discount_code').val();
             var quantity = $('#modal_product_quantity').val();
+
             var cardDetails = {
-                // "user_id": "{{ Auth::user()->id }}",
+
                 "product_id": product_id,
                 "variation_id": variation_id,
                 "sku": sku,
@@ -229,6 +239,8 @@
             var productPrice = $(this).data('price');
             var productOldPrice = $(this).data('old-price');
             var productDescription = $(this).data('description');
+            var productSku = $(this).data('sku');
+            var productVariationId = $(this).data('varination-id');
             var productImages = $(this).data('images');
             var slug = $(this).data('slug');
             console.log(slug);
@@ -238,8 +250,12 @@
             $('#modal_product_id').val(productId);
             $('#modal_box .modal_title h2').text(productName);
             $('#modal_box .modal_price .new_price').text('Rs. ' + productPrice);
+            $('#modal_product_price').attr('data-price', productPrice);
+
             $('#modal_box .modal_price .old_price').text('Rs. ' + productOldPrice);
             $('#modal_box .modal_description p').html(productDescription);
+            $('#modal_box #modal_product_sku').val(productSku);
+            $('#modal_box #modal_variation_id').val(productVariationId);
             $('#modal_box #see_all').attr('href', viewUrl);
             // Update product images in the modal
 
@@ -250,18 +266,18 @@
                 const imageSrc = '{{ asset('') }}' + image.image_path ??
                     '{{ asset('images/default-img.jpg') }}';
                 imageHtml += `
-            <div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="tab${index + 1}" role="tabpanel">
-                <div class="modal_tab_img">
-                    <a href="#"><img src="${imageSrc}" alt="${productName}"></a>
-                </div>
-            </div>`;
+    <div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="tab${index + 1}" role="tabpanel">
+        <div class="modal_tab_img">
+            <a href="#"><img src="${imageSrc}" alt="${productName}"></a>
+        </div>
+    </div>`;
                 thumbnailHtml += `
-            <li style="cursor: pointer; width: 50px; height: 50px;" class="nav-item">
-                <a href="#tab${index + 1}" class="nav-link ${index === 0 ? 'active' : ''}" data-toggle="tab" role="tab"
-                   aria-controls="tab${index + 1}" aria-selected="${index === 0}">
-                    <img src="${imageSrc}" height="50" alt="Product Thumbnail">
-                </a>
-            </li>`;
+    <li style="cursor: pointer; width: 50px; height: 50px;" class="nav-item">
+        <a href="#tab${index + 1}" class="nav-link ${index === 0 ? 'active' : ''}" data-toggle="tab" role="tab"
+            aria-controls="tab${index + 1}" aria-selected="${index === 0}">
+            <img src="${imageSrc}" height="50" alt="Product Thumbnail">
+        </a>
+    </li>`;
             });
 
             // Append images to the modal

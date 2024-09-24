@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AddTOCard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AddTOCardController extends Controller
 {
@@ -11,9 +12,7 @@ class AddTOCardController extends Controller
     {
         // Validate incoming request data
         $validated = $request->validate([
-            'user_id' => 'required|integer',
             'product_id' => 'required|integer',
-            'variation_id' => 'nullable|integer',
             'sku' => 'required|string',
             'quantity' => 'required|integer|min:1',
             'unit_price' => 'required|numeric',
@@ -21,32 +20,46 @@ class AddTOCardController extends Controller
             'discountCode' => 'nullable|string',
         ]);
 
-        // Calculate the total price
-        $totalPrice = (new AddTOCard())->calculateTotalPrice(
-            $request->quantity,
-            $request->unit_price,
-            $request->discount ?? 0
-        );
+        // Check if the product with the same SKU is already in the user's cart
+        $cartItem = AddTOCard::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->where('sku', $request->sku)
+            ->first();
 
-        // Save to cart
-        $cart = AddTOCard::create([
-            'user_id' => $request->user_id,
-            'product_id' => $request->product_id,
-            'variation_id' => $request->variation_id,
-            'sku' => $request->sku,
-            'quantity' => $request->quantity,
-            'unit_price' => $request->unit_price,
-            'total_price' => $totalPrice,
-            'discount' => $request->discount ?? 0,
-            'discountCode' => $request->discountCode ?? null,
-        ]);
+        if ($cartItem) {
+            // Update quantity and total price
+            $cartItem->quantity += $request->quantity;
+            $cartItem->total_price = $this->calculateTotalPrice($cartItem->quantity, $cartItem->unit_price, $cartItem->discount);
+            $cartItem->save();
+        } else {
+            // Calculate total price and create a new cart item
+            $totalPrice = $this->calculateTotalPrice($request->quantity, $request->unit_price, $request->discount ?? 0);
+
+            $cartItem = AddTOCard::create([
+                'user_id' => Auth::id(),
+                'product_id' => $request->product_id,
+                'variation_id' => $request->variation_id,
+                'sku' => $request->sku,
+                'quantity' => $request->quantity,
+                'unit_price' => $request->unit_price,
+                'total_price' => $totalPrice,
+                'discount' => $request->discount ?? 0,
+                'discountCode' => $request->discountCode ?? null,
+            ]);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Product added to cart successfully!',
-            'cart' => $cart,
+            'message' => 'Cart updated successfully!',
+            'cart' => $cartItem,
         ]);
     }
+
+    private function calculateTotalPrice($quantity, $unitPrice, $discount)
+    {
+        return ($unitPrice * $quantity) - $discount;
+    }
+
 
     public function getCart($userId)
     {

@@ -73,6 +73,8 @@
                                     data-price="${product.price}" 
                                     data-old-price="${product.compare_price}" 
                                     data-description="${product.description}" 
+                                    data-sku="${product.variations[0].sku}"
+                                     data-varination-id="${product.variations[0].id}"
                                     data-images='${JSON.stringify(product.images)}'>
                                         Quick View
                                     </a>

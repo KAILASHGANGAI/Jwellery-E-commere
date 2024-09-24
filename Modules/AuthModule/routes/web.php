@@ -21,8 +21,8 @@ Route::group([], function () {
     Route::resource('authmodule', AuthModuleController::class)->names('authmodule');
 });
 Route::get('/myadmin/login', [AuthModuleController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/login', [AuthModuleController::class, 'login'])->name('adminlogin');
-Route::post('/logout', [AuthModuleController::class, 'logout'])->name('admin.logout');
+Route::post('/myadmin/login', [AuthModuleController::class, 'login'])->name('adminlogin');
+Route::post('/myadmin/logout', [AuthModuleController::class, 'logout'])->name('admin.logout');
 
 
 Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function () {
