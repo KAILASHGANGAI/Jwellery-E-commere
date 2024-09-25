@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Admin\Models\Order;
 use Modules\Admin\Models\Product;
+use Modules\Admin\Models\Variation;
 
 class AddTOCard extends Model
 {
@@ -15,6 +16,10 @@ class AddTOCard extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function  variation(){
+        return $this->belongsTo(Variation::class);
     }
 
     public function user()

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AddTOCard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Modules\Admin\Models\Product;
 
 class AddTOCardController extends Controller
 {
@@ -52,6 +53,8 @@ class AddTOCardController extends Controller
             'success' => true,
             'message' => 'Cart updated successfully!',
             'cart' => $cartItem,
+            'totalAmount' => AddTOCard::where('user_id', Auth::id())->sum('total_price'),
+            'totalQuantity' => AddTOCard::query()->where('user_id', Auth::id())->count() ?? 0,
         ]);
     }
 
@@ -61,13 +64,18 @@ class AddTOCardController extends Controller
     }
 
 
-    public function getCart($userId)
+    public function getCart()
     {
-        $cartItems = AddTOCard::where('user_id', $userId)->get();
+        $cartItems = AddTOCard::with(['product:id,title,slug', 'variation:id,sku', 'product.images' => function ($query) {
+            $query->select('id', 'product_id', 'image_path')->limit(1);  // This will fetch only one image
+        }])
+            ->where('user_id', Auth::id())
+            ->get();
 
         return response()->json([
             'success' => true,
             'cartItems' => $cartItems,
+            'totalAmount' => $cartItems->sum('total_price'),
         ]);
     }
 
@@ -75,9 +83,24 @@ class AddTOCardController extends Controller
     {
         AddTOCard::destroy($cartId);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Item removed from cart successfully!',
-        ]);
+        return back()->with('success', 'Item Removed From Card');
+    }
+
+    public function wishlist(Request $request)
+    {
+        return view('pages.wishlist');
+    }
+
+    public function getWishlistProducts(Request $request)
+    {
+        $productIds = $request->input('product_ids');
+        $productIds = json_decode($productIds);
+        if ($productIds) {
+            $products = Product::with(['images', 'variations'])->whereIn('id', $productIds)->get();
+            return response()->json($products);
+        }
+        
+        return response()->json(['message' => 'No products found'], 404);
+
     }
 }

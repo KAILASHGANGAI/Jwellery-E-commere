@@ -5,6 +5,7 @@
 
   //navbar cart
   $(".cart_link > a").on("click", function () {
+    getCardItems();
     $(".mini_cart").addClass("active");
   });
 
@@ -222,4 +223,56 @@
     $(".product-details-large .tab-pane").removeClass("active show");
     $(".product-details-large " + $href).addClass("active show");
   });
+  getCardItems();
+  
 })(jQuery);
+
+function getCardItems() {
+  $.ajax({
+      type: "GET",
+      url: "/get-cart-items",
+      success: function(response) {
+          // Assuming 'response' contains an array of cart items
+          let cartItemsContainer = $('#card-items');
+          cartItemsContainer.empty(); // Clear any existing cart items
+          console.log(response);
+          response.cartItems.forEach(function(item) {
+
+                  let = item.product.images[0].image_path;
+              let cartItemHtml = `
+                <div class="cart_item">
+                  <div class="cart_img">
+                    <a href="/product-details/${item.product.slug}"><img src="/${item.product.images[0].image_path}" alt="${item.product.title}"></a>
+                  </div>
+                  <div class="cart_info">
+                    <a href="/product-details/${item.product.slug}">${item.product.title}</a>
+                    <span class="quantity">Qty : ${item.quantity}</span>
+                    <span class="price_cart"> ${formatPriceNepali(item.total_price)}</span>
+                  </div>
+                  <div class="cart_remove">
+                    <a href="/cart/${item.id}"><i class="ion-android-close"></i></a>
+                  </div>
+                </div>
+              `;
+              // Append the cart item to the container
+              cartItemsContainer.append(cartItemHtml);
+          });
+
+          //total-amount
+          $('#total-amount').text(formatPriceNepali(response.totalAmount));
+          // card-total 
+          $('#cart-total').text(formatPriceNepali(response.totalAmount));
+          // card aquantity
+          $('#cart-quantity').text(response.cartItems.length);
+            
+      },
+  });
+}
+
+function formatPriceNepali(price) {
+  return new Intl.NumberFormat('ne-NP', {
+      style: 'currency',
+      currency: 'NPR',
+      minimumFractionDigits: 0
+  }).format(price);
+}

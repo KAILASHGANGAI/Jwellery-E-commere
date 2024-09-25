@@ -41,11 +41,11 @@ class ProductController extends Controller
 
     public function show($slug)
     {
-        
+
         $select = ['id', 'title', 'slug', 'price', 'compare_price', 'description', 'collections', 'tags'];
         $condition = ['status' => 'active', 'display' => 1, 'slug' => $slug];
         $data = $this->comm->getSingleData(
-        Product::query()->with(['images:id,product_id,image_path', 'variations:id,product_id,sku,barcode,inventory']),
+            Product::query()->with(['images:id,product_id,image_path', 'variations:id,product_id,sku,barcode,inventory']),
 
             $select,
             $condition
@@ -63,5 +63,33 @@ class ProductController extends Controller
         ]);
 
         return response()->json(['message' => 'Product added to cart'], 200);
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->get('search', null);
+        $select = ['id', 'title', 'slug', 'price', 'compare_price', 'description', 'collections', 'tags'];
+        $condition = ['status' => 'active', 'display' => 1];
+        $request->order ?? $request['order'] = 'id';
+        $request->orderType ?? $request['orderType'] = 'asc';
+        $request->pagination ?? $request['pagination'] = 10;
+        $products = $this->comm->getData(
+            Product::query()->with([
+                'images:id,product_id,image_path',
+                'variations:id,product_id,sku,barcode,inventory'
+            ])
+                ->where($condition)
+                ->where(function ($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('tags', 'like', '%' . $search . '%')
+                        ->orWhere('collections', 'like', '%' . $search . '%');
+                }),
+            $select,
+            [],
+            0,
+            $request
+        );
+
+       return  view('pages.search', compact('products'));  
     }
 }

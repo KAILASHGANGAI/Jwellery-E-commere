@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('banners.collection-banner')
+  
     <div class="container">
         <div class="row">
 

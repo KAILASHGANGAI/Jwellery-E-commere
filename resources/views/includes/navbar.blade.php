@@ -39,7 +39,7 @@
                                     <li><a href="#">Checkout</a></li>
                                     <li><a href="#">My Account</a></li>
                                     <li><a href="#">Shopping Cart</a></li>
-                                    <li><a href="#">Wishlist</a></li>
+                                    <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -79,20 +79,21 @@
                         <div class="search_btn">
                             <a href="#"><i class="ion-ios-search-strong"></i></a>
                             <div class="dropdown_search">
-                                <form action="#">
-                                    <input type="text" placeholder="Search Product ....">
+                            <form action="{{ route('search') }}" method="GET">
+                              
+                                    <input type="text" name="search" placeholder="Search Product ....">
                                     <button type="submit"><i class="ion-ios-search-strong"></i></button>
                                 </form>
                             </div>
                         </div>
-                        <div class="wishlist_btn">
-                            <a href="#"><i class="ion-heart"></i></a>
+                        <div class="wishlist_btn">  
+                            <a href="{{ route('wishlist') }}"><i class="ion-heart"></i></a>
+                            
                         </div>
                         <div class="cart_link">
                             <a href="#" class="d-flex"><i class="ion-android-cart"></i><span
-                                    class="cart_text_quantity">Rs.
-                                    67,598</span><i class="ion-chevron-down"></i></a>
-                            <span class="cart_quantity">2</span>
+                                    class="cart_text_quantity" id="cart-total">0</span><i class="ion-chevron-down"></i></a>
+                            <span class="cart_quantity" id="cart-quantity">0</span>
 
                             <!-- mini cart -->
                             <div class="mini_cart">
@@ -104,35 +105,14 @@
                                         <a href="javascript:void(0)"><i class="ion-android-close"></i></a>
                                     </div>
                                 </div>
-                                <div class="cart_item">
-                                    <div class="cart_img">
-                                        <a href="#"><img src="images/nav-product/product.jpg" alt=""></a>
-                                    </div>
-                                    <div class="cart_info">
-                                        <a href="#">Earings</a>
-                                        <span class="quantity">Qty : 1</span>
-                                        <span class="price_cart">Rs. 54,599</span>
-                                    </div>
-                                    <div class="cart_remove">
-                                        <a href="#"><i class="ion-android-close"></i></a>
-                                    </div>
-                                </div>
-                                <div class="cart_item">
-                                    <div class="cart_img">
-                                        <a href="#"><img src="images/nav-product/product2.jpg" alt=""></a>
-                                    </div>
-                                    <div class="cart_info">
-                                        <a href="#">Bracelet</a>
-                                        <span class="quantity">Qty : 1</span>
-                                        <span class="price_cart">Rs. 12,999</span>
-                                    </div>
-                                    <div class="cart_remove">
-                                        <a href="#"><i class="ion-android-close"></i></a>
-                                    </div>
+                                <div id="card-items" class="card-items">
+
+                                    <!-- mini cart will be inserted here -->
+
                                 </div>
                                 <div class="cart_total">
                                     <span>Subtotal : </span>
-                                    <span>Rs. 67,598</span>
+                                    <span id="total-amount"></span>
                                 </div>
                                 <div class="mini_cart_footer">
                                     <div class="cart_button view_cart">
@@ -303,6 +283,7 @@
             e.preventDefault();
             const parentLi = this.parentElement;
             // Toggle the active class
+            console.log(parentLi);
             parentLi.classList.toggle('active');
         });
     });
@@ -410,6 +391,6 @@
         });
     }
 
-
+   
     fetchData();
 </script>

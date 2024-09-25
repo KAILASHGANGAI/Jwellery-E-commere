@@ -555,6 +555,8 @@ ul {
   top: 0;
   transition: 0.5s;
   transform: translateX(100%);
+  overflow: scroll;
+  overflow-x: hidden;
 }
 
 .mini_cart.active {

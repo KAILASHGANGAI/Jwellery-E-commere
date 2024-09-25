@@ -102,6 +102,7 @@
 
     <!-- modal section ends -->
     @include('includes.scripts')
+    @yield('scripts')
     <script>
         window.isAuthenticated = @json(auth()->check());
         // Reusable function to add a product to the cart
@@ -123,6 +124,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token for security
                 },
                 success: function(response) {
+
+                    // card-total 
+                    $('#cart-total').text(formatPriceNepali(response.totalAmount));
+                    // card aquantity
+                    $('#cart-quantity').text(response.totalQuantity);
                     // Handle success response, such as updating the cart UI
                     alert("Product added to cart successfully!");
 
@@ -149,7 +155,7 @@
         $(document).on('click', '.add_to_cart_button', function(event) {
             event.preventDefault();
             //check auth of laravel auth
-    
+
             var product_id = $(this).data('id');
             var variation_id = $(this).data('varination-id');
             var sku = $(this).data('sku');
