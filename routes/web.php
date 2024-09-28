@@ -39,6 +39,7 @@ Route::post('register', [RegisterController::class, 'register'])->name('auth.reg
 Route::post('/cart/add', [AddTOCardController::class, 'addToCart'])->name('cart.add');
 Route::get('/get-cart-items', [AddTOCardController::class, 'getCart'])->name('cart.get');
 Route::get('/cart/{cartId}', [AddTOCardController::class, 'removeItem'])->name('cart.remove');
+Route::post('/cart/update', [AddTOCardController::class, 'updateCart'])->name('cart.update');
 Route::get('/search', [ProductController::class, 'search'])->name('search');
 
 Route::get('wishlist', [AddTOCardController::class, 'wishlist'])->name('wishlist');

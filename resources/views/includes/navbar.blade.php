@@ -124,10 +124,10 @@
                                 </div>
                                 <div class="mini_cart_footer">
                                     <div class="cart_button view_cart">
-                                        <a href="#">View Cart</a>
+                                        <a href="{{ route('shopping-cart') }}">View Cart</a>
                                     </div>
                                     <div class="cart_button checkout">
-                                        <a href="#" class="active">Checkout</a>
+                                        <a href="{{ route('checkout') }}" class="active">Checkout</a>
                                     </div>
                                 </div>
                             </div>

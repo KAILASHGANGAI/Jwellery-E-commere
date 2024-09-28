@@ -62,7 +62,27 @@ class AddTOCardController extends Controller
     {
         return ($unitPrice * $quantity) - $discount;
     }
+    public function updateCart(Request $request){
+      
+        $cartItem = AddTOCard::find($request->itemId);
 
+        if ($cartItem) {
+            // Update quantity and total price
+            $quantity = $cartItem->quantity + $request->change; 
+            if ($quantity < 1) {
+                $quantity = 1;
+            }
+            $cartItem->quantity = $quantity;
+            $cartItem->total_price = $this->calculateTotalPrice($quantity, $cartItem->unit_price, $cartItem->discount);
+            $cartItem->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cart updated successfully!',
+            'cart' => $cartItem
+        ]);
+    }
 
     public function getCart()
     {
