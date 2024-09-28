@@ -12,7 +12,7 @@
     @include('includes.metadata')
     @include('includes.links')
 </head>
-
+@yield('style')
 <body>
     <div class="home_black_version">
         @include('includes.navbar')

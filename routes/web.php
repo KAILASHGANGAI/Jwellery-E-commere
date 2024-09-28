@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddTOCardController;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\RegisterController;
+use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -15,8 +16,8 @@ Route::view('/collection', 'pages.collection')->name('collection');
 Route::view('/contact', 'pages.contact')->name('contact');
 Route::view('/about-us', 'pages.about')->name('about');
 
-Route::get('/all-collections',[CollectionController::class, 'index'])->name('all-collections');
-Route::get('/childrens-collections',[CollectionController::class, 'showAllChildrens'])->name('childCollections');
+Route::get('/all-collections', [CollectionController::class, 'index'])->name('all-collections');
+Route::get('/childrens-collections', [CollectionController::class, 'showAllChildrens'])->name('childCollections');
 Route::get('/collection/{slug}', [CollectionController::class, 'show'])->name('collections');
 
 Route::get('products', [ProductController::class, 'index'])->name('web.products');
@@ -39,6 +40,10 @@ Route::post('/cart/add', [AddTOCardController::class, 'addToCart'])->name('cart.
 Route::get('/get-cart-items', [AddTOCardController::class, 'getCart'])->name('cart.get');
 Route::get('/cart/{cartId}', [AddTOCardController::class, 'removeItem'])->name('cart.remove');
 Route::get('/search', [ProductController::class, 'search'])->name('search');
+
 Route::get('wishlist', [AddTOCardController::class, 'wishlist'])->name('wishlist');
 Route::post('/wishlist-products', [AddTOCardController::class, 'getWishlistProducts'])->name('wishlist-products');
 
+// check out 
+Route::get('/check-out',[CheckOutController::class, 'index'])->name('checkout');
+Route::get('shopping-cart', [CheckOutController::class, 'shipCard'])->name('shopping-cart');

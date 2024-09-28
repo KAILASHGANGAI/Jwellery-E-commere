@@ -18,7 +18,8 @@ class AddTOCard extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function  variation(){
+    public function  variation()
+    {
         return $this->belongsTo(Variation::class);
     }
 
@@ -32,5 +33,4 @@ class AddTOCard extends Model
         $subtotal = $quantity * $unit_price;
         return $subtotal - $discount;
     }
-
 }

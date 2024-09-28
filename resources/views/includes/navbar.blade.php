@@ -1,7 +1,7 @@
 <header class="header_area header_black">
     <!-- header top starts -->
     <div class="header_top">
-        <div class="container">
+        <div class="container my-4">
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6">
                     <div class="social_icone">
@@ -17,6 +17,21 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="top_right text-right">
                         <ul>
+                            @auth
+                                <li class="top_links">
+                                    <a href="#">My Account <i class="ion-chevron-down"></i></a>
+                                    <ul class="dropdown_links">
+                                        <li><a href="#">My Account</a></li>
+                                        <li><a href="{{ route('shopping-cart') }}">Shopping Cart</a></li>
+                                        <li><a href="{{ route('checkout') }}">Checkout</a></li>
+                                        <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
+                                        <li><a href="{{ route('logout') }}">Logout</a></li>
+                                    </ul>
+                                </li>
+                            @else
+                                <li><a href="{{ route('login') }}">Login</a></li>
+                                <li><a href="{{ route('register') }}">Register</a></li>
+                            @endauth
                             {{-- <li class="language">
                                 <a href="#">English <i class="ion-chevron-down"></i></a>
                                 <ul class="dropdown_language">
@@ -33,15 +48,7 @@
                                     <li><a href="#">GBP - British Pound</a></li>
                                 </ul>
                             </li> --}}
-                            <li class="top_links">
-                                <a href="#">My Account <i class="ion-chevron-down"></i></a>
-                                <ul class="dropdown_links">
-                                    <li><a href="#">Checkout</a></li>
-                                    <li><a href="#">My Account</a></li>
-                                    <li><a href="#">Shopping Cart</a></li>
-                                    <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
-                                </ul>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -79,20 +86,21 @@
                         <div class="search_btn">
                             <a href="#"><i class="ion-ios-search-strong"></i></a>
                             <div class="dropdown_search">
-                            <form action="{{ route('search') }}" method="GET">
-                              
+                                <form action="{{ route('search') }}" method="GET">
+
                                     <input type="text" name="search" placeholder="Search Product ....">
                                     <button type="submit"><i class="ion-ios-search-strong"></i></button>
                                 </form>
                             </div>
                         </div>
-                        <div class="wishlist_btn">  
+                        <div class="wishlist_btn">
                             <a href="{{ route('wishlist') }}"><i class="ion-heart"></i></a>
-                            
+
                         </div>
                         <div class="cart_link">
                             <a href="#" class="d-flex"><i class="ion-android-cart"></i><span
-                                    class="cart_text_quantity" id="cart-total">0</span><i class="ion-chevron-down"></i></a>
+                                    class="cart_text_quantity" id="cart-total">0</span><i
+                                    class="ion-chevron-down"></i></a>
                             <span class="cart_quantity" id="cart-quantity">0</span>
 
                             <!-- mini cart -->
@@ -391,6 +399,6 @@
         });
     }
 
-   
+
     fetchData();
 </script>
