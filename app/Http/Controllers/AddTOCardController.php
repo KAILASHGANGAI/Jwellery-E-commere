@@ -6,9 +6,18 @@ use App\Models\AddTOCard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Modules\Admin\Models\Product;
+use App\Services\commonServices;
 
 class AddTOCardController extends Controller
 {
+
+
+    protected $comm;
+    public function __construct(commonServices $comm)
+    {
+        $this->comm = $comm;
+    }
+
     public function addToCart(Request $request)
     {
         // Validate incoming request data

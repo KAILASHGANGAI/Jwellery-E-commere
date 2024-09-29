@@ -58,7 +58,7 @@
                                 <span id="subtotal">NPR. 0.00</span>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <span>Sales Tax:</span>
+                                <span>Sales Tax (13% VAT):</span>
                                 <span id="salesTax">NPR. 0.00</span>
                             </div>
                         </div>

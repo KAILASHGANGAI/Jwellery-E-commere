@@ -22,9 +22,11 @@ return new class extends Migration
             $table->integer('no_of_item')->default(1);
             $table->decimal('subtotal', 8, 2)->nullable();
             $table->decimal('delivaryCharge', 8, 2)->nullable();
+            $table->string('payment_status')->nullable();
             $table->string('payment_method')->nullable();
-            $table->decimal('nettotal', 8, 2)->nullable();
             $table->decimal('discount', 8, 2)->nullable();
+            $table->decimal('taxAmount', 8, 2)->default(0);
+            $table->decimal('nettotal', 8, 2)->nullable();
             $table->string('coupon_code')->nullable();
             $table->date('order_date');
             $table->date('delivary_date')->nullable();

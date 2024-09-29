@@ -65,6 +65,10 @@
                                     <input type="radio" class="m-2" name="discount_on" value="tags" id="tags"
                                         {{ old('on', $discount->on) == 'tags' ? 'checked' : '' }}>
                                     <label class="fw-bold" for="tags">Products Tags</label>
+                                    <input type="radio" class="m-2" name="discount_on" value="on_checkout"
+                                        id="on_checkout"
+                                        {{ old('discount_on', $discount->discount_on) == 'on_checkout' ? 'checked' : '' }}>
+                                    <label class="fw-bold" for="on_checkout">Order Checkout</label>
                                 </div>
 
                                 <div class="lists" style="height: 200px; width: 100%; overflow-y: scroll">

@@ -48,3 +48,8 @@ Route::post('/wishlist-products', [AddTOCardController::class, 'getWishlistProdu
 // check out 
 Route::get('/check-out',[CheckOutController::class, 'index'])->name('checkout');
 Route::get('shopping-cart', [CheckOutController::class, 'shipCard'])->name('shopping-cart');
+Route::post('/place-order', [CheckOutController::class, 'placeOrder'])->name('place-order');
+
+Route::get('order-success', [CheckOutController::class, 'orderSuccess'])->name('orderSuccess');
+Route::get('order-failed', [CheckOutController::class, 'orderFailed'])->name('order-failed');
+Route::get('order-cancel', [CheckOutController::class, 'orderCancel'])->name('order-cancel');
