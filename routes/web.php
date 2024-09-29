@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use Modules\Admin\Models\Order;
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,3 +54,4 @@ Route::post('/place-order', [CheckOutController::class, 'placeOrder'])->name('pl
 Route::get('order-success', [CheckOutController::class, 'orderSuccess'])->name('orderSuccess');
 Route::get('order-failed', [CheckOutController::class, 'orderFailed'])->name('order-failed');
 Route::get('order-cancel', [CheckOutController::class, 'orderCancel'])->name('order-cancel');
+Route::get('/download-bill/{orderID}', [CheckOutController::class, 'downloadBill'])->name('download-bill');

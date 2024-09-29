@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -10,6 +11,7 @@
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
         }
+
         .invoice-box {
             max-width: 800px;
             margin: auto;
@@ -20,48 +22,59 @@
             line-height: 24px;
             color: #555;
         }
-        .table th, .table td {
+
+        .table th,
+        .table td {
             padding: 12px;
             vertical-align: top;
         }
+
         .total {
             font-weight: bold;
             font-size: 1.2em;
         }
     </style>
 </head>
+
 <body>
     <div class="invoice-box">
+      
         <h2>Bill for Order #{{ $order->id }}</h2>
 
-        <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
+        <p><strong>Customer Name:</strong> {{ $order->customer->name }}</p>
         <p><strong>Order Date:</strong> {{ $order->created_at->format('d M Y') }}</p>
-
-        <h4>Order Summary</h4>
+        <h4>Order Details</h4>
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>Images</th>
                     <th>Item</th>
+                    <th>Unit Price</th>
                     <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
+                    <th>SubTotal Price</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($order->items as $item)
+                @foreach ($order->orderProducts as $item)
                     <tr>
-                        <td>{{ $item['name'] }}</td>
-                        <td>{{ $item['quantity'] }}</td>
-                        <td>${{ number_format($item['price'], 2) }}</td>
-                        <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                        <td><img src="{{ public_path($item->product->images[0]->image_path) }}?height=100&width=100"
+                                height="50px" width="50px" alt=""></td>
+                        <td>{{ $item->product->title }}</td>
+                        <td>NPR. {{ number_format($item->unitPrice, 2) }}</td>
+                        <td>{{ $item->quantity }}</td>
+                        <td>NPR.{{ $item->subtotal }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <p class="text-right total">Total Amount: ${{ number_format($order->total, 2) }}</p>
+        <p class="text-right total">Net Amount: NPR.{{ number_format($order->nettotal, 2) }}</p>
+        <p class="text-right total">Tax Amount: NPR.{{ number_format($order->taxAmount, 2) }}</p>
+        <hr>
+        <p class="text-right total">Grand Total Amount: NPR.{{ number_format($order->total_amount, 2) }}</p>
 
         <p>Thank you for your business!</p>
     </div>
 </body>
+
 </html>

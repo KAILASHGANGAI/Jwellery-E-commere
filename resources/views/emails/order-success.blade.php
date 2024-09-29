@@ -35,33 +35,39 @@
 </head>
 <body>
     <div class="invoice-box">
-        <h2 class="text-center">Thank you for your order, {{ $order->customer_name }}!</h2>
+        <h2 class="text-center">Thank you for your order {{ $order->customer->name }}!</h2>
 
-        <p>Your order <strong>#{{ $order->id }}</strong> has been successfully placed.</p>
-
+        <p>Your order ID<strong>#{{ $order->id }}</strong> has been successfully placed.</p>
+        <a href="{{ route('download-bill', ['orderID' => $order->id]) }}">
+            Download your Invoice (Order #{{ $order->id }})
+        </a>
         <h4>Order Details</h4>
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>Images</th>
                     <th>Item</th>
+                    <th>Unit Price</th>
                     <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
+                    <th>SubTotal Price</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($order->items as $item)
+                @foreach ($order->orderProducts as $item)
                     <tr>
-                        <td>{{ $item['name'] }}</td>
-                        <td>{{ $item['quantity'] }}</td>
-                        <td>${{ number_format($item['price'], 2) }}</td>
-                        <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                        <td><img src="{{ asset( $item->product->images[0]->image_path) }}?height=100&width=100" height="100px" width="100px" alt=""></td>
+                        <td>{{ $item->product->title }}</td>
+                        <td>NPR. {{ number_format($item->unitPrice, 2) }}</td>
+                        <td>{{ $item->quantity }}</td>
+                        <td>NPR.{{ $item->subtotal}}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <p class="text-right total">Total Amount: ${{ number_format($order->total, 2) }}</p>
+        <p class="text-right total">Net Amount: NPR.{{ number_format($order->nettotal, 2) }}</p>
+        <p class="text-right total">Tax Amount: NPR.{{ number_format($order->taxAmount, 2) }}</p> <hr>
+        <p class="text-right total">Grand Total Amount: NPR.{{ number_format($order->total_amount, 2) }}</p>
 
         <p>You will find the attached bill for your reference. We will notify you when your order is shipped.</p>
 

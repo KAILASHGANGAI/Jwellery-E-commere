@@ -28,6 +28,6 @@ class Order extends Model
     // delivary location
     public function delivaryLocation()
     {
-        return $this->belongsTo(DelivaryLocation::class, 'delivary_location_id');
+        return $this->hasOne(DelivaryLocation::class, 'order_id' );
     }
 }

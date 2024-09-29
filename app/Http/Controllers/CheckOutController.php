@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\OrderSuccessMail;
 use App\Models\AddTOCard;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Modules\Admin\Models\Customer;
 use Modules\Admin\Models\DelivaryLocation;
 use Modules\Admin\Models\Order;
 use Symfony\Component\Mailer\Messenger\SendEmailMessage;
+use Illuminate\Support\Facades\Mail;
 
 class CheckOutController extends Controller
 {
@@ -28,6 +30,8 @@ class CheckOutController extends Controller
 
     public function placeOrder(Request $request)
     {
+
+
         $request->validate([
             'name' => 'required |string',
             'email' => 'required |email',
@@ -48,6 +52,7 @@ class CheckOutController extends Controller
 
             $order = $this->manageOrder($request, $customer->id);
 
+
             $orderProducts = $this->manageOrderProducts($order->id);
             if ($orderProducts) {
                 // delete from the card 
@@ -55,9 +60,10 @@ class CheckOutController extends Controller
             }
 
             $this->deliaryLocation($order->id, $request);
-
+            \Mail::to(
+                $request->email
+            )->send(new \App\Mail\OrderSuccessMail($order->id));
             DB::commit();
-            OrderSuccessMail::dispatch($order);
 
             return redirect()
                 ->route('orderSuccess', ['OrderID' => $order->id])
@@ -176,5 +182,21 @@ class CheckOutController extends Controller
     public function orderFailed()
     {
         return view('pages.ordermessage.failuer');
+    }
+
+    public function downloadBill($orderID)
+    {
+        // Fetch the order details
+        $order = Order::with([
+            'customer',
+            'orderProducts',
+            'delivaryLocation'
+        ])->where('id', $orderID)->first();
+
+        // Generate the PDF from the Blade view
+        $pdf = Pdf::loadView('pdf.bill', compact('order'));
+
+        // Stream the PDF for download, naming it appropriately
+        return $pdf->download('invoice_order_' . $orderID . '.pdf');
     }
 }

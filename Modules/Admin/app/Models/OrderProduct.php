@@ -15,8 +15,8 @@ class OrderProduct extends Model
      */
     protected $fillable = [];
 
-    protected static function newFactory(): OrderProductFactory
+    public function product()
     {
-        //return OrderProductFactory::new();
+        return $this->belongsTo(Product::class);
     }
 }
