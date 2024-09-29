@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderSuccessMail;
 use App\Models\AddTOCard;
 use Exception;
 use Illuminate\Container\Attributes\Auth;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Admin\Models\Customer;
 use Modules\Admin\Models\DelivaryLocation;
 use Modules\Admin\Models\Order;
+use Symfony\Component\Mailer\Messenger\SendEmailMessage;
 
 class CheckOutController extends Controller
 {
@@ -55,6 +57,8 @@ class CheckOutController extends Controller
             $this->deliaryLocation($order->id, $request);
 
             DB::commit();
+            OrderSuccessMail::dispatch($order);
+
             return redirect()
                 ->route('orderSuccess', ['OrderID' => $order->id])
                 ->with('success', 'Order Placed Successfully');
