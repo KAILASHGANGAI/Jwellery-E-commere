@@ -1,56 +1,72 @@
 @extends('admin::layouts.master')
-
+@section('style')
+    <style>
+        .main-title {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+@endsection
 @section('content')
-    <h1>Orders</h1>
-    <div class="pickup-info">
-        <h3>1 scheduled carrier pickup</h3>
-        <p>From Castle Hill with Sendle on Thursday, 5 September between 8 am - 6 pm.</p>
-        <button>View pickup</button>
-    </div>
+    <h4 class="main-title">Orders List</h4>
+    @include('admin::includes.errors')
     <div class="order-controls">
         <div class="order-tabs">
-            <span class="order-tab active" onclick="setActiveTab(this)">All</span>
-            <span class="order-tab" onclick="setActiveTab(this)">Unpaid</span>
-            <span class="order-tab" onclick="setActiveTab(this)">Open</span>
-            <span class="order-tab" onclick="setActiveTab(this)">Archived</span>
-            <span class="order-tab" onclick="setActiveTab(this)">+</span>
+            <span class="order-tab active" onclick="setActiveTab('all')">All</span>
+            <span class="order-tab" onclick="setActiveTab('refund')">Refund</span>
+            <span class="order-tab" onclick="setActiveTab('cancled')">Cancled</span>
+            <span class="order-tab" onclick="setActiveTab('pending')">Pending</span>
+            <span class="order-tab" onclick="setActiveTab('fulfilled')">Fulfilled</span>
+            <span class=" ">
+                <a class="order-tab bg-success text-decoration-none text-white font-weight-bold"
+                    href="{{ route('orders.create') }}">+</a>
+            </span>
+            <button id="bulk-delete-btn" class="btn text-danger" style="display: none;" onclick="bulkDelete()">Bulk
+                <i class="fa fa-trash"></i>
+            </button>
+
         </div>
         <div class="order-actions">
+
             <input type="text" id="table-search" placeholder="Search ...">
             <button class="search-button" onclick="searchOrders()">Search</button>
-            <span>☰</span> 
+            <span>☰</span>
             <span>⋮</span>
             <div class="filter-dropdown">
                 <span onclick="toggleFilter()">↓</span>
                 <div id="filterDropdown" class="filter-content">
-                    <a href="#" onclick="applyFilter('all')">All</a>
-                    <a href="#" onclick="applyFilter('paid')">Paid</a>
-                    <a href="#" onclick="applyFilter('unfulfilled')">Unfulfilled</a>
-                    <a href="#" onclick="applyFilter('fulfilled')">Fulfilled</a>
+                    <a href="#" onclick="applySort('id', 'asc')">A -Z</a>
+                    <a href="#" onclick="applySort('id', 'desc')">Z -A</a>
+                    <a href="#" onclick="applySort('created_at', 'desc')">Newest</a>
+                    <a href="#" onclick="applySort('created_at', 'asc')">Oldest</a>
+                    <a href="#" onclick="applySort('updated_at', 'desc')">Last Updated</a>
+                    <a href="#" onclick="applySort('updated_at', 'asc')">First Updated</a>
                 </div>
             </div>
         </div>
     </div>
-    <div style="overflow-x: auto;">
+    <div style="overflow-x: auto;" class="bg-white">
         <table class="order-table" id="orderTable">
             <thead>
                 <tr>
-                    <th></th>
-                    <th>Order</th>
-                    <th>Date</th>
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>OrderID</th>
+                    <th>Order Date</th>
                     <th>Customer</th>
-                    <th>Channel</th>
+                    <th>Status</th>
                     <th>Total</th>
-                    <th>Payment status</th>
-                    <th>Fulfillment status</th>
-                    <th>Items</th>
-                    <th>Delivery status</th>
+                    <th>No Items</th>
+                    <th>Net Total</th>
+                    <th>Tax Amount</th>
+                    <th>Payment Method</th>
+                    {{-- <th>Fulfillment status</th> --}}
+                    {{-- <th>Delivery status</th>
                     <th>Delivery method</th>
-                    <th>Tags</th>
+                    <th>Tags</th> --}}
                 </tr>
             </thead>
             <tbody id="orderTableBody">
                 <!-- Table body will be populated dynamically -->
+
             </tbody>
         </table>
     </div>
@@ -60,103 +76,47 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('admin/js/index.js') }}"></script>
     <script>
-        let currentPage = 1;
+        const apiBaseUrl = '{{ route('orders.indexAjax') }}'; // Replace with your actual API base URL
+        const apiBaseDeleteUrl = '{{ route('orders.bulkDelete') }}';
         const ordersPerPage = 10;
-        const apiBaseUrl = 'https://api.example.com'; // Replace with your actual API base URL
+        let currentPage = 1;
 
-      
-
-        function searchOrders() {
-            const searchTerm = document.getElementById('table-search').value;
-            currentPage = 1;
-            fetchOrders(searchTerm);
+        // Initialize the page
+        function init() {
+            initEventListeners();
+            fetchOrders();
         }
 
-        function applyFilter(filter) {
-            currentPage = 1;
-            fetchOrders('', filter);
-        }
-
-        async function fetchOrders(searchTerm = '', filter = 'all') {
-            try {
-                const response = await fetch(
-                    `${apiBaseUrl}/orders?page=${currentPage}&per_page=${ordersPerPage}&search=${searchTerm}&filter=${filter}`
-                    );
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                displayOrders(data.orders);
-                setupPagination(data.total, data.current_page, data.last_page);
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-                // Handle the error (e.g., display an error message to the user)
-            }
-        }
-
-        function displayOrders(orders) {
+        // Display orders in the table
+        function displayOrders(data) {
             const tableBody = document.getElementById('orderTableBody');
             tableBody.innerHTML = '';
-
-            orders.forEach(order => {
+            if (data.length == 0) {
+                tableBody.innerHTML = '<tr><td colspan="11">No datas found.</td></tr>';
+            }
+            data.forEach(order => {
                 const row = `
                     <tr>
-                        <td><input type="checkbox"></td>
+                     <td><input type="checkbox" class="checkbox" name="ids[]" value="${order.id}"></td>
+
                         <td>${order.id}</td>
-                        <td>${order.date}</td>
-                        <td>${order.customer}</td>
-                        <td>${order.channel}</td>
-                        <td>${order.total}</td>
-                        <td><span class="status-dot status-${order.payment_status.toLowerCase()}"></span>${order.payment_status}</td>
-                        <td><span class="status-dot status-${order.fulfillment_status.toLowerCase()}"></span>${order.fulfillment_status}</td>
-                        <td>${order.items}</td>
-                        <td>${order.delivery_status}</td>
-                        <td>${order.delivery_method}</td>
-                        <td>${order.tags}</td>
+                        <td>${order.order_date}</td>
+                        <td>${order.customer.name}</td>
+                        <td><span class="status-dot status-${order.status}"></span>${order.status}</td>
+                        <td>NPR. ${order.total_amount}</td>
+             
+                        <td>${order.no_of_item}</td>
+                        <td>NPR. ${order.nettotal}</td>
+                        <td>NPR. ${order.taxAmount}</td>
+                        <td><span class="status-dot status-${order.payment_method}"></span>${order.payment_method}</td>
+                     
                     </tr>
                 `;
                 tableBody.innerHTML += row;
             });
         }
-
-        function setupPagination(totalOrders, currentPage, totalPages) {
-            const paginationElement = document.getElementById('pagination');
-            paginationElement.innerHTML = '';
-
-            // Previous button
-            const prevButton = document.createElement('button');
-            prevButton.innerText = 'Previous';
-            prevButton.onclick = () => changePage(currentPage - 1);
-            prevButton.disabled = currentPage === 1;
-            paginationElement.appendChild(prevButton);
-
-            // Page numbers
-            for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.innerText = i;
-                pageButton.onclick = () => changePage(i);
-                if (i === currentPage) {
-                    pageButton.classList.add('current-page');
-                }
-                paginationElement.appendChild(pageButton);
-            }
-
-            // Next button
-            const nextButton = document.createElement('button');
-            nextButton.innerText = 'Next';
-            nextButton.onclick = () => changePage(currentPage + 1);
-            nextButton.disabled = currentPage === totalPages;
-            paginationElement.appendChild(nextButton);
-        }
-
-        function changePage(newPage) {
-            currentPage = newPage;
-            const searchTerm = document.getElementById('table-search').value;
-            fetchOrders(searchTerm);
-        }
-
-        // Initial load
-        fetchOrders();
+        init();
     </script>
 @endsection

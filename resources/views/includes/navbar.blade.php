@@ -1,7 +1,7 @@
 <header class="header_area header_black">
     <!-- header top starts -->
     <div class="header_top">
-        <div class="container my-4">
+        <div class="container mt-2">
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6">
                     <div class="social_icone">
@@ -68,13 +68,13 @@
                             <img src="images/icon/icon_phone.png" alt="">
                         </div>
                         <div class="contact_box">
-                            <p>Inquiry / Helpline : <a href="tel: 1234567894">1234567894</a></p>
+                            <p> Helpline : <a href="tel: 1234567894">1234567894</a></p>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-3 col-6">
-                    <div class="logo">
+                <div class="col-lg-2 col-md-3 col-6 ">
+                    <div class="logo d-none d-lg-block">
                         <a href="index.html">
                             {{-- <img src="images/logo/logo-ash.png" alt=""> --}} logo
                         </a>
@@ -157,7 +157,7 @@
                         <div class="main_menu" id="mainmenu">
 
                         </div>
-                        <div class="hem float-right">
+                        <div class="hem float-right d-lg-none d-md-none ">
                             <div class="col-lg-5 col-md-7 col-6">
                                 <div class="middel_right">
                                     <div class="cart_link_hem">
@@ -262,7 +262,10 @@
         .mini_cart_hem {
             display: none;
         }
+
+        
     }
+    
 
     /* Hide dropdown menu by default */
     .dropdown_menu {
@@ -380,7 +383,9 @@
         // Add static links for 'About Us' and 'Contact'
         menuHtml += `
         <li><a href="{{ route('about') }}">About Us</a></li>
-        <li><a href="{{ route('contact') }}">Contact</a></li>`;
+        <li><a href="{{ route('contact') }}">Contact</a></li>
+           
+        `;
 
         // Insert the generated menu into the sidebar
         sidebarMenu.innerHTML = menuHtml;

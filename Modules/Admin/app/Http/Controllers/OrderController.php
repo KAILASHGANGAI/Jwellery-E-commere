@@ -3,18 +3,67 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\CommonRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Modules\Admin\Models\Order;
+use Modules\Admin\Services\AdminComonService;
 
 class OrderController extends Controller
 {
+    private CommonRepository $comReo;
+    private AdminComonService $adminService;
+    public function __construct(AdminComonService $adminService)
+    {
+        $this->adminService = $adminService;
+        $this->comReo = new CommonRepository(Order::class);
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('admin::index');
+        return view('admin::orders.index');
+    }
+    public function indexAjax(Request $request)
+    {
+        $pagination = $request->get('limit', 2);
+        $search = $request->get('search', null);
+        $filter = $request->get('filter', null);
+        $sort_field = $request->get('sort_field', 'created_at');
+        $sort_type = $request->get('sort_type', 'DESC');
+        $select  = [
+            'id',        
+            'customer_id',
+            'status',
+            'total_amount',
+            'no_of_item',
+            'subtotal',
+            'payment_method',
+            'nettotal',
+            'taxAmount',
+            'order_date',
+            'delivary_date'
+        ];
+        $searchableFields = [
+            'id',
+            'status',
+            'payment_method',
+            'created_at',
+        ];
+        $data = $this->comReo->getData(
+            $select,
+            $search,
+            $searchableFields,
+            $filter,
+            $sort_field,
+            $sort_type,
+            $limit ?? null,
+            $pagination,
+            ['customer:id,name']
+        );
+
+        return response()->json($data, 200);
     }
 
     /**
@@ -22,7 +71,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('admin::create');
+        return view('admin::order.create');
     }
 
     /**
@@ -38,7 +87,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        return view('admin::show');
+        return view('admin::order.show');
     }
 
     /**
@@ -46,7 +95,7 @@ class OrderController extends Controller
      */
     public function edit($id)
     {
-        return view('admin::edit');
+        return view('admin::order.edit');
     }
 
     /**
@@ -63,5 +112,13 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function bulkDelete(Request $request)
+    {
+
+        $ids = $request->ids;
+        $this->comReo->bulkDelete($ids);
+        return response()->json(['success' => 'Orders deleted successfully.'], 200);
     }
 }

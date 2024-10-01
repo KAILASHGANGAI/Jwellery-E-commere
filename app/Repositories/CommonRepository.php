@@ -187,7 +187,8 @@ class CommonRepository implements CommonRepositoryInterface
         $direction = 'desc',
         $limit = null,
         $paginate = null,
-        $with = null
+        $with = null,
+        
     ) {
 
         return $this->model::query()
@@ -220,7 +221,8 @@ class CommonRepository implements CommonRepositoryInterface
                 return $query->limit($limit);
             })
             ->when($paginate, function ($query) use ($paginate) {
-                return $query->paginate($paginate);
+              return   $query->paginate($paginate)->appends(request()->all());
+                 // with request 
             });
     }
 

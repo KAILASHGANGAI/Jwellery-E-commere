@@ -45,6 +45,9 @@ Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function (
 
     #orders routes
     Route::resource('/orders', OrderController::class)->names('orders');
+    Route::get('/order-ajax', [OrderController::class, 'indexAjax'])->name('orders.indexAjax');
+    Route::post('/order-bulk-delete', [OrderController::class, 'bulkDelete'])->name('orders.bulkDelete');
+    Route::get('/search-orders', [OrderController::class, 'search'])->name('orders.search');
 
     #discount 
     Route::resource('/discounts', DiscountController::class)->names('discounts');

@@ -202,11 +202,13 @@ body {
 }
 
 .status-active,
+.status-fulfilled,
 .status-1 {
     background-color: #50b83c;
 }
 
 .status-archived, .status-inactive, 
+.status-pending,
 .status-0 {
     background-color: #e74c3c;
 }
