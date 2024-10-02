@@ -27,7 +27,7 @@ class OrderController extends Controller
     }
     public function indexAjax(Request $request)
     {
-        $pagination = $request->get('limit', 2);
+        $pagination = $request->get('limit', 20);
         $search = $request->get('search', null);
         $filter = $request->get('filter', null);
         $sort_field = $request->get('sort_field', 'created_at');
@@ -84,10 +84,11 @@ class OrderController extends Controller
 
     /**
      * Show the specified resource.
-     */
+     */ 
     public function show($id)
     {
-        return view('admin::order.show');
+        $order = $this->comReo->find($id);
+        return view('admin::orders.show', compact('order'));
     }
 
     /**

@@ -1,11 +1,11 @@
 
 // Fetch orders from the API
 async function fetchOrders(options = {}) {
-    const {
+    const { 
         searchTerm = '',    // Default value: empty string
         filter = 'all',     // Default value: 'all'
-        sortBy = '',        // Default value: empty string
-        sortOrder = ''      // Default value: empty string
+        sortBy = 'id',        // Default value: empty string
+        sortOrder = 'DESC'      // Default value: empty string
     } = options;
     const url = `${apiBaseUrl}?page=${currentPage}&per_page=${ordersPerPage}&search=${searchTerm}&filter=${filter}&sort_field=${sortBy}&sort_type=${sortOrder}`;
     showLoader();

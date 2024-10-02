@@ -93,20 +93,24 @@
         function displayOrders(data) {
             const tableBody = document.getElementById('orderTableBody');
             tableBody.innerHTML = '';
+        console.log(data);
             if (data.length == 0) {
                 tableBody.innerHTML = '<tr><td colspan="11">No datas found.</td></tr>';
             }
+         
+            
             data.forEach(order => {
+                var viewUrl = '{{ route('orders.show', ':id') }}';
+                viewUrl = viewUrl.replace(':id', order.id);
                 const row = `
                     <tr>
                      <td><input type="checkbox" class="checkbox" name="ids[]" value="${order.id}"></td>
 
-                        <td>${order.id}</td>
+                        <td><a class="text-decoration-none" href="${viewUrl}">${order.id}</a></td>
                         <td>${order.order_date}</td>
-                        <td>${order.customer.name}</td>
+                        <td><a href="${viewUrl}">${order.customer.name}</a></td>
                         <td><span class="status-dot status-${order.status}"></span>${order.status}</td>
                         <td>NPR. ${order.total_amount}</td>
-             
                         <td>${order.no_of_item}</td>
                         <td>NPR. ${order.nettotal}</td>
                         <td>NPR. ${order.taxAmount}</td>

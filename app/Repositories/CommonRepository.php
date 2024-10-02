@@ -31,7 +31,7 @@ class CommonRepository implements CommonRepositoryInterface
             ->orderBy('id', 'desc')
             ->paginate($limit);
     }
-    
+
     /**
      * Retrieves all records from the model with a given condition.
      *
@@ -158,10 +158,10 @@ class CommonRepository implements CommonRepositoryInterface
         return $this->model->create($data);
     }
 
-    public function createOrUpdateByCondition($condition, $data){
+    public function createOrUpdateByCondition($condition, $data)
+    {
 
-      return $this->model::updateOrCreate($condition, $data);
-    
+        return $this->model::updateOrCreate($condition, $data);
     }
     /**
      * Retrieves data from the model based on various parameters.
@@ -181,14 +181,14 @@ class CommonRepository implements CommonRepositoryInterface
     public function getData(
         $select = null,
         $search = null,
-        $searchableFields = null,   
+        $searchableFields = null,
         $filter = null,
-        $sort = 'created_at',
+        $sort = 'id',
         $direction = 'desc',
         $limit = null,
         $paginate = null,
         $with = null,
-        
+
     ) {
 
         return $this->model::query()
@@ -204,7 +204,7 @@ class CommonRepository implements CommonRepositoryInterface
 
                     foreach ($searchableFields as $field) {
 
-                        $query->orWhere($field, 'like', '%' . $search . '%');   
+                        $query->orWhere($field, 'like', '%' . $search . '%');
                     }
 
                     return $query;
@@ -214,15 +214,16 @@ class CommonRepository implements CommonRepositoryInterface
 
                 return $query->where('status', $filter);
             })
-            ->when($sort, function ($query) use ($sort, $direction) {
-                return $query->orderBy($sort, $direction);
-            })
+
             ->when($limit, function ($query) use ($limit) {
                 return $query->limit($limit);
             })
+            ->when($sort, function ($query) use ($sort, $direction) {
+                return $query->orderBy($sort, $direction);
+            })
             ->when($paginate, function ($query) use ($paginate) {
-              return   $query->paginate($paginate)->appends(request()->all());
-                 // with request 
+                return   $query->paginate($paginate)->appends(request()->all());
+                // with request 
             });
     }
 
@@ -233,14 +234,14 @@ class CommonRepository implements CommonRepositoryInterface
      * @param string $value The value to be searched for in the specified field.
      * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model[]
      */
-    public function searchByField($field, $value, $select=null)
+    public function searchByField($field, $value, $select = null)
     {
 
         return $this->model::query()
-        ->when($select, function ($query) use ($select) {
+            ->when($select, function ($query) use ($select) {
 
-            return $query->select($select);
-        })
-        ->where($field, 'like', '%' . $value . '%')->get();
+                return $query->select($select);
+            })
+            ->where($field, 'like', '%' . $value . '%')->get();
     }
 }
