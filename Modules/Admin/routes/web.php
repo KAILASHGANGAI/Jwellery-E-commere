@@ -48,7 +48,7 @@ Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function (
     Route::get('/order-ajax', [OrderController::class, 'indexAjax'])->name('orders.indexAjax');
     Route::post('/order-bulk-delete', [OrderController::class, 'bulkDelete'])->name('orders.bulkDelete');
     Route::get('/search-orders', [OrderController::class, 'search'])->name('orders.search');
-
+    Route::post('/update-order/{id}',[OrderController::class, 'saveField'])->name('saveField');
     #discount 
     Route::resource('/discounts', DiscountController::class)->names('discounts');
     Route::get('/discount-ajax', [DiscountController::class, 'indexAjax'])->name('discounts.indexAjax');

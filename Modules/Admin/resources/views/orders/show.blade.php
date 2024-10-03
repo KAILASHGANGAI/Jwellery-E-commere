@@ -145,10 +145,13 @@
             #<span>{{ $order->id }}</span> <span class="tag editable"
                 data-field="status">{{ strtoupper($order->status) }}</span></h1>
         <div class="header1-actions">
-            <button onclick="alert('Refund initiated')">Refund</button>
+            <button onclick="saveField('status', 'refund')">Refund</button>
+            <button onclick="saveField('status', 'fulfilled')">Fulfilled</button>
+            <button onclick="saveField('status', 'refund')">Refund</button>
+            <button onclick="saveField('status', 'cancled')">Cancled</button>
+
             <button onclick="toggleEditMode()">Edit</button>
             <button onclick="window.print()">Print</button>
-            <button onclick="alert('More actions')">More actions</button>
         </div>
     </div>
     <div class="main-content2">
@@ -223,14 +226,15 @@
                 <span>{{ $order->customer->country }}</span>
                 <h5 class="mt-3">Shipping address</h5>
                 <span class="editable fw-bold" data-field="name">{{ $order->delivaryLocation->name }}</span>
-           
+
                 <a href="tel:{{ $order->delivaryLocation->phone }}" class="editable"
                     data-field="phone">{{ $order->delivaryLocation->phone }}</a>
                 <span class="editable" data-field="address">{{ $order->delivaryLocation->address }}</span>
-                <span>{{ $order->delivaryLocation->city }}, {{ $order->delivaryLocation->state }}, {{ $order->delivaryLocation->zip }}</span>
+                <span>{{ $order->delivaryLocation->city }}, {{ $order->delivaryLocation->state }},
+                    {{ $order->delivaryLocation->zip }}</span>
                 <span>{{ $order->delivaryLocation->country }}</span>
                 <h5 class="mt-3">Billing address</h5>
-                <p class="editable" data-field="billingAddress">Same as shipping address /  Customer address </p>
+                <p class="editable" data-field="billingAddress">Same as shipping address / Customer address </p>
             </div>
             <div class="card">
                 <h2>Conversion summary</h2>
@@ -306,10 +310,15 @@
         }
 
         function saveField(field, value) {
-            fetch('/api/saveField', {
+            var saveUrl = '{{ route('saveField', $order->id) }}';
+
+            fetch(saveUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content')
+
                     },
                     body: JSON.stringify({
                         field,
@@ -318,8 +327,10 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        showSaveIndicator();
+                    console.log(data)
+                    if (data.status) {
+                      alert(data.message);
+                      window.location.href="{{ route('orders.show', $order->id) }}";
                     } else {
                         alert('Failed to save changes. Please try again.');
                     }

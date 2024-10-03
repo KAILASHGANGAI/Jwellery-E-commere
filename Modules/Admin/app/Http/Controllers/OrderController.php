@@ -33,7 +33,7 @@ class OrderController extends Controller
         $sort_field = $request->get('sort_field', 'created_at');
         $sort_type = $request->get('sort_type', 'DESC');
         $select  = [
-            'id',        
+            'id',
             'customer_id',
             'status',
             'total_amount',
@@ -84,7 +84,7 @@ class OrderController extends Controller
 
     /**
      * Show the specified resource.
-     */ 
+     */
     public function show($id)
     {
         $order = $this->comReo->find($id);
@@ -121,5 +121,22 @@ class OrderController extends Controller
         $ids = $request->ids;
         $this->comReo->bulkDelete($ids);
         return response()->json(['success' => 'Orders deleted successfully.'], 200);
+    }
+
+    public function saveField(Request $request, $id)
+    {
+        
+        
+        $field = $request->get('field');
+        $value = $request->get('value');
+        $data = [
+            $field => $value 
+        ];
+        $this->comReo->update($id, $data);
+
+        return response()->json([
+            'status' => 200,
+            'message' => $request->field . " Updated SuccessFully"
+        ]);
     }
 }
