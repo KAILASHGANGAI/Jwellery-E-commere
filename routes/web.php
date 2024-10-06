@@ -21,7 +21,8 @@ Route::get('/all-collections', [CollectionController::class, 'index'])->name('al
 Route::get('/childrens-collections', [CollectionController::class, 'showAllChildrens'])->name('childCollections');
 Route::get('/collection/{slug}', [CollectionController::class, 'show'])->name('collections');
 
-Route::get('products', [ProductController::class, 'index'])->name('web.products');
+Route::get('/products', [ProductController::class, 'index'])->name('all.products');
+Route::get('api/products', [ProductController::class, 'ajaxIndex'])->name('web.products');
 Route::get('/product-details/{sku}', [ProductController::class, 'show'])->name('product-details');
 
 Route::get('/login', function () {

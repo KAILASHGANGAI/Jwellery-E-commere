@@ -36,10 +36,6 @@ class CollectionController extends Controller
             $request
         );
 
-        if ($request->ajax()) {
-
-            return response()->json($data);
-        }
         return response()->json($data);
     }
 

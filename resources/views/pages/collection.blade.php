@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('banners.collection-banner')
     <div class="container">
         <div class="row">
 
@@ -23,7 +22,7 @@
                         <label for="sort" class="form-label me-2">Sort by:</label>
                         <select class="form-select d-inline-block w-auto" id="sort">
                             <option selected>Default</option>
-                            <option value="price-asc">Price: Low to High</option>
+                            <option value="">Price: Low to High</option>
                             <option value="price-desc">Price: High to Low</option>
                             <option value="popularity">Popularity</option>
                             <option value="rating">Rating</option>
@@ -109,6 +108,12 @@
                         </div>
                     </div>
                     @endforeach
+                    {{-- @if ($products->count() > 0)
+                    <div class="d-flex justify-content-center">
+                        {!! $products->links() !!}
+                    </div>
+                    @endif --}}
+
                 </div>
             </div>
 

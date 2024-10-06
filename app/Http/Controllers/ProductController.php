@@ -24,6 +24,32 @@ class ProductController extends Controller
         $request->orderType ?? 'asc';
         $tag = $request->tag ?? null;
         $query = Product::query()->with(['images:id,product_id,image_path', 'variations:id,product_id,sku,barcode,inventory']);
+        $request->pagination ?? $request['pagination'] = 20;
+        if ($tag) {
+            $query->where('tags', 'like', '%' . $tag . '%');
+        }
+        $limitflag = null;
+        $products = $this->comm->getData(
+            $query,
+            $select,
+            $condition,
+            $limitflag,
+            $request
+        );
+  
+        return view('pages.collection', compact('products'));
+    }
+
+    public function ajaxIndex(Request $request)
+    {
+
+        $select = ['id', 'title', 'slug', 'price', 'compare_price', 'description', 'collections', 'tags'];
+        $condition = ['status' => 'active', 'display' => 1];
+        $request->order ?? $request['order'] = 'id';
+        $request->orderType ?? $request['orderType'] = 'asc';
+        $request->orderType ?? 'asc';
+        $tag = $request->tag ?? null;
+        $query = Product::query()->with(['images:id,product_id,image_path', 'variations:id,product_id,sku,barcode,inventory']);
 
         if ($tag) {
             $query->where('tags', 'like', '%' . $tag . '%');
@@ -38,7 +64,6 @@ class ProductController extends Controller
         );
         return response()->json($data);
     }
-
     public function show($slug)
     {
 

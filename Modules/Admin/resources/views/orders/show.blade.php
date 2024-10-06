@@ -236,12 +236,12 @@
                 <h5 class="mt-3">Billing address</h5>
                 <p class="editable" data-field="billingAddress">Same as shipping address / Customer address </p>
             </div>
-            <div class="card">
+            {{-- <div class="card">
                 <h2>Conversion summary</h2>
                 <p class="editable" data-field="conversionSummary">There aren't any conversion details available for this
                     order.</p>
                 <a href="#" onclick="alert('Learn more about conversions')">Learn more</a>
-            </div>
+            </div> --}}
 
             <div class="card">
                 <h2>Tags</h2>
@@ -329,8 +329,8 @@
                 .then(data => {
                     console.log(data)
                     if (data.status) {
-                      alert(data.message);
-                      window.location.href="{{ route('orders.show', $order->id) }}";
+                        alert(data.message);
+                        window.location.href = "{{ route('orders.show', $order->id) }}";
                     } else {
                         alert('Failed to save changes. Please try again.');
                     }

@@ -192,7 +192,9 @@ body {
     background-color: #f4f6f8;
     font-weight: normal;
 }
-
+tr:hover{
+    background-color: #b89d6f;
+  }
 .status-dot {
     height: 8px;
     width: 8px;

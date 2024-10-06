@@ -18,10 +18,10 @@ class commonServices
                 return $query->orderBy($request->order, $request->orderType);
             })
             ->when(@$request->pagination, function ($query) use ($request) {
+               
                 return $query->paginate($request->pagination)->appends($request->query());
             })
             ->when(($limitflag != null && !@$request->pagination), function ($query) use ($limitflag) {
-              
                 if ($limitflag  == -1) {
                     return $query->first();
                 }
