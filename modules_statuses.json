@@ -1,4 +1,5 @@
 {
     "Admin": true,
-    "AuthModule": true
+    "AuthModule": true,
+    "Blog": true
 }

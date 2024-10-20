@@ -7,7 +7,7 @@
                     <p>Sale Off 20% All Products</p>
                     <h2>New Trending Collection</h2>
                     <span>Best Design makes you more special.</span>
-                    <a href="#">Shop Now</a>
+                    <a href="{{ route('all.products') }}">Shop Now</a>
                 </div>
             </div>
         </div>

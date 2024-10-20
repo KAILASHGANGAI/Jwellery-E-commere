@@ -16,7 +16,18 @@ class CollectionController extends Controller
         $this->comm = $comm;
     }
 
-    public function index(Request $request)
+    /**
+     * Retrieve a list of active parent collections along with their active children collections.
+     *
+     * This method fetches collections with a `collection_id` of zero, indicating they are parent collections,
+     * and includes their associated children collections that are active and displayed.
+     * The results are ordered by the 'id' field in ascending order and returned as a JSON response.
+     *
+     * @param Request $request The incoming HTTP request containing optional query parameters.
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the list of collections and their children.
+     * Used for the navbar 
+     */
+    public function index(Request $request, $all = false)
     {
         $select = ['id', 'title', 'slug', 'file_path', 'collection_id'];
         $condition = ['status' => 'active', 'display' => 1, 'collection_id' => 0];
@@ -35,10 +46,27 @@ class CollectionController extends Controller
             1,
             $request
         );
+        if ($all) {
+            return $data;
+        }
 
         return response()->json($data);
     }
 
+    /**
+     * Retrieve a list of all active children collections.
+     *
+     * This method fetches collections with a `collection_id` of not zero, indicating they are children collections,
+     * and includes their associated children collections that are active and displayed.
+     * The results are ordered by the 'id' field in ascending order and returned as a JSON response.
+     *
+     * @param Request $request The incoming HTTP request containing optional query parameters.
+     * @return \Illuminate\Http\JsonResponse A JSON response containing the list of children collections.
+     */
+    public function allCollection(Request $request){
+        $collections = $this->index($request, true);
+        return view('pages.collections', compact('collections'));
+    }
     public function showAllChildrens(Request $request)
     {
 
