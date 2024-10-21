@@ -132,11 +132,12 @@
                                 </div>
                                 <div class="sidebar-section card p-2 mt-1">
                                     <h5>Category</h5>
-                                    <select id="status" name="category_id" required>
-                                        <option {{ old('status') == 0 ? 'selected' : '' }} value="0" selected>
-                                            Unpublished</option>
-                                        <option {{ old('status') == '1' ? 'selected' : '' }} value="1">Published
-                                        </option>
+                                    <select id="category_id" name="category_id" required>
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $category)
+                                            <option {{ old('category_id') == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->title }}</option>
+                                                                                       
+                                        @endforeach
                                     </select>
 
                                 </div>

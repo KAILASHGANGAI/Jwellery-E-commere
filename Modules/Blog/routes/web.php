@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Blog\Http\Controllers\BlogController;
+use Modules\Blog\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,9 @@ Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function (
     //bulk delete 
     Route::post('blogs-bulk-delete', [BlogController::class, 'bulkDelete'])->name('blogs.bulkDelete');
 
+    Route::resource('blog-category', CategoryController::class)->names('blogcategory');
+    Route::get('blog-category-ajax', [CategoryController::class, 'indexAjax'])->name('blogcategory.indexAjax');
+    //bulk delete 
+    Route::post('blog-category-bulk-delete', [CategoryController::class, 'bulkDelete'])->name('blogcategory.bulkDelete');
+    
 });

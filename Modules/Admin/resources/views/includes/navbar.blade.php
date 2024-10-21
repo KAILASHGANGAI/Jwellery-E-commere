@@ -29,7 +29,7 @@
                 Blog Management
                 <ul class="dropdown-content">
                     <li><a href="{{ route('blogs.index') }}">Blogs List</a></li>
-                    <li><a href="{{ route('adminroles.index') }}">Blogs Category</a></li>
+                    <li><a href="{{ route('blogcategory.index') }}">Blogs Category</a></li>
                    
                 </ul>
             </li>

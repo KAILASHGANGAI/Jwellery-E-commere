@@ -9,6 +9,7 @@ use Illuminate\Http\Response;
 use Modules\Blog\Http\Requests\BlogRequest;
 use Modules\Blog\Models\Blog;
 use Illuminate\Support\Str;
+use Modules\Blog\Models\Category;
 use Modules\Blog\Services\CommonService;
 
 class BlogController extends Controller
@@ -23,8 +24,8 @@ class BlogController extends Controller
     // Display a listing of the blog Blogs
     public function index()
     {
-        $blogs = Blog::all();
-        return view('blog::blogs.index', compact('blogs'));
+    
+        return view('blog::blogs.index');
     }
 
     public function indexAjax(Request $request)
@@ -51,7 +52,7 @@ class BlogController extends Controller
             $sort_type,
             $limit ?? null,
             $pagination,
-            ['createdBy:id,name']
+            ['createdBy:id,name', 'category:id,title']
         );
 
         return response()->json($data, 200);
@@ -60,7 +61,9 @@ class BlogController extends Controller
     // Show the form for creating a new Blog
     public function create()
     {
-        return view('blog::blogs.create');
+        $categories = Category::select('id', 'title')->get();
+
+        return view('blog::blogs.create', compact('categories'));
     }
 
     // Store a newly created blog Blog in storage
@@ -95,7 +98,9 @@ class BlogController extends Controller
     // Show the form for editing the specified Blog
     public function edit(Blog $Blog)
     {
-        return view('blog::blogs.edit', compact('Blog'));
+        $categories = Category::select('id', 'title')->get();
+
+        return view('blog::blogs.edit', compact('Blog', 'categories'));
     }
 
     // Update the specified Blog in storage

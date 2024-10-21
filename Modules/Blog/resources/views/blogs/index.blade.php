@@ -50,6 +50,7 @@
                     <th>ID</th>
                     <th>Image</th>
                     <th>Title</th>
+                    <th>Category</th>
                     <th>Status</th>
                     <th>Created By</th>
                     <th>created At</th>
@@ -102,11 +103,11 @@
                             <td>${data.id}</td>
                             <td><img src="${image}" width="50px" height="50px" alt=""></td>
                             <td><a class="nav-link" href="${edit}">${data.title}</a></td>
-                           
+                            <td>${data.category.title ?? ''}</td>
                             <td><span class="status-dot status-${data.status}"></span>${data.status== '1' ? 'Published' : 'Unpublished'}</td>
                              <td>${data.created_by.name}</td>
-                            <td>${data.created_at.split('T')[0]}</td>
-                            <td>${data.updated_at.split('T')[0]}</td>
+                            <td>${data.created_at ? data.created_at.split('T')[0] : ''}</td>
+                            <td>${ data.updated_at ? data.updated_at.split('T')[0] : ''}</td>
                             <td>    
                                 <form action="${destroy}" method="POST">
                                     @csrf

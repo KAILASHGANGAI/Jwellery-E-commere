@@ -30,4 +30,10 @@ class Blog extends Model
     {
         return $this->belongsTo(AdminUser::class, 'created_by');
     }
+
+    // categories 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }
