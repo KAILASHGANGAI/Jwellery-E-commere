@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\AuthModule\Models\AdminUser;
+
 class Blog extends Model
 {
     use HasFactory, SoftDeletes;
@@ -21,5 +23,11 @@ class Blog extends Model
                 $blog->slug = Str::slug($blog->title);
             }
         });
+    }
+
+    // created with created by user 
+    public function createdBy()
+    {
+        return $this->belongsTo(AdminUser::class, 'created_by');
     }
 }

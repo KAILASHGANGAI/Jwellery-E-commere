@@ -11,9 +11,10 @@ class BlogRequest extends FormRequest
      */
     public function rules(): array
     {
+      
         return [
             'title' => 'required',
-            'slug' => 'required|unique:posts',
+            'slug' => 'unique:blogs',
             'content' => 'required',
         ];
     }

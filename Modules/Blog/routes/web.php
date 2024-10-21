@@ -15,5 +15,9 @@ use Modules\Blog\Http\Controllers\BlogController;
 */
 
 Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function () {
-    Route::resource('blog', BlogController::class)->names('blog');
+    Route::resource('blog', BlogController::class)->names('blogs');
+    Route::get('blogs-ajax', [BlogController::class, 'indexAjax'])->name('blogs.indexAjax');
+    //bulk delete 
+    Route::post('blogs-bulk-delete', [BlogController::class, 'bulkDelete'])->name('blogs.bulkDelete');
+
 });

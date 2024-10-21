@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->longText('content');
             $table->string('featured_image')->nullable();
             $table->text('keywords')->nullable();
             $table->text('description')->nullable();
             $table->text('tags')->nullable();
-            $table->boolean('published')->default(0);
+            $table->boolean('status')->default(0);
             $table->unsignedBigInteger('category_id')->nullable();
 
             $table->unsignedBigInteger('created_by')->nullable();
