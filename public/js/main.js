@@ -166,8 +166,8 @@
     dots: false,
     margin: 30,
     navText: [
-      '<i class="ion-chevron-left"></i>',
-      '<i class="ion-chevron-right"></i>',
+      '<i class="ion-chevron-left m-0"></i>',
+      '<i class="ion-chevron-right m-0"></i>',
     ],
     responsiveClass: true,
     responsive: {

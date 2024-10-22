@@ -1954,6 +1954,9 @@ ul {
   padding: 0 10px;
   font-size: 18px;
 }
+.owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev, .owl-carousel button.owl-dot{
+  padding: 0 !important;
+}
 
 .blog_wrapper .owl-nav div.owl-next {
   margin-left: 8px;

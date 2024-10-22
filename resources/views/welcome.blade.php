@@ -14,7 +14,7 @@
 @include('banners.tranding-banner')
 
 @include('products.best-selling-products')
-@include('blogs.index-blogs')
+@include('blogs.blogs-section')
 
 @include('products.branches')
 @include('banners.instagram')

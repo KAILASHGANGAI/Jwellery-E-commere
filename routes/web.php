@@ -3,15 +3,14 @@
 use App\Http\Controllers\AddTOCardController;
 use App\Http\Controllers\auth\LoginController;
 use App\Http\Controllers\auth\RegisterController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
-use Modules\Admin\Models\Order;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/',[HomeController::class, 'index'])->name('home');
 
 // Route::view('/collection', 'pages.collection')->name('collection');
 Route::view('/contact', 'pages.contact')->name('contact');
@@ -57,3 +56,7 @@ Route::get('order-success', [CheckOutController::class, 'orderSuccess'])->name('
 Route::get('order-failed', [CheckOutController::class, 'orderFailed'])->name('order-failed');
 Route::get('order-cancel', [CheckOutController::class, 'orderCancel'])->name('order-cancel');
 Route::get('/download-bill/{orderID}', [CheckOutController::class, 'downloadBill'])->name('download-bill');
+
+#blogs 
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
