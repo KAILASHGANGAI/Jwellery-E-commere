@@ -17,7 +17,7 @@
                 <p>{{ $blog->description }}</p>
             </div>
             <div class="read_more">
-                <a href="{{ route('blog.show', $blog->slug) }}">Continue Reading</a>
+                <a class="" href="{{ route('blog.show', $blog->slug) }}">Continue Reading</a>
             </div>
         </div>
     </div>

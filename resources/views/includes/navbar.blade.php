@@ -347,6 +347,7 @@
         });
 
         row += `
+        <li><a href="{{ route('blogs') }}">Blogs</a></li>
         <li><a href="{{ route('about') }}">About Us</a></li>
         <li><a href="{{ route('contact') }}">Contact Us</a></li>
         </ul>
@@ -382,6 +383,7 @@
 
         // Add static links for 'About Us' and 'Contact'
         menuHtml += `
+        <li><a href="{{ route('blogs') }}">Blogs</a></li>
         <li><a href="{{ route('about') }}">About Us</a></li>
         <li><a href="{{ route('contact') }}">Contact</a></li>
            

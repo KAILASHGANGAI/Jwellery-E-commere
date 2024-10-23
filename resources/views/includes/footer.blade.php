@@ -6,8 +6,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-8">
                     <div class="widgets_container contact_us">
                         <h3>About jwellery</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime voluptas nihil facere doloremque quos libero modi maiores necessitatibus ab vel.</p>
                         <div class="footer_contact">
-                            <p>Address : jwellery palace, Surat, Gujarat</p>
+                            <p>Address : Kathmandu, Nepal</p>
                             <p>Phone : <a href="tel:(+91)888888885555">(+91)888888885555</a></p>
                             <p>Email : jwelleryjewlers@gmail.com</p>
                             <ul>
@@ -22,15 +23,16 @@
                 </div>
                 <div class="col-lg-2 col-md-6 col-sm-4 col-6">
                     <div class="widgets_container widget_menu">
-                        <h3>Information</h3>
+                        <h3>Quick Links</h3>
                         <div class="footer_menu">
                             <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Blog</a></li>
-                                <li><a href="#">Contact</a></li>
-                                <li><a href="#">Services</a></li>
-                                <li><a href="#">Collection</a></li>
-                                <li><a href="#">Portfolio</a></li>
+                                <li><a href="{{ route('all.products') }}">All Products</a></li>
+                                <li><a href="{{ route('all.collections') }}">All Collection</a></li>
+                                <li><a href="{{ route('blogs') }}">Blogs</a></li>
+                                <li><a href="{{ route('about') }}">About Us</a></li>
+                                <li><a href="{{ route('contact') }}">Contact</a></li>
+                                <li><a href="{{ route('terms-and-conditions') }}">Terms & Conditions</a></li>
+                                <li><a href="{{ route('policy')  }}">Returns & Exchanges Policy</a></li>
                             </ul>
                         </div>
                     </div>
@@ -40,12 +42,12 @@
                         <h3>My Account</h3>
                         <div class="footer_menu">
                             <ul>
-                                <li><a href="#">My Account</a></li>
-                                <li><a href="#">Contact</a></li>
-                                <li><a href="#">Wishlist</a></li>
-                                <li><a href="#">Portfolio</a></li>
-                                <li><a href="#">Checkout</a></li>
-                                <li><a href="#">Frequently Questions</a></li>
+                                <li><a href="{{ route('my-account') }}">My Account</a></li>
+                                <li><a href="{{ route('my-orders') }}">My Orders</a></li>
+                                <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
+                                <li><a href="{{ route('shopping-cart') }}">Shopping Cart</a></li>
+                                <li><a href="{{ route('checkout') }}">Checkout</a></li>
+                                <li><a href="{{ route('faq') }}">Frequently Questions</a></li>
                             </ul>
                         </div>
                     </div>
@@ -99,7 +101,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="copyright_area">
-                        <p>Copyright &copy; 2020 <a href="#">jwellery</a> All rights Reserved.</p>
+                        <p>Copyright &copy; <script> document.write(new Date().getFullYear()); </script> <a href="/">jwellery</a> All rights Reserved.</p>
                         <img src="images/icon/papyel2.png" alt="">
                     </div>
                 </div>

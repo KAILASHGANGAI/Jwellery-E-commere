@@ -15,6 +15,12 @@ Route::get('/',[HomeController::class, 'index'])->name('home');
 // Route::view('/collection', 'pages.collection')->name('collection');
 Route::view('/contact', 'pages.contact')->name('contact');
 Route::view('/about-us', 'pages.about')->name('about');
+#left pages 
+Route::view('/terms-and-conditions', 'pages.extra.terms-and-conditions')->name('terms-and-conditions');
+Route::view('/returns-and-exchanges-policy', 'pages.extra.privacy-policy')->name('policy');
+Route::view('/faq', 'pages.extra.faq')->name('faq');
+Route::view('/my-account', 'pages.profile.my-account')->name('my-account');
+Route::view('/my-orders', 'pages.profile.my-orders')->name('my-orders');
 
 Route::get('/nav-collections', [CollectionController::class, 'index'])->name('all-collections');
 Route::get('/collections', [CollectionController::class, 'allCollection'])->name('all.collections');
@@ -60,3 +66,4 @@ Route::get('/download-bill/{orderID}', [CheckOutController::class, 'downloadBill
 #blogs 
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/blog-category/{slug}', [BlogController::class, 'category'])->name('blog.category');

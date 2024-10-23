@@ -1,4 +1,4 @@
-<div>
+<div class="main-banner">
     <div class="container-fluid banner-sm">
         <div class="single_banner">
             <div class="banner_thumb">

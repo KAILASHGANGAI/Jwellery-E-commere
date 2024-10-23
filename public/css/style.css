@@ -2233,12 +2233,8 @@ p {
   padding-top: 67px;
 }
 
-.footer_top {
-  padding-bottom: 61px;
-}
-
 .footer_black .widgets_container>h3 {
-  color: #fff;
+  color: #a8741a;
   font-family: serif;
   font-weight: 400;
   font-size: 25px;
@@ -2726,4 +2722,35 @@ p {
   /* Change background color on hover */
   color: #fff;
   /* Change icon color on hover */
+}
+
+
+.blog-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.blog-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.blog-title:hover {
+  color: #007bff;
+}
+
+.read_more a {
+  color: #a8741a  !important;
+}
+.read_more a:hover{
+padding: 3px 10px;
+  border: 1px solid #a8741a;
+}
+.main-banner .banner_content {
+  top: 49px;
 }

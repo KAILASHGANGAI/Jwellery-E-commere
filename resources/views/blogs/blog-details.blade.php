@@ -160,7 +160,7 @@
                         @foreach ($categories as  $category)
                              
                         <li class="list-group-item">
-                            <a href="">{{ $category->title }}</a>
+                            <a href="{{ route('blog.category', $category->slug) }}">{{ $category->title }}</a>
                         </li>
                         @endforeach
                     </ul>
