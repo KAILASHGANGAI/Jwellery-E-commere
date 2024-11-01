@@ -38,70 +38,84 @@
         .chart {
             position: relative;
         }
-
-        .box {
-            position: relative;
-        }
-
-        .stat-box::after {
-            content: "";
-            position: absolute;
-            left: 10%;
-            top: 2px;
-            height: 6px;
-            width: 80%;
-            background-color: #6a0dad;
-            border-radius: 10px;
-        }
     </style>
 @endsection
 @section('content')
-    <h5>Hi !, {{ Auth::user()->name }} Welcome to dashboard</h5>
-    <div class="dashboard">
-        <!-- Header Stats -->
-        <div class="row g-2">
-            @foreach ($data as $key => $value)
-                <div class="col-sm-2 col-md-2 box">
-                    <div class="stat-box">
-                        <p> {{ $key }}</p>
-                        <p class="stat-value">{{ $value }}</p>
-                    </div>
+    <h5>Analytics charts </h5>
+    <!-- Graphs Section -->
+    <div class="row g-4 mt-2">
+        <!-- Line Chart -->
+        <div class="col-sm-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <span>Yearly Orders and Earnings</span>
                 </div>
-            @endforeach
-        </div>
-
-        <!-- Graphs Section -->
-        <div class="row g-4 mt-4">
-            <!-- Line Chart -->
-            <div class="col-sm-7 col-md-7">
-                <div class="card">
-                    <div class="card-header">
-                        <span>Yearly Orders and Earnings</span>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="ordersEarningsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <!-- Bar Chart -->
-            <div class="col-sm-5 col-md-5">
-                <div class="card">
-                    <div class="card-header">
-                        Weekly Revenue
-                    </div>
-                    <div class="card-body">
-                        <canvas id="weeklyRevenueChart"></canvas>
-
-                    </div>
+                <div class="card-body">
+                    <canvas id="ordersEarningsChart"></canvas>
                 </div>
             </div>
         </div>
+        <!-- Bar Chart -->
+        <div class="col-sm-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Weekly Revenue
+                </div>
+                <div class="card-body">
+                    <canvas id="weeklyRevenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Sales Trend
+                </div>
+                <div class="card-body">
+                    <canvas id="salesTradesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    
+        {{-- <div class="col-sm-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Order Funnel
+                </div>
+                <div class="card-body">
+                    <canvas id="orderFunnelChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Top Products Performance
+                </div>
+                <div class="card-body">
+                    <canvas id="productPerformanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Marketing Traffic
+                </div>
+                <div class="card-body">
+                    <canvas id="marketingTrafficChart"></canvas>
+                </div>
+            </div>
+        </div> --}}
+
     </div>
-
+    </div>
+@endsection
+@section('script')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         async function fetchData(url) {
-           
+
             try {
                 const response = await fetch(url);
                 return await response.json();
@@ -204,10 +218,85 @@
                 });
             }
         }
-      
+
+        async function salesTradesChart() {
+            var url = "{{ route('salesTrend') }}";
+            const data = await fetchData(url);
+
+            if (data) {
+                const ctx = document.getElementById('salesTradesChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Sales ($)',
+                            data: data.sales,
+                            borderColor: '#3e95cd',
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                    }
+
+                })
+            }
+        }
+
+
+
+        async function renderOrderFunnelChart() {
+            var url = "{{ route('order-funnel') }}";
+            const data = await fetchData(url);
+
+            if (data) {
+                const ctx = document.getElementById('orderFunnelChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.values,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Order Funnel'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
 
         document.addEventListener('DOMContentLoaded', renderChart);
         document.addEventListener('DOMContentLoaded', renderWeeklyRevenueChart);
-
+        document.addEventListener('DOMContentLoaded', salesTradesChart);
+        // document.addEventListener('DOMContentLoaded', renderOrderFunnelChart);
     </script>
 @endsection

@@ -1,5 +1,5 @@
 <div class="sidebar" id="sidebar">
-    <h2 ><a class="text-decoration-none" href="/">Dashboard</a></h2>
+    <h2 ><a class="text-decoration-none" href="{{ route('admin.dashboard') }}">Dashboard</a></h2>
     <nav>
         <ul>
             <li class="bg-secondary text-white"><a class="text-white" href="{{ route('home') }}">View Site</a></li>
@@ -22,8 +22,8 @@
             <li><a class="text-decoration-none" href="{{ route('customers.index') }}">Customers</a></li>
             <li><a class="text-decoration-none" href="{{ route('discounts.index') }}">Discounts</a></li>
             <li><a class="text-decoration-none" href="{{ route('giftcards.index') }}">Gift Cards</a></li>
-            <li><a class="text-decoration-none" href="#">Analytics</a></li>
-            <li><a class="text-decoration-none" href="#">Marketing</a></li>
+            <li><a class="text-decoration-none" href="{{ route('analytics') }}">Analytics</a></li>
+            {{-- <li><a class="text-decoration-none" href="#">Marketing</a></li> --}}
             <hr>
             <li class="dropdown" onclick="toggleDropdown(this)">
                 Blog Management

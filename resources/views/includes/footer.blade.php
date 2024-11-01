@@ -11,13 +11,7 @@
                             <p>Address : Kathmandu, Nepal</p>
                             <p>Phone : <a href="tel:(+91)888888885555">(+91)888888885555</a></p>
                             <p>Email : jwelleryjewlers@gmail.com</p>
-                            <ul>
-                                <li><a href="#"><i class="ion-social-facebook"></i></a></li>
-                                <li><a href="#"><i class="ion-social-twitter"></i></a></li>
-                                <li><a href="#"><i class="ion-social-rss"></i></a></li>
-                                <li><a href="#"><i class="ion-social-googleplus"></i></a></li>
-                                <li><a href="#"><i class="ion-social-youtube"></i></a></li>
-                            </ul>
+                          
                         </div>
                     </div>
                 </div>
@@ -54,44 +48,16 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-7">
                     <div class="widgets_container product_widget">
-                        <h3>Top Rated Products</h3>
-                        <div class="simple_product">
-                            <div class="simple_product_items">
-                                <div class="simple_product_thumb">
-                                    <a href="#"><img src="images/product/14.jpg" alt=""></a>
-                                </div>
-                                <div class="simple_product_content">
-                                    <div class="tag_cate">
-                                        <a href="#">Women,</a>
-                                        <a href="#">Earrings</a>
-                                    </div>
-                                    <div class="product_name">
-                                        <h3><a href="#">Bracelet</a></h3>
-                                    </div>
-                                    <div class="product_price">
-                                        <span class="old_price">Rs. 45612.54</span>
-                                        <span class="current_price">Rs. 41612.54</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="simple_product_items">
-                                <div class="simple_product_thumb">
-                                    <a href="#"><img src="images/product/28.jpg" alt=""></a>
-                                </div>
-                                <div class="simple_product_content">
-                                    <div class="tag_cate">
-                                        <a href="#">Women,</a>
-                                        <a href="#">Earrings</a>
-                                    </div>
-                                    <div class="product_name">
-                                        <h3><a href="#">Ring</a></h3>
-                                    </div>
-                                    <div class="product_price">
-                                        <span class="old_price">Rs. 75612.54</span>
-                                        <span class="current_price">Rs. 71612.54</span>
-                                    </div>
-                                </div>
-                            </div>
+                        <h3>Follow Us !</h3>
+                        <div class="footer_contact">
+    
+                            <ul>
+                                <li><a href="#"><i class="ion-social-facebook"></i></a></li>
+                                <li><a href="#"><i class="ion-social-twitter"></i></a></li>
+                                <li><a href="#"><i class="ion-social-rss"></i></a></li>
+                                <li><a href="#"><i class="ion-social-googleplus"></i></a></li>
+                                <li><a href="#"><i class="ion-social-youtube"></i></a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>

@@ -13,6 +13,10 @@ body {
 .mycontainer {
     display: flex;
 }
+ol,
+ul {
+  padding-left: 0.5rem;
+}
 
 .sidebar {
     width: 240px;

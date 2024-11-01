@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Admin\Http\Controllers\AdminController;
+use Modules\Admin\Http\Controllers\AnalyticController;
 use Modules\Admin\Http\Controllers\CollectionController;
 use Modules\Admin\Http\Controllers\CustomerController;
 use Modules\Admin\Http\Controllers\DiscountController;
 use Modules\Admin\Http\Controllers\GiftCardController;
 use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\ProductController;
+use Modules\Admin\Http\Controllers\StatisticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +50,7 @@ Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function (
     Route::get('/order-ajax', [OrderController::class, 'indexAjax'])->name('orders.indexAjax');
     Route::post('/order-bulk-delete', [OrderController::class, 'bulkDelete'])->name('orders.bulkDelete');
     Route::get('/search-orders', [OrderController::class, 'search'])->name('orders.search');
-    Route::post('/update-order/{id}',[OrderController::class, 'saveField'])->name('saveField');
+    Route::post('/update-order/{id}', [OrderController::class, 'saveField'])->name('saveField');
     #discount 
     Route::resource('/discounts', DiscountController::class)->names('discounts');
     Route::get('/discount-ajax', [DiscountController::class, 'indexAjax'])->name('discounts.indexAjax');
@@ -62,4 +64,19 @@ Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function (
     Route::get('/gift-card-ajax', [GiftCardController::class, 'indexAjax'])->name('giftcards.indexAjax');
     Route::post('/gift-card-bulk-delete', [GiftCardController::class, 'bulkDelete'])->name('giftcards.bulkDelete');
     Route::get('/search-giftcards', [GiftCardController::class, 'search'])->name('giftcards.search');
+
+
+    #analytics for Dashboard 
+    Route::get('/yearly-orders-earnings', [StatisticsController::class, 'index'])->name('yearly-orders-earnings');
+    Route::get('/weekly-revenue', [StatisticsController::class, 'getWeeklyRevenue'])->name('weekly-revenue');
+
+    # analytics for
+
+    Route::get('/analytics', [AnalyticController::class, 'index'])->name('analytics');
+
+    Route::get('/sales-trend', [AnalyticController::class, 'salesTrend'])->name('salesTrend');
+    // Route::get('/customer-demographics', [AnalyticController::class, 'customerDemographics'])->name('customerDemographics');
+    Route::get('/order-funnel', [AnalyticController::class, 'orderFunnel'])->name('order-funnel');
+    Route::get('/product-performance', [AnalyticController::class, 'productPerformance']);
+    Route::get('/marketing-traffic', [AnalyticController::class, 'marketingTraffic']);
 });
