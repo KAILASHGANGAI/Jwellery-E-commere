@@ -89,7 +89,22 @@
                                             value="active">Active</option>
                                     </select>
                                 </div>
+                                <div class="form-section mt-2">
+                                    <h5>Images</h5>
+                                    <div id="drop-zone" class="drop-zone">
+                                        <input type="file" id="file-input" name="images" accept="image/*"
+                                            style="display: none;">
+                                        <p>Drag & drop your images here <span id="upload-trigger"></span></p>
 
+                                        <div id="image-preview" class="image-preview">
+                                            @if ($discount->image)
+                                                <img src="{{ asset($discount->image) }}" height="60" alt="">
+                                            @endif
+                                        
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="files-data">
+                                </div>
                                 <div class="sidebar-section card p-3 mt-2">
                                     <div class="form-section">
                                         <label for="start">Starting Date</label>
@@ -197,6 +212,117 @@
             // Load initial data if needed
             if (selectedValue && selectedValue !== 'tags') {
                 loadMoreData();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropZone = document.getElementById('drop-zone');
+            const fileInput = document.getElementById('file-input');
+            const imagePreview = document.getElementById('image-preview');
+            const uploadTrigger = document.getElementById('upload-trigger');
+            const filesDataInput = document.getElementById('files-data');
+
+            // Trigger file input click when the user clicks on the drop zone or upload text
+            dropZone.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Trigger file input click when the user clicks on the upload text
+            uploadTrigger.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Handle file input change event
+            fileInput.addEventListener('change', handleFiles);
+
+            // Handle drag and drop events
+            dropZone.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                dropZone.classList.add('dragging');
+            });
+
+            dropZone.addEventListener('dragleave', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                dropZone.classList.remove('dragging');
+            });
+
+            dropZone.addEventListener('drop', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                dropZone.classList.remove('dragging');
+                const files = event.dataTransfer.files;
+                fileInput.files = files;
+                handleFiles({
+                    target: {
+                        files
+                    }
+                });
+            });
+
+            function handleFiles(event) {
+                const files = event.target.files;
+                imagePreview.innerHTML = '';
+                const fileNames = [];
+                for (const file of files) {
+                    if (file.type.startsWith('image/')) {
+                        const container = document.createElement('div');
+                        container.classList.add('image-container');
+
+                        const img = document.createElement('img');
+                        img.classList.add('preview-img');
+                        img.file = file;
+                        img.addEventListener('click', (event) => {
+                            event.stopPropagation(); // Prevent redirection
+                        });
+                        container.appendChild(img);
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.classList.add('remove-img');
+                        removeBtn.textContent = '×';
+                        removeBtn.addEventListener('click', () => {
+                            container.remove();
+                            // updateFilesData();
+                        });
+                        container.appendChild(removeBtn);
+
+                        imagePreview.appendChild(container);
+
+                        const reader = new FileReader();
+                        reader.onload = ((aImg) => (e) => {
+                            aImg.src = e.target.result;
+                        })(img);
+                        reader.readAsDataURL(file);
+
+                        fileNames.push(file.name);
+                    } else {
+                        alert('Only image files are allowed.');
+                    }
+                }
+
+                // Update hidden input with file names
+                filesDataInput.value = fileNames.join(',');
+            }
+
+            // Initialize SortableJS on the image preview container
+            new Sortable(imagePreview, {
+                animation: 150,
+                onStart: function(evt) {
+                    // Optionally disable dragging during reordering if necessary
+                    evt.from.classList.add('sorting');
+                },
+                onEnd: function() {
+                    // Enable dragging after reordering
+                    imagePreview.classList.remove('sorting');
+                    // updateFilesData();
+                }
+            });
+
+            function updateFilesData() {
+                const images = Array.from(imagePreview.querySelectorAll('.preview-img'));
+                const fileNames = images.map(img => img.file.name);
+                filesDataInput.value = fileNames.join(',');
             }
         });
     </script>

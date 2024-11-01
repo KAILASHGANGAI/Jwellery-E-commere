@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text('collection_ids')->nullable(); 
             $table->enum('status', ['active', 'archived'])->default('archived');
             $table->text('tags')->nullable();
+            $table->string('image')->nullable();
             $table->softDeletes();
             $table->timestamps();
         

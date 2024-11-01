@@ -14,13 +14,16 @@ use Modules\Admin\Models\Discount;
 use Modules\Admin\Models\DiscountCollection;
 use Modules\Admin\Models\DiscountProduct;
 use Modules\Admin\Models\Product;
+use Modules\Admin\Services\AdminComonService;
 
 class DiscountController extends Controller
 {
     protected CommonRepository $comRepo;
+    protected AdminComonService $adminService;
 
-    public function __construct()
+    public function __construct( AdminComonService $adminService)
     {
+        $this->adminService = $adminService;
         $this->comRepo = new CommonRepository(Discount::class);
     }
     /**
@@ -96,6 +99,13 @@ class DiscountController extends Controller
                 'collection_ids' => $request->discount_on == 'collections' ? implode(',', $request->ids) : null,
                 'tags' => $request->tags ?? null
             ];
+
+            if ($images = $request->file('images')) {
+                $imgPath =  $this->adminService
+                    ->ImageUpload($images,  'images/discounts');
+                $data['image'] = $imgPath;
+            }
+
             $discount = $this->comRepo->create($data);
             if ($request->discount_on == 'products') {
                 foreach ($request->ids as $id) {
@@ -149,6 +159,7 @@ class DiscountController extends Controller
     public function update(DiscountRequest $request, $id): RedirectResponse
     {
         try {
+            $discount = $this->comRepo->find($id);
             DB::beginTransaction();
             $data = [
                 'name' => $request->name,
@@ -162,6 +173,17 @@ class DiscountController extends Controller
                 'collection_ids' => $request->discount_on == 'collections' ? implode(',', $request->ids) : null,
                 'tags' => $request->tags ?? null
             ];
+
+            if ($images = $request->file('images')) {
+                $imgPath =  $this->adminService
+                    ->ImageUpload($images,  'images/discounts');
+                    if (file_exists($discount->image)) {
+                        unlink($discount->image);
+                                               
+                    }
+                $data['image'] = $imgPath;
+            }
+
             $discount = $this->comRepo->update($id,$data);
             if ($request->discount_on == 'products') {
                 $desabled = DiscountProduct::where('discount_id', $discount->id)->update(['status'=> '0']);

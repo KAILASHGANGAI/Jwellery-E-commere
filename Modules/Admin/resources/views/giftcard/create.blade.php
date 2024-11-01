@@ -19,7 +19,7 @@
                                 <span class="back-button">
                                     <h4 class="main-title ">
                                         <a class="text-decoration-none text-dark" href="{{ route('giftcards.index') }}">
-                                            <span>← </span>Create Discount</a>
+                                            <span>← </span>Create Gift Card</a>
                                     </h4>
                                 </span>
                                 <button class="search-button float-end" id="submit-btn" type="submit">Save</button>
@@ -66,7 +66,7 @@
                                     </select>
 
                                 </div>
-
+                                
                                 <div class="sidebar-section card p-3 mt-2">
 
                                     <div class="form-section">
