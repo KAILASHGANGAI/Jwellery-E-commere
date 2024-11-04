@@ -68,8 +68,16 @@ class AdminUser extends Authenticatable
 
     //attach roles
 
+
     public function adminUserRole()
     {
         return $this->hasOne(AdminRoleUser::class, 'admin_user_id', 'id');
+    }
+
+    // has permission 
+    public function hasPermission(string $permission): bool
+    {
+        // Assuming 'permissions' is a JSON column with an array of permissions
+        return in_array($permission, $this->permissions ?? []);
     }
 }

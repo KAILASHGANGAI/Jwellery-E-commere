@@ -74,7 +74,7 @@ class AdminRoleController extends Controller
             'id',
             'asc',
         );
-        // dd($permissions);
+     
         return view('authmodule::roles.create', compact('permissions'));
     }
 

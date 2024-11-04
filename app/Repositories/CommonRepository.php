@@ -210,8 +210,8 @@ class CommonRepository implements CommonRepositoryInterface
                     return $query;
                 });
             })
-            ->when($filter && $filter != 'all', function ($query) use ($filter) {
-
+            ->when($filter != 'all', function ($query) use ($filter) {
+                
                 return $query->where('status', $filter);
             })
 

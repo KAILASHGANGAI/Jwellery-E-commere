@@ -40,6 +40,7 @@ class AdminUserController extends Controller
         $pagination = $request->get('limit', 20);
         $search = $request->get('search', null);
         $filter = $request->get('filter', null);
+    
         $sort_field = $request->get('sort_field', 'created_at');
         $sort_type = $request->get('sort_type', 'desc');
         $select  = [

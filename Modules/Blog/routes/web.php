@@ -15,7 +15,7 @@ use Modules\Blog\Http\Controllers\CategoryController;
 |
 */
 
-Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function () {
+Route::group(['prefix' => '/myadmin',  'middleware' => ['auth:admin', 'checkPermission']], function () {
     Route::resource('blog', BlogController::class)->names('blogs');
     Route::get('blogs-ajax', [BlogController::class, 'indexAjax'])->name('blogs.indexAjax');
     //bulk delete 

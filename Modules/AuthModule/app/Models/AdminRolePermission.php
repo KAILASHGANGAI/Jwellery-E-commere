@@ -28,6 +28,6 @@ class AdminRolePermission extends Model
 
     public function permission()
     {
-        return $this->belongsTo(AdminPermission::class, 'admin_permission_id', 'id');
+        return $this->hasMany(AdminPermission::class, 'admin_permission_id', 'id');
     }
 }

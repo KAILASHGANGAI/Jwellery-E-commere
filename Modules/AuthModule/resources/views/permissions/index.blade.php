@@ -7,7 +7,7 @@
     </style>
 @endsection
 @section('content')
-    <h4 class="main-title">Admin Users List</h4>
+    <h4 class="main-title">Admin Permissions List</h4>
     @include('admin::includes.errors')
     <div class="order-controls">
         <div class="order-tabs">
@@ -16,7 +16,7 @@
             <span class="order-tab" onclick="setActiveTab('0')">Inactive</span>
             <span class=" ">
                 <a class="order-tab bg-success text-decoration-none text-white font-weight-bold"
-                    href="{{ route('adminusers.create') }}">+</a>
+                    href="{{ route('adminpermissions.create') }}">+</a>
             </span>
             <button id="bulk-delete-btn" class="btn text-danger" style="display: none;" onclick="bulkDelete()">Bulk
                 <i class="fa fa-trash"></i>
@@ -49,12 +49,10 @@
                     <th><input type="checkbox" id="select-all"></th>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Role</th>
-                    <th>IsAdmin</th>
+                    <th>Controller</th>
+                    <th>Method</th>
+                    <th>Description</th>
                     <th>Status</th>
-                    <th>Created At</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -72,8 +70,8 @@
 @section('script')
     <script src="{{ asset('admin/js/index.js') }}"></script>
     <script>
-        const apiBaseUrl = '{{ route('adminusers.indexAjax') }}'; // Replace with your actual API base URL
-        const apiBaseDeleteUrl = '{{ route('adminusers.bulkDelete') }}';
+        const apiBaseUrl = '{{ route('adminpermissions.indexAjax') }}'; // Replace with your actual API base URL
+        const apiBaseDeleteUrl = '{{ route('adminpermissions.bulkDelete') }}';
         const ordersPerPage = 10;
         let currentPage = 1;
 
@@ -84,31 +82,29 @@
         }
 
         // Display orders in the table
-        function displayOrders(users) {
-       
+        function displayOrders(orders) {
+            
             const tableBody = document.getElementById('orderTableBody');
             tableBody.innerHTML = '';
             // Loop through each order and display it in the table
-            if (users.length == 0) {
+            if (orders.length == 0) {
                 tableBody.innerHTML = '<tr><td colspan="8">No Data found.</td></tr>';
             }
-            users.forEach(data => {
-                var created_at = data.created_at ? data.created_at.split('T')[0] : '';
-                console.log(data)
+            orders.forEach(data => {
               
-                let edit = "{{ route('adminusers.edit', ':id') }}".replace(':id', data.id);
-                let destroy = "{{ route('adminusers.destroy', ':id') }}".replace(':id', data.id);           
+                let edit = "{{ route('adminpermissions.edit', ':id') }}".replace(':id', data.id);
+                let destroy = "{{ route('adminpermissions.destroy', ':id') }}".replace(':id', data.id);           
                 const row = `
                         <tr>
                             <td><input type="checkbox" class="checkbox" name="ids[]" value="${data.id}"></td>
                             <td>${data.id}</td>
                             <td><a class="nav-link" href="${edit}">${data.name}</a></td>
-                            <td>${data.email}</td>
-                            <td>${data.phone}</td>
-                            <td>${ data.admin_user_role ? data.admin_user_role.admin_role.name : '-'}</td>
-                            <td>${data.is_super_admin == 1 ? 'Yes' : 'No'}</td>
+                            <td><a class="nav-link" href="${edit}">${data.controller}</a></td>
+                            <td><a class="nav-link" href="${edit}">${data.method}</a></td>
+
+                            <td>${data.description}</td>
                             <td><span class="status-dot status-${data.status}"></span>${data.status== '1' ? 'Active' : 'Inactive'}</td>
-                            <td>${created_at}</td>
+                           
                             <td>
                                 <form action="${destroy}" method="POST">
                                     @csrf

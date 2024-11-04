@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Middleware\CheckUserPermissions as MiddlewareCheckUserPermissions;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Modules\AuthModule\Http\Middleware\CheckUserPermissions;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo('myadmin/login');
 
         $middleware->alias([
-            // 'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+            'checkPermission' => CheckUserPermissions::class,
+            'checkRole' => MiddlewareCheckUserPermissions::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

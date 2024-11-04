@@ -17,7 +17,7 @@ use Modules\AuthModule\Http\Controllers\AuthModuleController;
 |
 */
 
-Route::group([], function () {
+Route::group([], function () {  
     Route::resource('authmodule', AuthModuleController::class)->names('authmodule');
 });
 Route::get('/myadmin/login', [AuthModuleController::class, 'showLoginForm'])->name('admin.login');
@@ -25,7 +25,7 @@ Route::post('/myadmin/login', [AuthModuleController::class, 'login'])->name('adm
 Route::post('/myadmin/logout', [AuthModuleController::class, 'logout'])->name('admin.logout');
 
 
-Route::group(['prefix' => '/myadmin',  'middleware' => 'auth:admin'], function () {
+Route::group(['prefix' => '/myadmin',  'middleware' => ['auth:admin', 'checkPermission']], function () {
     //users 
     Route::resource('/adminusers', AdminUserController::class)->names('adminusers');
     Route::get('/adminuser-ajax', [AdminUserController::class, 'indexAjax'])->name('adminusers.indexAjax');

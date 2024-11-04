@@ -75,8 +75,9 @@
                                 <div class="sidebar-section card p-2 mt-1">
                                     <h5>Role</h5>
                                     <select id="role" name="role">
+                                        <option >Choose Role</option>
                                         @foreach ($roles as $role)
-                                            <option {{ old('role', $data->adminUserRole->admin_role_id) == $role->id ? 'selected' : '' }} value="{{ $role->id }}">{{ $role->name }}</option>
+                                            <option {{ old('role', @$data->adminUserRole->admin_role_id) == $role->id ? 'selected' : '' }} value="{{ $role->id }}">{{ $role->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -22,6 +22,9 @@ class AdminRoleUser extends Model
     }
     // role 
 
+    /**
+     * The admin role that this user belongs to.
+     */
     public function adminRole()
     {
       return $this->hasOne(AdminRole::class, 'id', 'admin_role_id');
