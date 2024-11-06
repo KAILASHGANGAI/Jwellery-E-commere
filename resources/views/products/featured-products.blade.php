@@ -1,6 +1,6 @@
 <section class="product_section p_section1 product_black_section">
     <div class="container">
-        <div class="row">
+        <div class="row m-0">
             <div class="col-sm-12">
                 <div class="product_area">
                     <div class="product_tab_button">
@@ -20,7 +20,7 @@
                     <div class="tab-content">
                         <!-- Featured Products -->
                         <div class="tab-pane fade show active">
-                            <div class="product_container row" id="product-container">
+                            <div class="product_container row p-0 m-0" id="product-container">
 
                             </div>
                         </div>

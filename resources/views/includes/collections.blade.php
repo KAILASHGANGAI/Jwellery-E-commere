@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
-
+{{-- 
 <style>
      /* Positioning next and previous buttons in the middle of each side */
      .owl-nav {
@@ -45,9 +45,9 @@
         .collection:hover > .product-title {
             color: #a8741a;
         }
-</style>
+</style> --}}
 
-<div class="container my-5">
+<div class="container my-5 p-0">
     <h4 class="main-title text-center py-4">Shop By Collections</h4>
     <div class="owl-carousel owl-theme" id="myallCollection">
         <!-- Static content for testing -->
@@ -57,7 +57,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script> --}}
 
 <script>
     $(document).ready(function() {
@@ -103,7 +103,7 @@
         function initializeOwlCarousel() {
             const owl = $('.owl-carousel').owlCarousel({
                 loop: true,
-                margin: 10,
+               margin: 0,
                 // dots: false,
                 responsiveClass: true,
                 nav: true, // Enable navigation buttons

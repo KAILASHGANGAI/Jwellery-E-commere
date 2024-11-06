@@ -3,7 +3,7 @@
     <div class="header_top">
         <div class="container mt-2">
             <div class="row align-items-center">
-                <div class="col-lg-6 col-md-6">
+                <div class="col-8">
                     <div class="social_icone">
                         <ul>
                             <li><a href="#"><i class="ion-social-facebook"></i></a></li>
@@ -14,7 +14,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6">
+                <div class="col-4">
                     <div class="top_right text-right">
                         <ul>
                             @auth
@@ -62,7 +62,7 @@
         <div class="container">
             <div class="row align-items-center">
 
-                <div class="col-lg-5">
+                <div class="col-lg-5 d-none d-lg-block d-md-block">
                     <div class="home_contact">
                         <div class="contact_icone">
                             <img src="images/icon/icon_phone.png" alt="">
