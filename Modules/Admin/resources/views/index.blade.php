@@ -56,7 +56,7 @@
     </style>
 @endsection
 @section('content')
-    <h5>Hi !, {{ Auth::user()->name }} Welcome to dashboard</h5>
+   
     <div class="dashboard">
         <!-- Header Stats -->
         <div class="row g-2">

@@ -16,7 +16,7 @@
             <span class="order-tab" onclick="setActiveTab('inactive')">Inactive</span>
             <span class=" ">
                 <a class="order-tab bg-success text-decoration-none text-white font-weight-bold"
-                    href="{{ route('customers.create') }}">+</a>
+                    href="{{ route('customers.create') }}"><i class="fa-solid fa-plus"></i></a>
             </span>
             <button id="bulk-delete-btn" class="btn text-danger" style="display: none;" onclick="bulkDelete()">Bulk
                 <i class="fa fa-trash"></i>

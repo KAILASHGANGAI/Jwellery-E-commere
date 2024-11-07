@@ -16,7 +16,7 @@
             <span class="order-tab" onclick="setActiveTab('archived')">Archived</span>
             <span class=" ">
                 <a class="order-tab bg-success text-decoration-none text-white font-weight-bold"
-                    href="{{ route('collections.create') }}">+</a>
+                    href="{{ route('collections.create') }}"><i class="fa-solid fa-plus"></i></a>
             </span>
             <button id="bulk-delete-btn" class="btn text-danger" style="display: none;" onclick="bulkDelete()">Bulk
                 <i class="fa fa-trash"></i>

@@ -17,7 +17,7 @@
             <!-- Add Category Button -->
             <span>
                 <button class="btn bg-success text-white font-weight-bold" data-bs-toggle="modal"
-                    data-bs-target="#createModal">+</button>
+                    data-bs-target="#createModal"><i class="fa-solid fa-plus"></i></button>
             </span>
             <button id="bulk-delete-btn" class="btn text-danger" style="display: none;" onclick="bulkDelete()">Bulk
                 <i class="fa fa-trash"></i>

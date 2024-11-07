@@ -15,7 +15,8 @@
             <span class="order-tab" onclick="setActiveTab('active')">Active</span>
             <span class="order-tab" onclick="setActiveTab('archived')">Archived</span>
            
-            <span class="order-tab bg-success " ><a class="text-decoration-none text-white font-weight-bold" href="{{ route('products.create') }}">+</a></span>
+            <span class="order-tab bg-success " >
+                <a class="text-decoration-none text-white font-weight-bold" href="{{ route('products.create') }}"><i class="fa-solid fa-plus"></i></a></span>
             <button id="bulk-delete-btn" class="btn text-danger" style="display: none;" onclick="bulkDelete()">Bulk
                 <i class="fa fa-trash"></i>
             </button>
