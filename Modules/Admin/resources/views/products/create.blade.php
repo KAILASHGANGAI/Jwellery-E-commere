@@ -1,11 +1,10 @@
 @extends('admin::layouts.master')
 @section('style')
- 
 @endsection
 
 @section('content')
     <div class="container">
-       @include('admin::includes.errors')
+        @include('admin::includes.errors')
 
         <div class="row">
             <div class="col-sm-12">
@@ -18,8 +17,8 @@
                                 <span class="back-button">
                                     <h4 class="main-title ">
                                         <a class="text-decoration-none text-dark" href="{{ route('products.index') }}">
-                                            <span>← </span>Add Product</a> 
-                                            
+                                            <span>← </span>Add Product</a>
+
                                     </h4>
 
                                 </span>
@@ -33,9 +32,15 @@
                                 <input type="text" id="title" name="title" value="{{ old('title') }}"
                                     placeholder="Short sleeve t-shirt" required>
                             </div>
+
                             <div class="form-section">
                                 <label for="description">Description</label>
-                                <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ old('description') }}</textarea>
+                                @include('admin::includes.texteditor')
+                                <!-- Create the editor container -->
+                                <div id="editor">
+                                    {!! old('description') !!}
+                                </div>
+                                <input type="hidden" id="description" name="description" value="{{ old('description') }}">
                             </div>
                             <hr>
                             <div class="form-section">
@@ -106,7 +111,7 @@
 
                                             </div>
                                         </div>
-                                       
+
                                         @foreach (old('name', []) as $index => $oldName)
                                             @if ($index == 0)
                                                 @continue
@@ -186,9 +191,11 @@
                                     </div>
                                     <div class="form-section">
                                         <label for="collections">Collections</label>
-                                        <input type="text" id="collection-search" name="collections" value="{{ old('collections') }}"
-                                        id="collections" placeholder="Search for collections">
-                                        <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
+                                        <input type="text" id="collection-search" name="collections"
+                                            value="{{ old('collections') }}" id="collections"
+                                            placeholder="Search for collections">
+                                        <select id="collection-options" class="form-select" size="5"
+                                            style="display: none;"></select>
 
                                     </div>
                                     <div class="form-section">
@@ -211,6 +218,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <script>
+           document.getElementById('product-form').onsubmit = function() {
+            // Get the editor content as HTML
+            var quillContent = quill.root.innerHTML;
+
+            // Set the content into the hidden input field
+            document.getElementById('description').value = quillContent;
+        };
+
         document.querySelector('#online-store').addEventListener('change', function() {
             const status = this.checked ? 'Active' : 'Draft';
             document.querySelector('select').value = status;
@@ -259,7 +274,7 @@
                 const row = event.target.closest('.variation-row'); // Find the closest row to the clicked button
                 if (row) {
                     row.remove(); // Remove only this specific row
-                }else{
+                } else {
                     event.target.closest('.variation').remove();
                 }
             }
@@ -402,7 +417,8 @@
                             data.forEach(collection => {
                                 const option = document.createElement('option');
                                 option.value = collection.id; // Store the collection ID as the value
-                                option.textContent = collection.title; // Show the collection name in the dropdown
+                                option.textContent = collection
+                                .title; // Show the collection name in the dropdown
                                 selectElement.appendChild(option);
                             });
 
@@ -411,9 +427,9 @@
                                 const selectedOption = selectElement.options[selectElement
                                     .selectedIndex];
                                 document.getElementById('collection-search').value = selectedOption
-                                .text; // Set input value to selected option text
+                                    .text; // Set input value to selected option text
                                 selectElement.style.display =
-                                'none'; // Hide the dropdown after selection
+                                    'none'; // Hide the dropdown after selection
                             });
                         } else {
                             selectElement.style.display = 'none'; // Hide the select dropdown if no results
@@ -421,7 +437,7 @@
                     });
             } else {
                 document.getElementById('collection-options').style.display =
-                'none'; // Hide the dropdown if query length is less than 2
+                    'none'; // Hide the dropdown if query length is less than 2
             }
         });
     </script>

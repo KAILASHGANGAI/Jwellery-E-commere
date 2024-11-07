@@ -41,8 +41,13 @@
                                     placeholder="short-sleeve-t-shirt">
                             </div>
                             <div class="form-section">
-                                <label for="description">Description</label>
-                                <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ $data->description ?? old('description') }}</textarea>
+                                @include('admin::includes.texteditor')
+                                <!-- Create the editor container -->
+                                <div id="editor">
+                                    {!! old('description', $data->description) !!}
+                                </div>
+                                <input type="hidden" id="description" name="description"
+                                    value="{{ old('description', $data->description) }}">
                             </div>
 
 
@@ -56,9 +61,10 @@
                                     <div class="form-section">
                                         <label for="collections">Parent Collections</label>
                                         <input type="text" id="collection-search" name="collections"
-                                            value="{{ ($data->collection_id !=0 ? $data->parent->title : '') ?? old('collections') }}" id="collections"
-                                            placeholder="Search for collections">
-                                            <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
+                                            value="{{ ($data->collection_id != 0 ? $data->parent->title : '') ?? old('collections') }}"
+                                            id="collections" placeholder="Search for collections">
+                                        <select id="collection-options" class="form-select" size="5"
+                                            style="display: none;"></select>
 
                                     </div>
                                     <div class="form-section">
@@ -70,9 +76,10 @@
                                 <div class="sidebar-section card p-3 mt-2">
                                     <h5>Status</h5>
                                     <select id="status" name="status">
-                                        <option {{ old('status', $data->status) == 'archived' ? 'selected' : '' }} value=" archived"
-                                            selected>Archived</option>
-                                        <option {{ old('status', $data->status) == 'active' ? 'selected' : '' }} value="active">Active
+                                        <option {{ old('status', $data->status) == 'archived' ? 'selected' : '' }}
+                                            value=" archived" selected>Archived</option>
+                                        <option {{ old('status', $data->status) == 'active' ? 'selected' : '' }}
+                                            value="active">Active
                                         </option>
                                     </select>
                                     <div>
@@ -95,7 +102,7 @@
                                     </div>
                                     <input type="hidden" id="files-data">
                                 </div>
-                            
+
                             </aside>
                         </div>
                     </div>
@@ -107,6 +114,16 @@
 @endSection
 
 @section('script')
+    <script>
+        // Handle form submission
+        document.getElementById('product-form').onsubmit = function() {
+            // Get the editor content as HTML
+            var quillContent = quill.root.innerHTML;
+
+            // Set the content into the hidden input field
+            document.getElementById('description').value = quillContent;
+        };
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <script>
@@ -265,7 +282,8 @@
                             data.forEach(collection => {
                                 const option = document.createElement('option');
                                 option.value = collection.id; // Store the collection ID as the value
-                                option.textContent = collection.title; // Show the collection name in the dropdown
+                                option.textContent = collection
+                                    .title; // Show the collection name in the dropdown
                                 selectElement.appendChild(option);
                             });
 
@@ -274,9 +292,9 @@
                                 const selectedOption = selectElement.options[selectElement
                                     .selectedIndex];
                                 document.getElementById('collection-search').value = selectedOption
-                                .text; // Set input value to selected option text
+                                    .text; // Set input value to selected option text
                                 selectElement.style.display =
-                                'none'; // Hide the dropdown after selection
+                                    'none'; // Hide the dropdown after selection
                             });
                         } else {
                             selectElement.style.display = 'none'; // Hide the select dropdown if no results
@@ -284,7 +302,7 @@
                     });
             } else {
                 document.getElementById('collection-options').style.display =
-                'none'; // Hide the dropdown if query length is less than 2
+                    'none'; // Hide the dropdown if query length is less than 2
             }
         });
     </script>

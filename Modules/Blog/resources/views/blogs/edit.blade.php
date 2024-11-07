@@ -1,6 +1,6 @@
 @extends('admin::layouts.master')
 @section('style')
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    {{-- <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> --}}
     <style>
         #editor {
             height: 300px;
@@ -176,17 +176,8 @@
 @endSection
 
 @section('script')
-    <!-- Quill JS -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-
-    <!-- Initialize Quill editor -->
     <script>
-        var quill = new Quill('#editor', {
-            modules: {
-                toolbar: '#toolbar'
-            },
-            theme: 'snow'
-        });
+       
         // Handle form submission
         document.getElementById('form').onsubmit = function() {
             // Get the editor content as HTML

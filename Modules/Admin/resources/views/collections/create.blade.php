@@ -1,7 +1,12 @@
 @extends('admin::layouts.master')
 @section('style')
     <style>
-
+        #editor {
+            height: 200px;
+            /* Set your desired height */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+        }
     </style>
 @endsection
 
@@ -40,8 +45,12 @@
                                     placeholder="short-sleeve-t-shirt">
                             </div>
                             <div class="form-section">
-                                <label for="description">Description</label>
-                                <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ old('description') }}</textarea>
+                                @include('admin::includes.texteditor')
+                                <!-- Create the editor container -->
+                                <div id="editor">
+                                    {!! old('description') !!}
+                                </div>
+                                <input type="hidden" id="description" name="description" value="{{ old('description') }}">
                             </div>
 
 
@@ -70,9 +79,10 @@
                                 <div class="sidebar-section card p-3 mt-2">
                                     <h5>Status</h5>
                                     <select id="status" name="status">
-                                        <option {{ old('status') == 'archived' ? 'selected' : '' }} value=" archived"
-                                            >Archived</option>
-                                        <option {{ old('status') == 'active' ? 'selected' : '' }} selected value="active">Active
+                                        <option {{ old('status') == 'archived' ? 'selected' : '' }} value=" archived">
+                                            Archived</option>
+                                        <option {{ old('status') == 'active' ? 'selected' : '' }} selected value="active">
+                                            Active
                                         </option>
                                     </select>
                                     <div>
@@ -104,6 +114,16 @@
 @endSection
 
 @section('script')
+    <script>
+        // Handle form submission
+        document.getElementById('product-form').onsubmit = function() {
+            // Get the editor content as HTML
+            var quillContent = quill.root.innerHTML;
+
+            // Set the content into the hidden input field
+            document.getElementById('quill_content').value = quillContent;
+        };
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <script>
@@ -263,7 +283,7 @@
                                 const option = document.createElement('option');
                                 option.value = collection.id; // Store the collection ID as the value
                                 option.textContent = collection
-                                .title; // Show the collection name in the dropdown
+                                    .title; // Show the collection name in the dropdown
                                 selectElement.appendChild(option);
                             });
 

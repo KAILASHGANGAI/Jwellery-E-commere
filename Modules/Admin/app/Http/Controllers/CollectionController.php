@@ -13,6 +13,7 @@ use Modules\Admin\Services\AdminComonService;
 use Modules\Admin\Http\Requests\CollectionRequest;
 use Modules\Admin\Models\Collection;
 use Illuminate\Support\Str;
+
 class CollectionController extends Controller
 {
     private CommonRepository $comReo;
@@ -98,7 +99,7 @@ class CollectionController extends Controller
                 'status' => $request->status,
                 'tags' => $request->tags ?? $request->title,
             ];
-       
+
 
             $data = $this->comReo->create($datas);
             if ($images = $request->file('images')) {
@@ -169,10 +170,9 @@ class CollectionController extends Controller
             if ($images = $request->file('images')) {
                 $imgPath =  $this->adminService
                     ->ImageUpload($images,  'images/collections');
-                    if (file_exists($data->file_path)) {
-                        unlink($data->file_path);
-                                               
-                    }
+                if (file_exists($data->file_path)) {
+                    unlink($data->file_path);
+                }
                 $data->file_path = $imgPath;
             }
 
@@ -227,8 +227,8 @@ class CollectionController extends Controller
     {
         $search = $request->input('search');
 
-        $collections = $this->comReo->searchByField('title',$search);
-        
+        $collections = $this->comReo->searchByField('title', $search);
+
         return response()->json($collections);
     }
 }

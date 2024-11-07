@@ -34,9 +34,15 @@
                                 <input type="text" id="title" name="title" value="{{ $data->title ?? old('title') }}"
                                     placeholder="Short sleeve t-shirt" required>
                             </div>
+                         
                             <div class="form-section">
                                 <label for="description">Description</label>
-                                <textarea id="description" name="description" rows="4" placeholder="Add a description">{{ $data->description ?? old('description') }}</textarea>
+                                @include('admin::includes.texteditor')
+                                <!-- Create the editor container -->
+                                <div id="editor">
+                                    {!! old('description', $data->description) !!}
+                                </div>
+                                <input type="hidden" id="description" name="description" value="{{ old('description') }}">
                             </div>
                             <hr>
                             <div class="form-section">
@@ -221,6 +227,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <script>
+           document.getElementById('product-form').onsubmit = function() {
+            // Get the editor content as HTML
+            var quillContent = quill.root.innerHTML;
+
+            // Set the content into the hidden input field
+            document.getElementById('description').value = quillContent;
+        };
+
         document.querySelector('#online-store').addEventListener('change', function() {
             const status = this.checked ? 'Active' : 'Draft';
             document.querySelector('select').value = status;
