@@ -14,7 +14,7 @@ class AuthModuleController extends Controller
     public function showLoginForm()
     {
         // Render the login view
-        return view('authmodule::auth.login');
+        return view('authmodule::Auth.login');
     }
 
     // Handle the login request
