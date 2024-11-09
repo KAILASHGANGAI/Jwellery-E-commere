@@ -241,7 +241,7 @@ class DiscountController extends Controller
                 $select,
                 null,
                 null,
-                null,
+                1,
                 'title',
                 'asc',
                 null,
@@ -260,13 +260,14 @@ class DiscountController extends Controller
                 $select,
                 null,
                 null,
-                null,
+                'active',
                 'title',
                 'asc',
                 null,
                 5
             );
         }
+        
         return response()->json($data, 200);
     }
 

@@ -216,12 +216,14 @@ class CommonRepository implements CommonRepositoryInterface
             })
 
             ->when($limit, function ($query) use ($limit) {
+                
                 return $query->limit($limit);
             })
             ->when($sort, function ($query) use ($sort, $direction) {
                 return $query->orderBy($sort, $direction);
             })
             ->when($paginate, function ($query) use ($paginate) {
+              
                 return   $query->paginate($paginate)->appends(request()->all());
                 // with request 
             });

@@ -8,6 +8,10 @@
 @endsection
 @section('content')
     <h4 class="main-title">Gift Cards List</h4>
+    <div class="pickup-info">
+        <h3>Under Development</h3>
+        <p>comming Soon.</p>
+    </div>
     @include('admin::includes.errors')
     <div class="order-controls">
         <div class="order-tabs">
@@ -48,6 +52,7 @@
                     <th><input type="checkbox" id="select-all"></th>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Gift Code</th>
                     <th>Value</th>
                     <th>Status</th>
                     <th>Expiry_date</th>
@@ -99,7 +104,7 @@
                             <td><input type="checkbox" class="checkbox" name="ids[]" value="${data.id}"></td>
                             <td>${data.id}</td>
                             <td><a class="nav-link" href="${edit}">${data.name}</a></td>
-                           
+                            <td>${data.code}</td>
                             <td>${data.value}</td>
                             <td><span class="status-dot status-${data.status}"></span>${data.status}</td>
                             <td>${data.expiry_date}</td>

@@ -8,6 +8,10 @@
 @endsection
 @section('content')
     <h4 class="main-title">Discounts List</h4>
+    <div class="pickup-info">
+        <h3>Under Development</h3>
+        <p>comming Soon.</p>
+    </div>
     @include('admin::includes.errors')
     <div class="order-controls">
         <div class="order-tabs">
