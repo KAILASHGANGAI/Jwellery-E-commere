@@ -38,7 +38,7 @@ class CheckUserPermissions
             ])->first();
 
         if (!$permissions) {
-            abort(Response::HTTP_NOT_FOUND, 'Method not found');
+            abort(Response::HTTP_FORBIDDEN, 'You do not have permission to access this page.');
         }
 
         foreach ($role->role_permissions as $role_permission) {
