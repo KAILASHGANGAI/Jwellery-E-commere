@@ -154,8 +154,9 @@
                                 {{-- <img src="images/logo/logo-ash.png" alt="logo"> --}}
                             </a>
                         </div>
+                        
                         <div class="main_menu" id="mainmenu">
-
+                            
                         </div>
                         <div class="hem float-right d-lg-none d-md-none ">
                             <div class="col-lg-5 col-md-7 col-6">

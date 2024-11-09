@@ -2621,6 +2621,13 @@ p {
 }
 
 @media screen and (max-width: 767px) {
+  .logo_sticky {
+    display: contents;
+    /* margin-right: 35px; */
+  }
+  .logo_sticky a {
+    float: left;
+  }
   .row {
     margin: 0px !important;
   }
