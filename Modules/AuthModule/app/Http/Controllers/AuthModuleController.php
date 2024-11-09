@@ -13,6 +13,7 @@ class AuthModuleController extends Controller
 {
     public function showLoginForm()
     {
+        // Render the login view
         return view('authmodule::auth.login');
     }
 
