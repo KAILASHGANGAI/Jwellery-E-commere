@@ -29,8 +29,6 @@ class AuthModuleController extends Controller
             if (Auth::guard('admin')->check()) {
                 dd('solved');
                 // The user is authenticated via the admin guard
-            }else{
-                dd('not solved');
             }
             // Attempt to log the user in
             if (Auth::guard('admin')->attempt($request->only('email', 'password'))) {
@@ -42,6 +40,7 @@ class AuthModuleController extends Controller
                 'email' => 'The provided credentials do not match our records.',
             ]);
         } catch (Exception $th) {
+            dd($th->getMessage());
            return back()->with('error', 'Something went wrong')->withInput($request->all());
         }
     }
