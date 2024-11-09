@@ -27,7 +27,7 @@ return [
         ],
         'admin_users' => [
             'driver' => 'eloquent',
-            'model' => App\Modules\AuthModule\Models\AdminUser\AdminUser::class,  // Ensure AdminUser model exists in Modules\AuthModule\Models
+            'model' => AdminUser::class,  // Ensure AdminUser model exists in Modules\AuthModule\Models
         ],
     ],
 
