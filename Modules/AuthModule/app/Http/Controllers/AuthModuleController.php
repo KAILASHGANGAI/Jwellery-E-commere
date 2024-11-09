@@ -28,6 +28,7 @@ class AuthModuleController extends Controller
             ]);
             if (Auth::guard('admin')->check()) {
                 dd('solved');
+                
                 // The user is authenticated via the admin guard
             }
             // Attempt to log the user in
