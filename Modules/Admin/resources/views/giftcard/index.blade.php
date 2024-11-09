@@ -10,7 +10,7 @@
     <h4 class="main-title">Gift Cards List</h4>
     <div class="pickup-info">
         <h3>Under Development</h3>
-        <p>comming Soon.</p>
+        <p>comming Soon. you can create , edit and delete discounts. but wont be impleented on websiteright now. </p>
     </div>
     @include('admin::includes.errors')
     <div class="order-controls">
