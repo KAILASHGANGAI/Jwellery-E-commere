@@ -26,7 +26,12 @@ class AuthModuleController extends Controller
                 'email' => 'required|email',
                 'password' => 'required|min:6',
             ]);
-dd(Auth::guard(['admin']));
+            if (Auth::guard('admin')->check()) {
+                dd('solved');
+                // The user is authenticated via the admin guard
+            }else{
+                dd('not solved');
+            }
             // Attempt to log the user in
             if (Auth::guard('admin')->attempt($request->only('email', 'password'))) {
                 // Redirect to the admin dashboard
