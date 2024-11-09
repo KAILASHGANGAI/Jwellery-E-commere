@@ -14,8 +14,6 @@
     background-color: #f8f9fa;
 }
 
-
-
 .card {
     border-radius: 10px;
 }
@@ -60,6 +58,10 @@ button:hover {
                 <img src="your-logo.png" alt="Logo" width="50">
 
             </div>
+
+
+
+            
             <!-- Welcome Text -->
             <div class="text-center mb-4">
                 <h2>Welcome Back!</h2>
