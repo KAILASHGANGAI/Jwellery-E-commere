@@ -26,7 +26,7 @@
                 <ul class="navbar-nav ms-auto">
                     <li><a href="#" class="nav-link"><span> {{ date('l jS \of F Y') }}</span></a></li>
                     <li>
-                        <a href="{{ route('home') }}" title="View Site" class="nav-link">
+                        <a href="{{ route('home') }}" target="blank" title="View Site" class="nav-link">
                             <i class="fa-solid fa-eye">
                             </i>
                         </a>

@@ -27,10 +27,9 @@
 
             <input type="text" id="table-search" placeholder="Search ...">
             <button class="search-button" onclick="searchOrders()">Search</button>
-            <span>☰</span>
-            <span>⋮</span>
+            <span title="filter data"><i class="fa-solid fa-filter"></i></span>
             <div class="filter-dropdown">
-                <span onclick="toggleFilter()">↓</span>
+                <span onclick="toggleFilter()"><i class="fa-solid fa-arrow-up-a-z"></i></span>
                 <div id="filterDropdown" class="filter-content">
                     <a href="#" onclick="applySort('title', 'asc')">A -Z</a>
                     <a href="#" onclick="applySort('title', 'desc')">Z -A</a>

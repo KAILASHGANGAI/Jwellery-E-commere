@@ -28,7 +28,7 @@
             <span>☰</span> 
             <span>⋮</span>
             <div class="filter-dropdown">
-                <span onclick="toggleFilter()">↓</span>
+                <span onclick="toggleFilter()"><i class="fa-solid fa-arrow-up-a-z"></i></span>
                 <div id="filterDropdown" class="filter-content">
                
                     <a href="#" onclick="applySort('created_at', 'desc')">Newest</a>
