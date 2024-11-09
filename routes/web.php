@@ -42,9 +42,12 @@ Route::get('/register', function () {
 })->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('auth.register');
 
-
+Route::group([ 'middleware' => 'auth'], function () {
+    Route::post('/cart/add', [AddTOCardController::class, 'addToCart'])->name('cart.add');
+Route::get('/check-out',[CheckOutController::class, 'index'])->name('checkout');
+    
+});
 // routes/web.php
-Route::post('/cart/add', [AddTOCardController::class, 'addToCart'])->name('cart.add');
 Route::get('/get-cart-items', [AddTOCardController::class, 'getCart'])->name('cart.get');
 Route::get('/cart/{cartId}', [AddTOCardController::class, 'removeItem'])->name('cart.remove');
 Route::post('/cart/update', [AddTOCardController::class, 'updateCart'])->name('cart.update');
@@ -54,7 +57,6 @@ Route::get('wishlist', [AddTOCardController::class, 'wishlist'])->name('wishlist
 Route::post('/wishlist-products', [AddTOCardController::class, 'getWishlistProducts'])->name('wishlist-products');
 
 // check out 
-Route::get('/check-out',[CheckOutController::class, 'index'])->name('checkout');
 Route::get('shopping-cart', [CheckOutController::class, 'shipCard'])->name('shopping-cart');
 Route::post('/place-order', [CheckOutController::class, 'placeOrder'])->name('place-order');
 
