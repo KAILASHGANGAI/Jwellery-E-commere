@@ -14,6 +14,8 @@
     background-color: #f8f9fa;
 }
 
+
+
 .card {
     border-radius: 10px;
 }
