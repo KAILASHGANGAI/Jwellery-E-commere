@@ -42,8 +42,6 @@ Route::get('/register', function () {
 })->name('register');
 Route::post('register', [RegisterController::class, 'register'])->name('auth.register');
 
-
-
 Route::group([ 'middleware' => 'auth'], function () {
     Route::post('/cart/add', [AddTOCardController::class, 'addToCart'])->name('cart.add');
 Route::get('/check-out',[CheckOutController::class, 'index'])->name('checkout');
