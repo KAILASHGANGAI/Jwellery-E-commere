@@ -2621,6 +2621,12 @@ p {
 }
 
 @media screen and (max-width: 767px) {
+  .modal-dialog.modal-dialog-centered {
+    min-width: 337px;
+  }
+  .modal-content button.close {
+    left:89%;
+  }
   .logo_sticky {
     display: contents;
     /* margin-right: 35px; */
