@@ -22,12 +22,13 @@ use Modules\Admin\Http\Controllers\StatisticsController;
 |
 */
 
-Route::group(['prefix' => '/myadmin',  'middleware' => ['auth:admin', 'checkPermission']], function () {
-    Route::get('/myadmin', [AdminController::class,  'index'])->name('admin.dashboard');
+Route::get('/dashboard', [AdminController::class,  'index'])->middleware(['auth:admin', 'checkPermission'])->name('admin.dashboard');
+Route::group(['prefix' => '/admin',  'middleware' => ['auth:admin', 'checkPermission']], function () {
 
 
     # Product routes
     Route::resource('/products', ProductController::class)->names('products');
+    Route::get('/products-create', [ProductController::class, 'new']);
     Route::get('/product-ajax', [ProductController::class, 'productAjax'])->name('products.indexAjax');
     Route::post('/product-bulk-delete', [ProductController::class, 'bulkDelete'])->name('products.bulkDelete');
     Route::get('/search-products', [ProductController::class, 'search'])->name('products.search');

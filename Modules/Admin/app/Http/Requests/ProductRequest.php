@@ -11,6 +11,7 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        dd($this->all());
         // dd($this->title);
         return [
             'title' => 'required|string|max:255',

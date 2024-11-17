@@ -81,14 +81,17 @@ class ProductController extends Controller
     {
         return view('admin::products.create');
     }
-
+    public function new()
+    {
+        return view('admin::products.new');
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(ProductRequest $request)
     {
         try {
-            // dd($request->all());
+            dd($request->all());
             DB::beginTransaction();
             $collectionID = $this->adminService->findByField(
                 Collection::class,
