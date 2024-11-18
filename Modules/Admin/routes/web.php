@@ -9,6 +9,7 @@ use Modules\Admin\Http\Controllers\DiscountController;
 use Modules\Admin\Http\Controllers\GiftCardController;
 use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\ProductController;
+use Modules\Admin\Http\Controllers\ShippingController;
 use Modules\Admin\Http\Controllers\StatisticsController;
 
 /*
@@ -66,6 +67,12 @@ Route::group(['prefix' => '/admin',  'middleware' => ['auth:admin', 'checkPermis
     Route::post('/gift-card-bulk-delete', [GiftCardController::class, 'bulkDelete'])->name('giftcards.bulkDelete');
     Route::get('/search-giftcards', [GiftCardController::class, 'search'])->name('giftcards.search');
 
+    #Shipping Methods and places
+    Route::resource('/shipping', ShippingController::class)->names('shipping');
+    Route::get('/shipping-ajax', [ShippingController::class, 'indexAjax'])->name('shipping.indexAjax');
+    Route::post('/shipping-bulk-delete', [ShippingController::class, 'bulkDelete'])->name('shipping.bulkDelete');
+    Route::get('/search-shipping', [ShippingController::class, 'search'])->name('shipping.search');
+    
 
     #analytics for Dashboard 
     Route::get('/yearly-orders-earnings', [StatisticsController::class, 'index'])->name('yearly-orders-earnings');

@@ -23,6 +23,7 @@
             <li><a class="text-decoration-none" href="{{ route('customers.index') }}"><i class="fa-solid fa-users"></i> Customers</a></li>
             <li><a class="text-decoration-none" href="{{ route('discounts.index') }}"><i class="fa-solid fa-tag"></i> Discounts</a></li>
             <li><a class="text-decoration-none" href="{{ route('giftcards.index') }}"><i class="fa-solid fa-gift"></i> Gift Cards</a></li>
+            <li><a class="text-decoration-none" href="{{ route('shipping.index') }}"><i class="fa-solid fa-truck-fast"></i>Shipping </a></li>
             <li><a class="text-decoration-none" href="{{ route('analytics') }}"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
             {{-- <li><a class="text-decoration-none" href="#">Marketing</a></li> --}}
             <hr>

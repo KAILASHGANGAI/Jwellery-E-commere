@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->tinyInteger('hasVariation')->default(0);
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->text('options')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
             $table->decimal('compare_price', 10, 2)->nullable();
             $table->decimal('cost', 10, 2)->nullable();
             $table->string('status')->default('archived');

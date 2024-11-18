@@ -91,7 +91,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         try {
-            dd($request->all());
+        //    DD($request->all());
             DB::beginTransaction();
             $collectionID = $this->adminService->findByField(
                 Collection::class,
@@ -104,9 +104,11 @@ class ProductController extends Controller
                 'slug' => Str::slug($request->title),
                 'description' => $request->description,
                 'status' => $request->status,
-                'price' => $request->price,
-                'compare_price' => $request->compare_price,
-                'cost' => $request->cost,
+                'hasVariation' =>  $request->hasVariation,
+                'options' => json_encode(@$request->options ?? null),
+                'price' => $request->price ?? 0,
+                'compare_price' => $request->compare_price ?? 0,
+                'cost' => $request->cost ?? 0,
                 'display' => isset($request->display) && $request->display == 'on' ? 1 : 0,
                 'vendor' => $request->vendor,
                 'product_type' => $request->product_type,
@@ -115,14 +117,21 @@ class ProductController extends Controller
                 'tags' => $request->tags,
             ];
             $product = $this->comReo->create($products);
-            foreach ($request->name as $key => $value) {
+            foreach ($request->variants as  $variant) {
+                
                 $vdata = [
-                    'name' => $value,
+                    'name' => @$variant['name'] ?? 'Default Title',
+                    'barcode' => $request['barcode'] ?? null,
+                    'inventory' => $request['inventory'] ?? 0,
+                    'price' => $request['price'] ?? 0,
+                    'cost' => $request['cost'] ?? 0,
+                    'compare_price' => $request['compare_price'] ?? 0,
+                    'weight' => $variant['weight'] ?? 0,
+                    'weight_unit' => $variant['weight_unit'] ?? 'gram',
                     'product_id' => $product->id,
-                    'sku' => $request->sku[$key],
-                    'barcode' => $request->barcode[$key],
-                    'inventory' => $request->inventory[$key],
+                    'sku' => $variant['sku'],
                 ];
+                
                 $product->variations()->create($vdata);
             }
 
@@ -149,6 +158,68 @@ class ProductController extends Controller
             return back()->withInput($request->all())->with('error', $e->getMessage());
         }
     }
+
+    // public function store(ProductRequest $request)
+    // {
+    //     try {
+    //         dd($request->all());
+    //         DB::beginTransaction();
+    //         $collectionID = $this->adminService->findByField(
+    //             Collection::class,
+    //             'title',
+    //             $request->collections
+    //         );
+
+    //         $products = [
+    //             'title' => $request->title,
+    //             'slug' => Str::slug($request->title),
+    //             'description' => $request->description,
+    //             'status' => $request->status,
+    //             'price' => $request->price,
+    //             'compare_price' => $request->compare_price,
+    //             'cost' => $request->cost,
+    //             'display' => isset($request->display) && $request->display == 'on' ? 1 : 0,
+    //             'vendor' => $request->vendor,
+    //             'product_type' => $request->product_type,
+    //             'collections' => $request->collections,
+    //             'collection_id' => $collectionID ? $collectionID->id : 0,
+    //             'tags' => $request->tags,
+    //         ];
+    //         $product = $this->comReo->create($products);
+    //         foreach ($request->name as $key => $value) {
+    //             $vdata = [
+    //                 'name' => $value,
+    //                 'product_id' => $product->id,
+    //                 'sku' => $request->sku[$key],
+    //                 'barcode' => $request->barcode[$key],
+    //                 'inventory' => $request->inventory[$key],
+    //             ];
+    //             $product->variations()->create($vdata);
+    //         }
+
+    //         if ($request->hasFile('images') && $images = $request->file('images')) {
+    //             foreach ($images as $key => $image) {
+
+    //                 $imageName = $image->getClientOriginalName();
+    //                 $imgPath = $this->adminService->ImageUpload($image,  'images/products');
+    //                 $idata = [
+    //                     'product_id' => $product->id,
+    //                     'name' => $imageName ?? null,
+    //                     'image_path' => $imgPath,
+    //                     'image_url' => config('app.url') . '/' . $imgPath
+    //                 ];
+
+    //                 $product->images()->create($idata);
+    //             }
+    //         }
+    //         DB::commit();
+    //         return back()->with('success', 'Product created successfully');
+    //     } catch (Exception $e) {
+    //         DB::rollBack();
+    //         dd($e);
+    //         return back()->withInput($request->all())->with('error', $e->getMessage());
+    //     }
+    // }
 
     /**
      * Show the specified resource.
@@ -186,9 +257,11 @@ class ProductController extends Controller
                 'slug' => Str::slug($request->title),
                 'description' => $request->description,
                 'status' => $request->status,
-                'price' => $request->price,
-                'compare_price' => $request->compare_price,
-                'cost' => $request->cost,
+                'hasVariation' =>  $request->hasvariation,
+                'options' => json_encode(@$request->options ?? null),
+                // 'price' => $request->price,
+                // 'compare_price' => $request->compare_price,
+                // 'cost' => $request->cost,
                 'display' => isset($request->display) && $request->display == 'on' ? 1 : 0,
                 'vendor' => $request->vendor,
                 'product_type' => $request->product_type,
@@ -197,15 +270,20 @@ class ProductController extends Controller
                 'tags' => $request->tags,
             ];
             $product = $this->comReo->update($id,$products);
-            foreach ($request->name as $key => $value) {
+            foreach ($request->variants as $key => $variant) {
                 $vdata = [
-                    'name' => $value,
-                    'barcode' => $request->barcode[$key],
-                    'inventory' => $request->inventory[$key],
+                    'name' => $variant->name,
+                    'barcode' => $request->barcode,
+                    'inventory' => $request->inventory,
+                    'price' => $request->price ?? 0,
+                    'cost' => $request->cost ?? 0,
+                    'compare_price' => $request->compare_price ?? 0,
+                    'weight' => $variant->weight,
+                    'weight_unit' => $variant->weight_unit,
                 ];
                 $condition = [
                     'product_id' => $product->id,
-                    'sku' => $request->sku[$key],
+                    'sku' => $variant->sku,
                 ];
                 $this->adminService->createOrUpdateByField(Variation::class, $condition, $vdata);
             }

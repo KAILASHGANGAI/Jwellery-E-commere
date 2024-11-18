@@ -146,6 +146,72 @@
                 font-size: 0.9em;
             }
         }
+
+        .upload-container {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 5px;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            cursor: move;
+        }
+
+        .preview-item img,
+        .preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .preview-item:hover .remove-btn {
+            display: block;
+        }
+
+        .add-more {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-more::before {
+            content: '+';
+            font-size: 40px;
+            color: #ccc;
+        }
+
+        .dragging {
+            opacity: 0.5;
+        }
     </style>
 @endsection
 
@@ -189,20 +255,17 @@
                                 </div>
                                 <input type="hidden" id="description" name="description" value="{{ old('description') }}">
                             </div>
-                            <hr>
-                            <div class="form-section">
-                                <h5>Drag and Drop Images</h5>
-                                <div id="drop-zone" class="drop-zone">
-                                    <input type="file" id="file-input" name="images[]" multiple accept="image/*"
-                                        style="display: none;">
-                                    <p>Drag & drop your images here or <span id="upload-trigger">click to upload</span></p>
 
-                                    <div id="image-preview" class="image-preview"></div>
+                            <div class="form-section">
+                                <div class="upload-container">
+                                    <p>Select Files to Upload </p>
+                                    <input type="file" name="images[]" id="fileInput" multiple accept="image/*,video/*"
+                                        style="display: none;">
+                                    <div class="preview-container" id="previewContainer"></div>
                                 </div>
-                                <input type="hidden" id="files-data" name="">
                             </div>
 
-                            <hr>
+
                             <div class="form-section">
 
                                 <div class="row">
@@ -210,15 +273,16 @@
                                         <label for="variation">Has Variations</label>
                                         <div class="form-group d-flex">
                                             <div class="form-check d-flex">
-                                                <input class="" type="radio" name="hasvariation" id="no-variations"
-                                                    checked value="0">
+                                                <input class="" {{ old('hasVariation') == '0' ? 'checked' : '' }}
+                                                    type="radio" name="hasVariation" id="no-variations" checked
+                                                    value="0">
                                                 <label class="mx-3" for="no-variations">
                                                     No (Simple Product)
                                                 </label>
                                             </div>
                                             <div class="form-check d-flex">
-                                                <input class="" type="radio" name="hasvariation" id="has-variations"
-                                                    value="1">
+                                                <input class="" {{ old('hasVariation') == '1' ? 'checked' : '' }}
+                                                    type="radio" name="hasVariation" id="has-variations" value="1">
                                                 <label class="mx-3" for="has-variations">
                                                     Yes (Matrix Product)
                                                 </label>
@@ -235,7 +299,7 @@
                             <div id="variations-section" class="variation-section" style="display: none;">
                                 <h5>Product Options</h5>
                                 <div id="options-container">
-                                     
+
                                 </div>
                                 <button type="button" id="add-option" class="add-option-btn mt-3">
                                     <i class="fas fa-plus"></i> Add New Option
@@ -244,6 +308,46 @@
 
                             </div>
                             {{-- has no variation --}}
+                            <div class="variation-section" id="no-variations-section" style="display: none">
+                                <div class="row">
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="price">Price</label>
+                                        <input class="form-control" type="number" id="price" name="variants[0][price]"
+                                            value="{{ @old('variants')[0]['price'] }}" placeholder="price">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="compare-price">Compare at price</label>
+                                        <input class="form-control" type="number" id="compare-price"
+                                            name="variants[0][compare_price]"
+                                            value="{{ @old('variants')[0]['compare_price'] }}"
+                                            placeholder="Compare at price">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="sku">SKU</label>
+                                        <input class="form-control" type="text" id="sku" name="variants[0][sku]"
+                                            value="{{ @old('variants')[0]['sku'] }}" placeholder="SKU">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="barcode">Barcode</label>
+                                        <input class="form-control" type="number" id="barcode"
+                                            name="variants[0][barcode]" value="{{ @old('variants')[0]['barcode'] }}"
+                                            placeholder="Barcode">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="stock">Stock</label>
+                                        <input class="form-control" type="number" id="stock"
+                                            name="variants[0][stock]" value="{{ @old('variants')[0]['stock'] }}"
+                                            placeholder="Stock">
+                                    </div>
+
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="weight">Weight</label>
+                                        <input class="form-control" type="number" id="weight"
+                                            name="variants[0][weight]" value="{{ @old('variants')[0]['weight'] }}"
+                                            placeholder="Weight">
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -291,7 +395,7 @@
                                 </div>
                             </aside>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 " id="variants-table">
                             <h5 class="mt-4">Variants</h5>
                             <div class="table-responsive">
                                 <table id="variants-table" class="variants-table">
@@ -306,13 +410,13 @@
                                             <th>Weight</th>
                                         </tr>
                                     </thead>
-                                    {{ old('variants') }}
+
                                     <tbody id="variants-body">
                                         @if (old('variants'))
                                             @foreach (old('variants') as $variant)
                                                 <tr>
                                                     <td><input type="text" name="variants[{{ $loop->index }}][name]"
-                                                            value="{{ $variant['name'] }}"></td>
+                                                            value="{{ $variant['name'] ?? '' }}"></td>
                                                     <td><input type="number" name="variants[{{ $loop->index }}][price]"
                                                             step="0.01" value="{{ $variant['price'] }}"></td>
                                                     <td><input type="number"
@@ -354,13 +458,19 @@
             const hasVariationsRadio = document.getElementById('has-variations');
             const noVariationsRadio = document.getElementById('no-variations');
             const variationsSection = document.getElementById('variations-section');
+            const variantsTable = document.getElementById('variants-table');
+            const novarinationsSection = document.getElementById('no-variations-section');
 
             function toggleVariationOptions() {
                 variationsSection.style.display = hasVariationsRadio.checked ? 'block' : 'none';
+                variantsTable.style.display = hasVariationsRadio.checked ? 'block' : 'none';
+                novarinationsSection.style.display = noVariationsRadio.checked ? 'block' : 'none';
             }
 
             hasVariationsRadio.addEventListener('change', toggleVariationOptions);
             noVariationsRadio.addEventListener('change', toggleVariationOptions);
+
+
 
             // Initial toggle
             toggleVariationOptions();
@@ -421,14 +531,14 @@
                 </div>
                 <div class="option-values">
                     ${option.values.map((value, valueIndex) => `
-                                    <div class="option-value">
-                                        <span>${value}</span>
-                                        <input type="hidden" name="options[${optionIndex}][values][${valueIndex}]" value="${value}">
-                                        <button type="button" class="remove-value" onclick="removeOptionValue(${optionIndex}, ${valueIndex})">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                `).join('')}
+                                        <div class="option-value">
+                                            <span>${value}</span>
+                                            <input type="hidden" name="options[${optionIndex}][values][${valueIndex}]" value="${value}">
+                                            <button type="button" class="remove-value" onclick="removeOptionValue(${optionIndex}, ${valueIndex})">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    `).join('')}
                 </div>
                 <button type="button" class="add-value-btn mt-2" onclick="addOptionValue(${optionIndex})">
                     <i class="fas fa-plus"></i> Add Value
@@ -482,7 +592,158 @@
         }
 
 
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
 
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(e) {
+            handleFiles(e.target.files);
+        }
+
+        function handleFiles(files) {
+            for (const file of files) {
+                if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const previewItem = createPreviewItem(e.target.result, file.type);
+                        previewContainer.insertBefore(previewItem, previewContainer.lastElementChild);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            ensureAddMoreButton();
+        }
+
+        function createPreviewItem(src, fileType) {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            previewItem.draggable = true;
+
+            const media = fileType.startsWith('image/') ?
+                document.createElement('img') :
+                document.createElement('video');
+
+            media.src = src;
+            if (media.tagName === 'VIDEO') {
+                media.setAttribute('controls', '');
+            }
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-btn';
+            removeBtn.textContent = '×';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                previewItem.remove();
+            };
+
+            previewItem.appendChild(media);
+            previewItem.appendChild(removeBtn);
+
+            previewItem.addEventListener('dragstart', dragStart);
+            previewItem.addEventListener('dragover', dragOver);
+            previewItem.addEventListener('dragleave', dragLeave);
+            previewItem.addEventListener('drop', drop);
+            previewItem.addEventListener('dragend', dragEnd);
+
+            return previewItem;
+        }
+
+        function ensureAddMoreButton() {
+            let addMore = previewContainer.querySelector('.add-more');
+            if (!addMore) {
+                addMore = document.createElement('div');
+                addMore.className = 'preview-item add-more';
+                addMore.onclick = () => fileInput.click();
+                previewContainer.appendChild(addMore);
+            }
+        }
+
+        function dragStart(e) {
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.innerHTML);
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+
+        function dragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            const draggedElement = document.querySelector('.dragging');
+            if (this !== draggedElement) {
+                const allItems = [...previewContainer.querySelectorAll('.preview-item:not(.add-more)')];
+                const draggedIndex = allItems.indexOf(draggedElement);
+                const dropIndex = allItems.indexOf(this);
+                if (draggedIndex < dropIndex) {
+                    this.parentNode.insertBefore(draggedElement, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedElement, this);
+                }
+            }
+        }
+
+        function dragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        ensureAddMoreButton();
         // ... (rest of the script content remains unchanged) ...
+        document.getElementById('collection-search').addEventListener('input', function() {
+            const query = this.value;
+            var url = "{{ route('collections.search', ['search' => 'PLACEHOLDER']) }}";
+            if (query.length >= 2) { // Start searching after 2 characters
+                let searchUrl = url.replace('PLACEHOLDER', encodeURIComponent(query));
+
+                fetch(searchUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        //if no data found display no results
+                        if (data.length == 0) {
+                            document.getElementById('collection-options').style.display = 'none';
+                            document.getElementById('collection-search').value = '';
+                            alert('No results found');
+                            return;
+                        }
+                        // Display the search results
+                        const selectElement = document.getElementById('collection-options');
+                        selectElement.innerHTML = ''; // Clear previous results
+
+                        if (data.length > 0) {
+                            selectElement.style.display = 'block'; // Show the select dropdown
+
+                            data.forEach(collection => {
+                                const option = document.createElement('option');
+                                option.value = collection.id; // Store the collection ID as the value
+                                option.textContent = collection
+                                    .title; // Show the collection name in the dropdown
+                                selectElement.appendChild(option);
+                            });
+
+                            // Handle selection of an option
+                            selectElement.addEventListener('change', function() {
+                                const selectedOption = selectElement.options[selectElement
+                                    .selectedIndex];
+                                document.getElementById('collection-search').value = selectedOption
+                                    .text; // Set input value to selected option text
+                                selectElement.style.display =
+                                    'none'; // Hide the dropdown after selection
+                            });
+                        } else {
+                            selectElement.style.display = 'none'; // Hide the select dropdown if no results
+                        }
+                    });
+            } else {
+                document.getElementById('collection-options').style.display =
+                    'none'; // Hide the dropdown if query length is less than 2
+            }
+        });
     </script>
 @endsection

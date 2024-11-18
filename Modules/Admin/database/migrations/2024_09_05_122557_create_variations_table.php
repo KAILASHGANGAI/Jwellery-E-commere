@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('sku');
             $table->string('barcode')->nullable();
             $table->integer('inventory')->default(0);
+            $table->decimal('price', 10, 2)->nullable();
+            $table->decimal('compare_price', 10, 2)->nullable();
+            $table->decimal('cost', 10, 2)->nullable();
+            $table->string('weight')->default('0');
+            $table->string('weight_unit')->default('gram');
             $table->timestamps();
         });
     }
