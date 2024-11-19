@@ -23,6 +23,8 @@ return new class extends Migration
             $table->decimal('cost', 10, 2)->nullable();
             $table->string('weight')->default('0');
             $table->string('weight_unit')->default('gram');
+            $table->tinyInteger('isdeleted')->default(0);
+            
             $table->timestamps();
         });
     }

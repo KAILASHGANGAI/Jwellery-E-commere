@@ -5,10 +5,19 @@ namespace Modules\Admin\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Repositories\CommonRepository;
+use Modules\Admin\Models\Image;
+use Modules\Admin\Services\AdminComonService;
 
 class ImageController extends Controller
 {
+    private CommonRepository $comReo;
+    private AdminComonService $adminService;
+    public function __construct(AdminComonService $adminService)
+    {
+        $this->adminService = $adminService;
+        $this->comReo = new CommonRepository(Image::class);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -62,6 +71,12 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        //
+       $image =  $this->comReo->find($id);
+
+       if (file_exists($image->image_path)) {
+           unlink($image->image_path);
+       }
+       $this->comReo->delete($id);
+       return response()->json(['success' => 'Deleted successfully.']);
     }
 }

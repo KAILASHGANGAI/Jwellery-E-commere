@@ -63,6 +63,11 @@ class CommonRepository implements CommonRepositoryInterface
         return $this->model::find($id);
     }
 
+    public function findWith(array $with, $id)
+    {
+        return $this->model::with($with)->find($id);
+    }
+
     /**
      * Creates a new record in the model.
      *

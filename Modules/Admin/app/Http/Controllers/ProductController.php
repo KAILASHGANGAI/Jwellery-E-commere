@@ -79,12 +79,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin::products.create');
-    }
-    public function new()
-    {
         return view('admin::products.new');
     }
+    // public function new()
+    // {
+    //     return view('admin::products.new');
+    // }
     /**
      * Store a newly created resource in storage.
      */
@@ -106,9 +106,9 @@ class ProductController extends Controller
                 'status' => $request->status,
                 'hasVariation' =>  $request->hasVariation,
                 'options' => json_encode(@$request->options ?? null),
-                'price' => $request->price ?? 0,
-                'compare_price' => $request->compare_price ?? 0,
-                'cost' => $request->cost ?? 0,
+                'price' => $variants[0]['price'] ?? 0, // no need
+                'compare_price' => $request[0]['compare_price'] ?? 0, // no need
+                'cost' => $request->cost ?? 0, // no need
                 'display' => isset($request->display) && $request->display == 'on' ? 1 : 0,
                 'vendor' => $request->vendor,
                 'product_type' => $request->product_type,
@@ -121,11 +121,11 @@ class ProductController extends Controller
                 
                 $vdata = [
                     'name' => @$variant['name'] ?? 'Default Title',
-                    'barcode' => $request['barcode'] ?? null,
-                    'inventory' => $request['inventory'] ?? 0,
-                    'price' => $request['price'] ?? 0,
-                    'cost' => $request['cost'] ?? 0,
-                    'compare_price' => $request['compare_price'] ?? 0,
+                    'barcode' => $variant['barcode'] ?? null,
+                    'inventory' => $variant['inventory'] ?? 0,
+                    'price' => $variant['price'] ?? 0,
+                    'cost' => $variant['cost'] ?? 0,
+                    'compare_price' => $variant['compare_price'] ?? 0,
                     'weight' => $variant['weight'] ?? 0,
                     'weight_unit' => $variant['weight_unit'] ?? 'gram',
                     'product_id' => $product->id,
@@ -234,8 +234,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $data = $this->comReo->find($id);
-        return view('admin::products.edit', compact('data'));
+        $product = $this->comReo->findWith(['variations'],$id);
+
+        return view('admin::products.edit', compact('product'));
     }
 
     /**
@@ -257,7 +258,7 @@ class ProductController extends Controller
                 'slug' => Str::slug($request->title),
                 'description' => $request->description,
                 'status' => $request->status,
-                'hasVariation' =>  $request->hasvariation,
+                'hasVariation' =>  $request->hasVariation,
                 'options' => json_encode(@$request->options ?? null),
                 // 'price' => $request->price,
                 // 'compare_price' => $request->compare_price,
@@ -270,20 +271,26 @@ class ProductController extends Controller
                 'tags' => $request->tags,
             ];
             $product = $this->comReo->update($id,$products);
+            $product->variations()->update(['isdeleted'=> 1]);
             foreach ($request->variants as $key => $variant) {
+
                 $vdata = [
-                    'name' => $variant->name,
-                    'barcode' => $request->barcode,
-                    'inventory' => $request->inventory,
-                    'price' => $request->price ?? 0,
-                    'cost' => $request->cost ?? 0,
-                    'compare_price' => $request->compare_price ?? 0,
-                    'weight' => $variant->weight,
-                    'weight_unit' => $variant->weight_unit,
+                    'name' => @$variant['name'] ?? 'Default Title',
+                    'barcode' => $variant['barcode'] ?? null,
+                    'inventory' => $variant['inventory'] ?? 0,
+                    'price' => $variant['price'] ?? 0,
+                    'cost' => $variant['cost'] ?? 0,
+                    'compare_price' => $variant['compare_price'] ?? 0,
+                    'weight' => $variant['weight'] ?? 0,
+                    'weight_unit' => $variant['weight_unit'] ?? 'gram',
+                    'product_id' => $product->id,
+                    'sku' => $variant['sku'],
+                    'isdeleted'=> 0
                 ];
+                
                 $condition = [
                     'product_id' => $product->id,
-                    'sku' => $variant->sku,
+                    'sku' => $variant['sku'],
                 ];
                 $this->adminService->createOrUpdateByField(Variation::class, $condition, $vdata);
             }

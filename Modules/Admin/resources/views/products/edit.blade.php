@@ -1,16 +1,228 @@
 @extends('admin::layouts.master')
 @section('style')
-   
+    <style>
+        input[type="radio"] {
+            width: 20px;
+        }
+
+        .variation-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .option {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .option-name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .option-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .option-value {
+            background-color: #e9ecef;
+            border-radius: 20px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .remove-value,
+        .remove-option-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1.1em;
+        }
+
+        .remove-value {
+            margin-left: 5px;
+        }
+
+        .add-value-btn,
+        .remove-option-btn {
+            background: none;
+            border: 1px solid #007bff;
+            color: #007bff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-value-btn:hover,
+        .remove-option-btn:hover {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .remove-option-btn {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .remove-option-btn:hover {
+            background-color: #dc3545;
+        }
+
+        .add-option-btn {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-option-btn:hover {
+            background-color: #218838;
+        }
+
+        .variants-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+        }
+
+        .variants-table th,
+        .variants-table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .variants-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .variants-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .variants-table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .option-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .remove-option-btn {
+                margin-top: 10px;
+            }
+
+            .variants-table {
+                font-size: 0.9em;
+            }
+        }
+
+        .upload-container {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 5px;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            cursor: move;
+        }
+
+        .preview-item img,
+        .preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .preview-item:hover .remove-btn {
+            display: block;
+        }
+
+        .add-more {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-more::before {
+            content: '+';
+            font-size: 40px;
+            color: #ccc;
+        }
+
+        .dragging {
+            opacity: 0.5;
+        }
+    </style>
 @endsection
 
 @section('content')
     <div class="container">
-       @include('admin::includes.errors')
+        @include('admin::includes.errors')
 
         <div class="row">
             <div class="col-sm-12">
-                <form id="product-form" class="product-form" action="{{ route('products.update', $data->id) }}" method="POST"
-                    enctype="multipart/form-data">
+                <form id="product-form" class="product-form" action="{{ route('products.update', $product->id) }}"
+                    method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -18,11 +230,9 @@
                             <div class="header d-flex">
                                 <span class="back-button">
                                     <h4 class="main-title ">
-                                        <a class="text-decoration-none text-dark" href="{{  route('products.index') }}">
-                                            <span>← </span>Update Product</a> 
-                                            
+                                        <a class="text-decoration-none text-dark" href="{{ route('products.index') }}">
+                                            <span>← </span>Edit Product</a>
                                     </h4>
-
                                 </span>
                                 <button class="search-button float-end" id="submit-btn" type="submit">Save</button>
 
@@ -31,143 +241,133 @@
                         <div class="col-sm-8">
                             <div class="form-section">
                                 <label for="title">Title</label>
-                                <input type="text" id="title" name="title" value="{{ $data->title ?? old('title') }}"
-                                    placeholder="Short sleeve t-shirt" required>
+                                <input type="text" id="title" name="title"
+                                    value="{{ old('title', $product->title) }}" placeholder="Short sleeve t-shirt" required>
                             </div>
-                         
+
                             <div class="form-section">
                                 <label for="description">Description</label>
                                 @include('admin::includes.texteditor')
                                 <!-- Create the editor container -->
                                 <div id="editor">
-                                    {!! old('description', $data->description) !!}
+                                    {!! old('description', $product->description) !!}
                                 </div>
-                                <input type="hidden" id="description" name="description" value="{{ old('description') }}">
+                                <input type="hidden" id="description" name="description"
+                                    value="{{ old('description', $product->description) }}">
                             </div>
-                            <hr>
+
                             <div class="form-section">
-                                <h5>Drag and Drop Images</h5>
-                                <div id="drop-zone" class="drop-zone">
-                                    <input type="file" id="file-input" name="images[]" multiple accept="image/*"
+                                <div class="upload-container">
+                                    <p>Select Files to Upload </p>
+                                    <input type="file" name="images[]" id="fileInput" multiple accept="image/*,video/*"
                                         style="display: none;">
-                                    <p>Drag & drop your images here or <span id="upload-trigger">click to upload</span></p>
-
-                                    <div id="image-preview" class="image-preview"> 
-                                        @if (!empty($data->images))
-                                            
-                                            @foreach ($data->images as $image)
-                                                <img src="{{ asset($image->image_path) }}" height="60" alt="">
-                                            @endforeach
-                                        @endif
-                                    </div>
-                                </div>
-                                <input type="hidden" id="files-data" name="">
-                            </div>
-
-                            <hr>
-                            <div class="form-section">
-                                <h5>Pricing</h5>
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <label for="price">Price</label>
-                                        <input type="text" name="price" value="{{ $data->price ?? old('price') }}" id="price"
-                                            placeholder="Rs. 0.00" required>
-
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="compare-price">Compare at price</label>
-                                        <input type="text" name="compare_price" value="{{ $data->compare_price ?? old('compare_price') }}"
-                                            id="compare-price" placeholder="Rs. 0.00">
-
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label for="cost">Cost per item</label>
-                                        <input type="number" name="cost" value="{{ $data->cost ?? old('cost') }}" id="cost"
-                                            placeholder="Rs. 0.00">
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="form-section">
-                                <h3>Variations
-                                    <button type="button" class="search-button" id="add-variation">➕</button>
-                                </h3>
-                                <div class="variation-group">
-                                    <div class="variation">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <label for="option-name-1">Name</label>
-                                                <input type="text" name="name[]" value="{{ $data->variations[0]->name ??  old('name.0') }}"
-                                                    id="option-name-1" placeholder="Color/size/material, etc.">
-                                            </div>
-                                            <div class="col-3">
-                                                <label for="option-sku-1">SKU</label>
-                                                <input type="text" name="sku[]" value="{{ $data->variations[0]->sku ?? old('sku.0') }}"
-                                                    id="option-sku-1" placeholder="code">
-                                            </div>
-                                            <div class="col-3">
-                                                <label for="option-barcode-1">Barcode</label>
-                                                <input type="number" name="barcode[]" value="{{ $data->variations[0]->barcode ?? old('barcode.0') }}"
-                                                    id="option-barcode-1" placeholder="barcode">
-                                            </div>
-                                            <div class="col-2">
-                                                <label for="option-inventory-1">Inventory</label>
-                                                <input type="number" name="inventory[]"
-                                                    value="{{ $data->variations[0]->inventory ?? old('inventory.0') }}" min="0"
-                                                    id="option-inventory-1" placeholder="0">
-                                            </div>
-                                            <div class="col-1 pb-2">
-
-                                            </div>
-                                        </div>
-                                       
-                                        @foreach ( old('name', $data->variations) as $index => $oldName)
-                                            @if ($index == 0)
-                                                @continue
-                                            @endif
-                                            <div class="row variation-row">
-                                                <div class="col-3">
-                                                    <input type="text" name="name[]"
-                                                        value="{{ $oldName->name ?? old('name.' . $index) }}"
-                                                        placeholder="Color/size/material, etc.">
-                                                    @if ($errors->has('name.' . $index))
-                                                        <span
-                                                            class="text-danger">{{ $errors->first('name.' . $index) }}</span>
-                                                    @endif
-                                                </div>
-                                                <div class="col-3">
-                                                    <input type="text" name="sku[]"
-                                                        value="{{ $oldName->sku ?? old('sku.' . $index) }}" placeholder="code">
-                                                    @if ($errors->has('sku.' . $index))
-                                                        <span
-                                                            class="text-danger">{{ $errors->first('sku.' . $index) }}</span>
-                                                    @endif
-                                                </div>
-                                                <div class="col-3">
-                                                    <input type="number" name="barcode[]"
-                                                        value="{{ $oldName->barcode ?? old('barcode.' . $index) }}" placeholder="barcode">
-                                                    @if ($errors->has('barcode.' . $index))
-                                                        <span
-                                                            class="text-danger">{{ $errors->first('barcode.' . $index) }}</span>
-                                                    @endif
-                                                </div>
-                                                <div class="col-2">
-                                                    <input type="number" name="inventory[]"
-                                                    value="{{ $oldName->inventory ?? old('inventory.' . $index) }}" min="0"
-                                                        placeholder="0">
-                                                    @if ($errors->has('inventory.' . $index))
-                                                        <span
-                                                            class="text-danger">{{ $errors->first('inventory.' . $index) }}</span>
-                                                    @endif
-                                                </div>
-                                                <div class="col-1 pb-2">
-                                                    <button type="button" class="remove-variation">x</button>
-                                                </div>
+                                    <div class="preview-container" id="previewContainer">
+                                        @foreach ($product->images as $file)
+                                            <div class="preview-item" draggable="true" data-file="{{ $file->image_path }}">
+                                                @if (file_exists($file->image_path))
+                                                    <img src="{{ asset($file->image_path) }}" alt="Uploaded file">
+                                                @elseif(Str::startsWith(Storage::mimeType($file), 'video'))
+                                                    <video src="{{ asset($file->image_path) }}" controls></video>
+                                                @endif
+                                                <span class="remove-btn"
+                                                    onclick="deleteImage('{{ $file->id }}')">×</span>
                                             </div>
                                         @endforeach
                                     </div>
-                                    
+                                </div>
+                            </div>
 
+
+                            <div class="form-section">
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label for="variation">Has Variations</label>
+                                        <div class="form-group d-flex">
+                                            <div class="form-check d-flex">
+                                                <input class=""
+                                                    {{ old('hasVariation', $product->hasVariation) == '0' ? 'checked' : '' }}
+                                                    type="radio" name="hasVariation" id="no-variations" checked
+                                                    value="0">
+                                                <label class="mx-3" for="no-variations">
+                                                    No (Simple Product)
+                                                </label>
+                                            </div>
+                                            @if (config('setting.variationsEnabled') == true)
+                                            <div class="form-check d-flex">
+                                                <input class=""
+                                                    {{ old('hasVariation', $product->hasVariation) == '1' ? 'checked' : '' }}
+                                                    type="radio" name="hasVariation" id="has-variations" value="1">
+                                                <label class="mx-3" for="has-variations">
+                                                    Yes (Matrix Product)
+                                                </label>
+                                            </div>
+                                            @endif
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            {{-- has varinations --}}
+                            @if (config('setting.variationsEnabled') == true)
+                            <div id="variations-section" class="variation-section" style="display: none;">
+                                <h5>Product Options</h5>
+                                <div id="options-container">
+
+                                </div>
+                                <button type="button" id="add-option" class="add-option-btn mt-3">
+                                    <i class="fas fa-plus"></i> Add New Option
+                                </button>
+
+
+                            </div>
+                            @endif
+                            {{-- has no variation --}}
+                            <div class="variation-section" id="no-variations-section" style="display: block">
+                                <div class="row">
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="price">Price</label>
+                                        <input class="form-control" type="number" id="price" name="variants[0][price]"
+                                            value="{{ @old('variants', $product->variations)[0]['price'] }}"
+                                            placeholder="price">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="compare-price">Compare at price</label>
+                                        <input class="form-control" type="number" id="compare-price"
+                                            name="variants[0][compare_price]"
+                                            value="{{ @old('variants', $product->variations)[0]['compare_price'] }}"
+                                            placeholder="Compare at price">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="sku">SKU</label>
+                                        <input class="form-control" type="text" id="sku"
+                                            name="variants[0][sku]"
+                                            value="{{ @old('variants', $product->variations)[0]['sku'] }}"
+                                            placeholder="SKU">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="barcode">Barcode</label>
+                                        <input class="form-control" type="number" id="barcode"
+                                            name="variants[0][barcode]"
+                                            value="{{ @old('variants', $product->variations)[0]['barcode'] }}"
+                                            placeholder="Barcode">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="inventory">inventory</label>
+                                        <input class="form-control" type="number" id="inventory"
+                                            name="variants[0][inventory]"
+                                            value="{{ @old('variants', $product->variations)[0]['inventory'] }}"
+                                            placeholder="inventory">
+                                    </div>
+
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="weight">Weight</label>
+                                        <input class="form-control" type="number" id="weight"
+                                            name="variants[0][weight]"
+                                            value="{{ @old('variants', $product->variations)[0]['weight'] }}"
+                                            placeholder="Weight">
+                                    </div>
                                 </div>
                             </div>
 
@@ -178,13 +378,16 @@
                                 <div class="sidebar-section card p-3">
                                     <h5>Product Status</h5>
                                     <select id="status" name="status">
-                                        <option {{ $data->status == 'archived' ? 'selected' : '' }} {{ old('status') == 'archived' ? 'selected' : '' }} value="archived"
-                                            selected>Archived</option>
-                                        <option {{ $data->status == 'active' ? 'selected' : '' }} {{ old('status') == 'active' ? 'selected' : '' }} value="active">Active
+                                        <option {{ old('status', $product->status) == 'archived' ? 'selected' : '' }}
+                                            value="archived" selected>Archived</option>
+                                        <option {{ old('status', $product->status) == 'active' ? 'selected' : '' }}
+                                            value="active">Active
                                         </option>
                                     </select>
                                     <div>
-                                        <input  type="checkbox" name="display" {{ $data->display == 1 ? 'checked' : '' }} id="online-store">
+                                        <input type="checkbox"
+                                            {{ old('display', $product->display) == '1' ? 'checked' : '' }} name="display"
+                                            checked id="online-store">
                                         <label for="online-store">Online Store</label>
 
                                     </div>
@@ -192,29 +395,80 @@
                                 <div class="sidebar-section card p-3 mt-2">
                                     <div class="form-section">
                                         <label for="vendor">Vendor/Brand</label>
-                                        <input type="text" id="vendor" name="vendor" value="{{ $data->vendor ?? old('vendor') }}"
-                                            placeholder="e.g. Nike">
+                                        <input type="text" id="vendor" name="vendor"
+                                            value="{{ old('vendor', $product->vendor) }}" placeholder="e.g. Nike">
                                     </div>
                                     <div class="form-section">
                                         <label for="product-type">Product Type</label>
-                                        <input type="text" name="product_type" value="{{ $data->product_type ?? old('product_type') }}"
-                                            id="product-type" placeholder="Search types">
+                                        <input type="text" name="product_type"
+                                            value="{{ old('product_type', $product->product_type) }}" id="product-type"
+                                            placeholder="Search types">
                                     </div>
                                     <div class="form-section">
                                         <label for="collections">Collections</label>
-                                        <input type="text" id="collection-search" name="collections" value="{{ $data->collections ?? old('collections') }}"
-                                        id="collections" placeholder="Search for collections">
-                                        <select id="collection-options" class="form-select" size="5" style="display: none;"></select>
+                                        <input type="text" id="collection-search" name="collections"
+                                            value="{{ old('collections', $product->collections) }}" id="collections"
+                                            placeholder="Search for collections">
+                                        <select id="collection-options" class="form-select" size="5"
+                                            style="display: none;"></select>
 
                                     </div>
                                     <div class="form-section">
                                         <label for="tags">Tags</label>
-                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ $data->tags ?? old('tags') }}</textarea>
+                                        <textarea name="tags" id="" placeholder="tag1, tag2"> {{ old('tags', $product->tags) }}</textarea>
                                     </div>
 
                                 </div>
                             </aside>
                         </div>
+                        @if (config('setting.variationsEnabled') == true)
+                        <div class="col-sm-12 " id="variants-table">
+                            @if ($product->hasVariation == 1)
+                                <h5 class="mt-4">Variants</h5>
+                            @endif
+                            <div class="table-responsive">
+                                <table id="variants-table" class="variants-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Variant</th>
+                                            <th>Price</th>
+                                            <th>Compare Price</th>
+                                            <th>SKU</th>
+                                            <th>Barcode</th>
+                                            <th>inventory</th>
+                                            <th>Weight</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="variants-body">
+                                        @if (old('variants'))
+                                            @foreach (old('variants') as $variant)
+                                                <tr>
+                                                    <td><input type="text" name="variants[{{ $loop->index }}][name]"
+                                                            value="{{ $variant['name'] ?? '' }}"></td>
+                                                    <td><input type="number" name="variants[{{ $loop->index }}][price]"
+                                                            step="0.01" value="{{ $variant['price'] }}"></td>
+                                                    <td><input type="number"
+                                                            name="variants[{{ $loop->index }}][compare_price]"
+                                                            step="0.01" value="{{ $variant['compare_price'] }}"></td>
+                                                    <td><input type="text" name="variants[{{ $loop->index }}][sku]"
+                                                            value="{{ $variant['sku'] }}"></td>
+                                                    <td><input type="text"
+                                                            name="variants[{{ $loop->index }}][barcode]"
+                                                            value="{{ $variant['barcode'] }}"></td>
+                                                    <td><input type="number" name="variants[{{ $loop->index }}][inventory]"
+                                                            value="{{ $variant['inventory'] }}"></td>
+                                                    <td><input type="number"
+                                                            name="variants[{{ $loop->index }}][weight]" step="0.01"
+                                                            value="{{ $variant['weight'] }}"></td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </form>
 
@@ -223,183 +477,329 @@
     </div>
 @endSection
 
-@section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
+
+@section('script')
     <script>
-           document.getElementById('product-form').onsubmit = function() {
+        document.getElementById('product-form').onsubmit = function() {
             // Get the editor content as HTML
             var quillContent = quill.root.innerHTML;
 
             // Set the content into the hidden input field
             document.getElementById('description').value = quillContent;
         };
+        let options = @json(json_decode($product->options) ?? []);
 
-        document.querySelector('#online-store').addEventListener('change', function() {
-            const status = this.checked ? 'Active' : 'Draft';
-            document.querySelector('select').value = status;
-        });
+        let variants = @json($product->variations ?? []);
 
-        document.getElementById('add-variation').addEventListener('click', function() {
-            const variationGroup = document.querySelector('.variation-group');
-            const variationCount = variationGroup.querySelectorAll('.variation').length +
-                1; // Calculate the new index
+        document.addEventListener('DOMContentLoaded', function() {
+            const hasVariationsRadio = document.getElementById('has-variations');
+            const noVariationsRadio = document.getElementById('no-variations');
+            const variationsSection = document.getElementById('variations-section');
 
-            const newVariation = document.createElement('div');
-            newVariation.className = 'variation';
-            newVariation.innerHTML = `
-                    <div class="row">
-                        <div class="col-3">
-                            <input type="text" name="name[]" value="{{ old('name.${variationCount}') }}"  placeholder="Color/size/material, etc.">
-                        </div>
-                        <div class="col-3">
-                            <input type="text" name="sku[]" value="{{ old('sku.${variationCount}') }}"  placeholder="code">
-                        </div>
-                        <div class="col-3">
-                            <input type="number" name="barcode[]"  value="{{ old('barcode.${variationCount}') }}" placeholder="barcode">
-                        </div>
-                        <div class="col-2">
-                            <input type="number" name="inventory[]" value="{{ old('inventory.${variationCount}') }}" min="0" placeholder="0">
-                        </div>
-                        <div class="col-1 pb-2">
-                            <button class="remove-variation">x</button>
-                        </div>
-                    </div>
-                `;
-
-            variationGroup.insertBefore(newVariation, document.getElementById('variation'));
-        });
-
-        // document.querySelector('.variation-group').addEventListener('click', function(event) {
-        //     if (event.target.classList.contains('remove-variation')) {
-        //         event.target.closest('.variation').remove();
-        //     }
-        // });
-
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('remove-variation')) {
-                event.preventDefault(); // Prevent default button behavior
-
-                const row = event.target.closest('.variation-row'); // Find the closest row to the clicked button
-                if (row) {
-                    row.remove(); // Remove only this specific row
-                }else{
-                    event.target.closest('.variation').remove();
-                }
+            function toggleVariationOptions() {
+                variationsSection.style.display = hasVariationsRadio.checked ? 'block' : 'none';
             }
+
+            hasVariationsRadio.addEventListener('change', toggleVariationOptions);
+            noVariationsRadio.addEventListener('change', toggleVariationOptions);
+
+            // Initial toggle
+            toggleVariationOptions();
+
+            document.getElementById('add-option').addEventListener('click', addOption);
+
+            // Initialize existing options and variants
+            renderOptions();
+            renderVariants();
+
+            // Add event listener to the form submission
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (hasVariationsRadio.checked) {
+                    e.preventDefault(); // Prevent the form from submitting
+                    submitWithVariants(); // Custom submission with variants
+                }
+            });
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file-input');
-            const imagePreview = document.getElementById('image-preview');
-            const uploadTrigger = document.getElementById('upload-trigger');
-            const filesDataInput = document.getElementById('files-data');
+        function addOption() {
+            const optionName = prompt("Enter option name (e.g., Color, Size):");
+            if (optionName) {
+                options.push({
+                    name: optionName,
+                    values: []
+                });
+                renderOptions();
+            }
+        }
 
-            // Trigger file input click when the user clicks on the drop zone or upload text
-            dropZone.addEventListener('click', () => {
-                fileInput.click();
+        function addOptionValue(optionIndex) {
+            const value = prompt(`Enter a value for ${options[optionIndex].name}:`);
+            if (value) {
+                options[optionIndex].values.push(value);
+                renderOptions();
+                generateVariants();
+            }
+        }
+
+        function removeOption(optionIndex) {
+            options.splice(optionIndex, 1);
+            renderOptions();
+            generateVariants();
+        }
+
+        function removeOptionValue(optionIndex, valueIndex) {
+            options[optionIndex].values.splice(valueIndex, 1);
+            renderOptions();
+            generateVariants();
+        }
+
+        function renderOptions() {
+            const container = document.getElementById('options-container');
+            container.innerHTML = options.map((option, optionIndex) => `
+         <div class="option">
+             <div class="option-header">
+                 <span class="option-name">${option.name}</span>
+                 <input type="hidden" name="options[${optionIndex}][name]" class="option-name-input" value="${option.name}" >
+                 <button type="button" class="remove-option-btn" onclick="removeOption(${optionIndex})">
+                     <i class="fas fa-trash-alt"></i> Remove Option
+                 </button>
+             </div>
+             <div class="option-values">
+                 ${option.values.map((value, valueIndex) => `
+                                         <div class="option-value">
+                                             <span>${value}</span>
+                                             <input type="hidden" name="options[${optionIndex}][values][${valueIndex}]" value="${value}">
+                                             <button type="button" class="remove-value" onclick="removeOptionValue(${optionIndex}, ${valueIndex})">
+                                                 <i class="fas fa-times"></i>
+                                             </button>
+                                         </div>
+                                     `).join('')}
+             </div>
+             <button type="button" class="add-value-btn mt-2" onclick="addOptionValue(${optionIndex})">
+                 <i class="fas fa-plus"></i> Add Value
+             </button>
+         </div>
+     `).join('');
+        }
+
+        function generateVariants() {
+            if (options.length === 0) {
+                variants = [];
+                renderVariants();
+                return;
+            }
+
+            const newVariants = [{
+                name: '',
+                price: 0,
+                compare_price: 0,
+                sku: '',
+                barcode: '',
+                inventory: 0,
+                weight: 0
+            }];
+            options.forEach(option => {
+                const tempVariants = [];
+                newVariants.forEach(variant => {
+                    option.values.forEach(value => {
+                        tempVariants.push({
+                            ...variant,
+                            name: variant.name ? `${variant.name} / ${value}` : value
+                        });
+                    });
+                });
+                newVariants.splice(0, newVariants.length, ...tempVariants);
             });
 
-            // Trigger file input click when the user clicks on the upload text
-            uploadTrigger.addEventListener('click', () => {
-                fileInput.click();
+            // Preserve existing variant data where possible
+            variants = newVariants.map(newVariant => {
+                const existingVariant = variants.find(v => v.name === newVariant.name);
+                return existingVariant || newVariant;
             });
 
-            // Handle file input change event
-            fileInput.addEventListener('change', handleFiles);
+            renderVariants();
+        }
 
-            // Handle drag and drop events
-            dropZone.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                dropZone.classList.add('dragging');
-            });
+        function renderVariants() {
+            const tbody = document.getElementById('variants-body');
+            tbody.innerHTML = variants.map((variant, index) => `
+         <tr>
+                <td>${variant.name} <input type="hidden" name="variants[${index}][name]" value="${variant.name}"> </td>
+                <td><input type="number" name="variants[${index}][price]" step="0.01" value="${variant.price}" onchange="updateVariant(${index}, 'price', this.value)"></td>
+                <td><input type="number" name="variants[${index}][compare_price]" step="0.01" value="${variant.compare_price}" onchange="updateVariant(${index}, 'compare_price', this.value)"></td>
+                <td><input type="text" name="variants[${index}][sku]" value="${variant.sku}" onchange="updateVariant(${index}, 'sku', this.value)"></td>
+                <td><input type="text" name="variants[${index}][barcode]" value="${variant.barcode}" onchange="updateVariant(${index}, 'barcode', this.value)"></td>
+                <td><input type="number" name="variants[${index}][inventory]" value="${variant.inventory}" onchange="updateVariant(${index}, 'inventory', this.value)"></td>
+                <td><input type="number" name="variants[${index}][weight]" step="0.01" value="${variant.weight}" onchange="updateVariant(${index}, 'weight', this.value)"></td>
+            </tr>
+     `).join('');
+        }
 
-            dropZone.addEventListener('dragleave', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                dropZone.classList.remove('dragging');
-            });
+        function updateVariant(index, field, value) {
+            variants[index][field] = value;
+        }
 
-            dropZone.addEventListener('drop', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                dropZone.classList.remove('dragging');
-                const files = event.dataTransfer.files;
-                fileInput.files = files;
-                handleFiles({
-                    target: {
-                        files
-                    }
+        function submitWithVariants() {
+            const form = document.querySelector('form');
+            const formData = new FormData(form);
+
+            // Add options and their values
+            options.forEach((option, index) => {
+                formData.append(`options[${index}][name]`, option.name);
+                option.values.forEach((value, valueIndex) => {
+                    formData.append(`options[${index}][values][${valueIndex}]`, value);
                 });
             });
 
-            function handleFiles(event) {
-                const files = event.target.files;
-                imagePreview.innerHTML = '';
-                const fileNames = [];
-                for (const file of files) {
-                    if (file.type.startsWith('image/')) {
-                        const container = document.createElement('div');
-                        container.classList.add('image-container');
-
-                        const img = document.createElement('img');
-                        img.classList.add('preview-img');
-                        img.file = file;
-                        img.addEventListener('click', (event) => {
-                            event.stopPropagation(); // Prevent redirection
-                        });
-                        container.appendChild(img);
-
-                        const removeBtn = document.createElement('button');
-                        removeBtn.classList.add('remove-img');
-                        removeBtn.textContent = '×';
-                        removeBtn.addEventListener('click', () => {
-                            container.remove();
-                            // updateFilesData();
-                        });
-                        container.appendChild(removeBtn);
-
-                        imagePreview.appendChild(container);
-
-                        const reader = new FileReader();
-                        reader.onload = ((aImg) => (e) => {
-                            aImg.src = e.target.result;
-                        })(img);
-                        reader.readAsDataURL(file);
-
-                        fileNames.push(file.name);
-                    } else {
-                        alert('Only image files are allowed.');
-                    }
-                }
-
-                // Update hidden input with file names
-                filesDataInput.value = fileNames.join(',');
-            }
-
-            // Initialize SortableJS on the image preview container
-            new Sortable(imagePreview, {
-                animation: 150,
-                onStart: function(evt) {
-                    // Optionally disable dragging during reordering if necessary
-                    evt.from.classList.add('sorting');
-                },
-                onEnd: function() {
-                    // Enable dragging after reordering
-                    imagePreview.classList.remove('sorting');
-                    // updateFilesData();
-                }
+            // Add variants
+            variants.forEach((variant, index) => {
+                Object.keys(variant).forEach(key => {
+                    formData.append(`variants[${index}][${key}]`, variant[key]);
+                });
             });
 
-            function updateFilesData() {
-                const images = Array.from(imagePreview.querySelectorAll('.preview-img'));
-                const fileNames = images.map(img => img.file.name);
-                filesDataInput.value = fileNames.join(',');
-            }
-        });
+            // Submit the form
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    alert('Product updated successfully!');
+                    window.location.href = "{{ route('products.index') }}";
+                } else {
+                    alert('Error updating product. Please try again.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
 
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(e) {
+            handleFiles(e.target.files);
+        }
+
+        function handleFiles(files) {
+            for (const file of files) {
+                if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const previewItem = createPreviewItem(e.target.result, file.type);
+                        previewContainer.insertBefore(previewItem, previewContainer.lastElementChild);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            ensureAddMoreButton();
+        }
+
+        function createPreviewItem(src, fileType) {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            previewItem.draggable = true;
+
+            const media = fileType.startsWith('image/') ?
+                document.createElement('img') :
+                document.createElement('video');
+
+            media.src = src;
+            if (media.tagName === 'VIDEO') {
+                media.setAttribute('controls', '');
+            }
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-btn';
+            removeBtn.textContent = '×';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                previewItem.remove();
+            };
+
+            previewItem.appendChild(media);
+            previewItem.appendChild(removeBtn);
+
+            previewItem.addEventListener('dragstart', dragStart);
+            previewItem.addEventListener('dragover', dragOver);
+            previewItem.addEventListener('dragleave', dragLeave);
+            previewItem.addEventListener('drop', drop);
+            previewItem.addEventListener('dragend', dragEnd);
+
+            return previewItem;
+        }
+
+        function ensureAddMoreButton() {
+            let addMore = previewContainer.querySelector('.add-more');
+            if (!addMore) {
+                addMore = document.createElement('div');
+                addMore.className = 'preview-item add-more';
+                addMore.onclick = () => fileInput.click();
+                previewContainer.appendChild(addMore);
+            }
+        }
+
+        function dragStart(e) {
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.innerHTML);
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+            this.classList.add('drag-over');
+        }
+
+        function dragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+            const draggedElement = document.querySelector('.dragging');
+            if (this !== draggedElement) {
+                const allItems = [...previewContainer.querySelectorAll('.preview-item:not(.add-more)')];
+                const draggedIndex = allItems.indexOf(draggedElement);
+                const dropIndex = allItems.indexOf(this);
+                if (draggedIndex < dropIndex) {
+                    this.parentNode.insertBefore(draggedElement, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedElement, this);
+                }
+            }
+        }
+
+        function dragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function deleteImage(id) {
+            fetch("{{ route('images.destroy', ':id') }}".replace(':id', id), {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+
+            }).then(response => {
+                console.log(response)
+                if (response.ok) {
+                    alert('Image deleted successfully!');
+                    window.location.reload();
+                } else {
+                    alert('Error deleting image. Please try again.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+        ensureAddMoreButton();
+        // ... (rest of the script content remains unchanged) ...
         document.getElementById('collection-search').addEventListener('input', function() {
             const query = this.value;
             var url = "{{ route('collections.search', ['search' => 'PLACEHOLDER']) }}";
@@ -426,7 +826,8 @@
                             data.forEach(collection => {
                                 const option = document.createElement('option');
                                 option.value = collection.id; // Store the collection ID as the value
-                                option.textContent = collection.title; // Show the collection name in the dropdown
+                                option.textContent = collection
+                                    .title; // Show the collection name in the dropdown
                                 selectElement.appendChild(option);
                             });
 
@@ -435,9 +836,9 @@
                                 const selectedOption = selectElement.options[selectElement
                                     .selectedIndex];
                                 document.getElementById('collection-search').value = selectedOption
-                                .text; // Set input value to selected option text
+                                    .text; // Set input value to selected option text
                                 selectElement.style.display =
-                                'none'; // Hide the dropdown after selection
+                                    'none'; // Hide the dropdown after selection
                             });
                         } else {
                             selectElement.style.display = 'none'; // Hide the select dropdown if no results
@@ -445,7 +846,7 @@
                     });
             } else {
                 document.getElementById('collection-options').style.display =
-                'none'; // Hide the dropdown if query length is less than 2
+                    'none'; // Hide the dropdown if query length is less than 2
             }
         });
     </script>

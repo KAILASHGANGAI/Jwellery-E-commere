@@ -280,14 +280,17 @@
                                                     No (Simple Product)
                                                 </label>
                                             </div>
+                                            @if (config('setting.variationsEnabled') == true)
+                                                
                                             <div class="form-check d-flex">
                                                 <input class="" {{ old('hasVariation') == '1' ? 'checked' : '' }}
-                                                    type="radio" name="hasVariation" id="has-variations" value="1">
+                                                type="radio" name="hasVariation" id="has-variations" value="1">
                                                 <label class="mx-3" for="has-variations">
                                                     Yes (Matrix Product)
                                                 </label>
                                             </div>
-
+                                            
+                                            @endif
                                         </div>
 
                                     </div>
@@ -295,7 +298,7 @@
                                 </div>
                             </div>
                             {{-- has varinations --}}
-
+                            @if (config('setting.variationsEnabled') == true)
                             <div id="variations-section" class="variation-section" style="display: none;">
                                 <h5>Product Options</h5>
                                 <div id="options-container">
@@ -307,8 +310,9 @@
 
 
                             </div>
+                            @endif
                             {{-- has no variation --}}
-                            <div class="variation-section" id="no-variations-section" style="display: none">
+                            <div class="variation-section" id="no-variations-section" style="display: block">
                                 <div class="row">
                                     <div class="col-sm-4 mt-2">
                                         <label for="price">Price</label>
@@ -329,21 +333,27 @@
                                     </div>
                                     <div class="col-sm-4 mt-2">
                                         <label for="barcode">Barcode</label>
-                                        <input class="form-control" type="number" id="barcode"
+                                        <input class="form-control" type="text" id="barcode"
                                             name="variants[0][barcode]" value="{{ @old('variants')[0]['barcode'] }}"
                                             placeholder="Barcode">
                                     </div>
                                     <div class="col-sm-4 mt-2">
-                                        <label for="stock">Stock</label>
-                                        <input class="form-control" type="number" id="stock"
-                                            name="variants[0][stock]" value="{{ @old('variants')[0]['stock'] }}"
-                                            placeholder="Stock">
+                                        <label for="inventory">inventory</label>
+                                        <input class="form-control" type="number" id="inventory"
+                                            name="variants[0][inventory]" value="{{ @old('variants')[0]['inventory'] }}"
+                                            placeholder="inventory">
                                     </div>
 
                                     <div class="col-sm-4 mt-2">
                                         <label for="weight">Weight</label>
                                         <input class="form-control" type="number" id="weight"
                                             name="variants[0][weight]" value="{{ @old('variants')[0]['weight'] }}"
+                                            placeholder="Weight">
+                                    </div>
+                                    <div class="col-sm-4 mt-2">
+                                        <label for="weight">Weight Unit</label>
+                                        <input class="form-control" type="number" id="weight"
+                                            name="variants[0][weight_unit]" placeholder="gram" value="{{ @old('variants')[0]['weight_unit'] }}"
                                             placeholder="Weight">
                                     </div>
                                 </div>
@@ -395,6 +405,7 @@
                                 </div>
                             </aside>
                         </div>
+                        @if (config('setting.variationsEnabled') == true)
                         <div class="col-sm-12 " id="variants-table">
                             <h5 class="mt-4">Variants</h5>
                             <div class="table-responsive">
@@ -406,7 +417,7 @@
                                             <th>Compare Price</th>
                                             <th>SKU</th>
                                             <th>Barcode</th>
-                                            <th>Stock</th>
+                                            <th>inventory</th>
                                             <th>Weight</th>
                                         </tr>
                                     </thead>
@@ -427,8 +438,8 @@
                                                     <td><input type="text"
                                                             name="variants[{{ $loop->index }}][barcode]"
                                                             value="{{ $variant['barcode'] }}"></td>
-                                                    <td><input type="number" name="variants[{{ $loop->index }}][stock]"
-                                                            value="{{ $variant['stock'] }}"></td>
+                                                    <td><input type="number" name="variants[{{ $loop->index }}][inventory]"
+                                                            value="{{ $variant['inventory'] }}"></td>
                                                     <td><input type="number"
                                                             name="variants[{{ $loop->index }}][weight]" step="0.01"
                                                             value="{{ $variant['weight'] }}"></td>
@@ -439,6 +450,7 @@
                                 </table>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </form>
 
@@ -451,6 +463,13 @@
 
 @section('script')
     <script>
+        document.getElementById('product-form').onsubmit = function() {
+            // Get the editor content as HTML
+            var quillContent = quill.root.innerHTML;
+
+            // Set the content into the hidden input field
+            document.getElementById('description').value = quillContent;
+        };
         let options = [];
         let variants = [];
 
@@ -531,14 +550,14 @@
                 </div>
                 <div class="option-values">
                     ${option.values.map((value, valueIndex) => `
-                                        <div class="option-value">
-                                            <span>${value}</span>
-                                            <input type="hidden" name="options[${optionIndex}][values][${valueIndex}]" value="${value}">
-                                            <button type="button" class="remove-value" onclick="removeOptionValue(${optionIndex}, ${valueIndex})">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    `).join('')}
+                                            <div class="option-value">
+                                                <span>${value}</span>
+                                                <input type="hidden" name="options[${optionIndex}][values][${valueIndex}]" value="${value}">
+                                                <button type="button" class="remove-value" onclick="removeOptionValue(${optionIndex}, ${valueIndex})">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        `).join('')}
                 </div>
                 <button type="button" class="add-value-btn mt-2" onclick="addOptionValue(${optionIndex})">
                     <i class="fas fa-plus"></i> Add Value
@@ -551,10 +570,10 @@
             variants = [{
                 name: '',
                 price: 0,
-                comparePrice: 0,
+                compare_price: 0,
                 sku: '',
                 barcode: '',
-                stock: 0,
+                inventory: 0,
                 weight: 0
             }];
             options.forEach(option => {
@@ -578,10 +597,10 @@
             <tr>
                 <td>${variant.name} <input type="hidden" name="variants[${index}][name]" value="${variant.name}"> </td>
                 <td><input type="number" name="variants[${index}][price]" step="0.01" value="${variant.price}" onchange="updateVariant(${index}, 'price', this.value)"></td>
-                <td><input type="number" name="variants[${index}][compare_price]" step="0.01" value="${variant.comparePrice}" onchange="updateVariant(${index}, 'comparePrice', this.value)"></td>
+                <td><input type="number" name="variants[${index}][compare_price]" step="0.01" value="${variant.compare_price}" onchange="updateVariant(${index}, 'compare_price', this.value)"></td>
                 <td><input type="text" name="variants[${index}][sku]" value="${variant.sku}" onchange="updateVariant(${index}, 'sku', this.value)"></td>
                 <td><input type="text" name="variants[${index}][barcode]" value="${variant.barcode}" onchange="updateVariant(${index}, 'barcode', this.value)"></td>
-                <td><input type="number" name="variants[${index}][stock]" value="${variant.stock}" onchange="updateVariant(${index}, 'stock', this.value)"></td>
+                <td><input type="number" name="variants[${index}][inventory]" value="${variant.inventory}" onchange="updateVariant(${index}, 'inventory', this.value)"></td>
                 <td><input type="number" name="variants[${index}][weight]" step="0.01" value="${variant.weight}" onchange="updateVariant(${index}, 'weight', this.value)"></td>
             </tr>
         `).join('');

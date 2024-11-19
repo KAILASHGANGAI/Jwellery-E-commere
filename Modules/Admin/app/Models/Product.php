@@ -11,7 +11,7 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
-
+    
     public function images()
     {
         return $this->hasMany(Image::class);

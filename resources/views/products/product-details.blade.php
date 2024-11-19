@@ -30,17 +30,37 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div>  
             <div class="col-lg-7 col-md-7 col-sm-12">
-                <div class="modal_right">
+                <div class="modal_right pl-4">
                     <div class="modal_title mb-10  mt-5">
                         <h2>{{ $data->title }}</h2>
+                        {{-- @if ($data->hasVariation == 1)
+                            <p class="modal_title" style="color:#000">Variant Type : {{ $data->variations[0]->name }}</p>
+                        @endif --}}
+                        <p class="weight text-bold" style="color:#000">Weight: {{ $data->variations[0]->weight }} {{ $data->variations[0]->weight_unit }}</p>
+                        
                     </div>
-                    <div class="modal_price mb-10">
-                        <span class="new_price" id="modal_product_price" data-price="{{ $data->price }}" >Rs. {{ $data->price }}</span>
-                        <span class="old_price">Rs. {{ $data->compare_price }}</span>
+                   
+                    <div class="modal_price mb-10 mt-3">
+                        <span class="new_price" id="modal_product_price"   data-vid="{{ $data->variations[0]->id }}" data-price="{{ $data->variations[0]->price }}" >Rs. {{ $data->variations[0]->price }}</span>
+                        <span class="old_price">Rs. {{ $data->variations[0]->compare_price }}</span>
                     </div>
-
+                    {{-- @if($data->hasVariation == 1)
+                  
+                    <div id="modal_options" data-variants='@json($data->variations)'>
+                        @foreach(json_decode($data->options, true) as $option)
+                            <div class="mb-4 col-2">
+                                <label class="d-block mb-2">{{ $option['name'] }}:</label>
+                                <select class="form-select option-selector" data-option-name="{{ $option['name'] }}">
+                                    @foreach($option['values'] as $value)
+                                        <option  value="{{ $value }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endforeach
+                    </div>
+                    @endif --}}
                     <div class="modal_add_to_cart mb-15">
                         <form id="modal_add_to_cart_form" action="javascript:void(0)">
                             <input type="number" id="modal_product_quantity" min="1" value="1">
@@ -54,9 +74,7 @@
 
                         </form>
                     </div>
-                    <div class=" mb-15">
-                        <p>{{ !empty($data->description) ? $data->description : 'No description' }}</p>
-                    </div>
+                   
                     <div class="modal_social mt-4">
                         <h2>Share this Product</h2>
                         <ul>
@@ -99,7 +117,7 @@
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="details" role="tabpane1">
                                 <div class="product_container">
-                                    {{ !empty($data->description) ? $data->description : 'No description' }}
+                                    {!! !empty($data->description) ? $data->description : 'No description' !!}
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="policies" role="tabpane1">

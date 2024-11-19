@@ -67,11 +67,13 @@ class ProductController extends Controller
     public function show($slug)
     {
 
-        $select = ['id', 'title', 'slug', 'price', 'compare_price', 'description', 'collections', 'tags'];
+        $select = ['id', 'title', 'slug', 'description', 'collections','hasVariation','options', 'tags'];
         $condition = ['status' => 'active', 'display' => 1, 'slug' => $slug];
         $data = $this->comm->getSingleData(
-            Product::query()->with(['images:id,product_id,image_path', 'variations:id,product_id,sku,barcode,inventory']),
-
+            Product::query()->with([
+                'images:id,product_id,image_path', 
+                'variations:id,name,product_id,sku,barcode,inventory,price,compare_price,weight,weight_unit'
+            ]),
             $select,
             $condition
         );

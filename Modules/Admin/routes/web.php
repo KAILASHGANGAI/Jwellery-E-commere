@@ -7,6 +7,7 @@ use Modules\Admin\Http\Controllers\CollectionController;
 use Modules\Admin\Http\Controllers\CustomerController;
 use Modules\Admin\Http\Controllers\DiscountController;
 use Modules\Admin\Http\Controllers\GiftCardController;
+use Modules\Admin\Http\Controllers\ImageController;
 use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\ProductController;
 use Modules\Admin\Http\Controllers\ShippingController;
@@ -29,11 +30,13 @@ Route::group(['prefix' => '/admin',  'middleware' => ['auth:admin', 'checkPermis
 
     # Product routes
     Route::resource('/products', ProductController::class)->names('products');
-    Route::get('/products-create', [ProductController::class, 'new']);
+    // Route::get('/products-create', [ProductController::class, 'new']);
     Route::get('/product-ajax', [ProductController::class, 'productAjax'])->name('products.indexAjax');
     Route::post('/product-bulk-delete', [ProductController::class, 'bulkDelete'])->name('products.bulkDelete');
     Route::get('/search-products', [ProductController::class, 'search'])->name('products.search');
 
+    #image 
+    Route::resource('/images', ImageController::class)->names('images');
     # Collection routes 
     Route::resource('/collections', CollectionController::class)->names('collections');
     Route::get('/collection-ajax', [CollectionController::class, 'collectionAjax'])->name('collections.indexAjax');
