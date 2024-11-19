@@ -48,6 +48,7 @@
                     <th>Image</th>
                     <th>Title</th>
                     <th>Type</th>
+                    <th>IsMatrix</th>
                     <th>Status</th>
                     <th>Display</th>
                     <th>Price</th>
@@ -99,7 +100,7 @@
                 let destroy = "{{ route('products.destroy', ':id') }}".replace(':id', data.id);
                 const formattedDate = new Date(data.created_at).toISOString().split('T')[0];
                 const display = data.display == 1 ? 'Yes' : 'No';
-
+                const ismatrix = data.hasVariation == 1 ? 'Yes' : 'No';
                 const row = `
                         <tr>
                             <td><input type="checkbox" class="checkbox" name="ids[]" value="${data.id}"></td>
@@ -107,10 +108,11 @@
                             <td><img src="${imgUrl}" width="50"></td>
                             <td><a class="nav-link" href="${edit}">${data.title}</a></td>
                             <td>${data.product_type}</td>
+                            <td>${ismatrix}</td>
                             <td><span class="status-dot status-${data.status}"></span>${data.status}</td>
                             <td><span class="status-dot status-${data.display}"></span>${display}</td>
-                            <td>${data.price}</td>
-                            <td>${data.compare_price}</td>
+                            <td>${data.variations[0].price}</td>
+                            <td>${data.variations[0].compare_price}</td>
                            
                             <td>${sum(data.variations)}</td>
                             <td>${formattedDate}</td>

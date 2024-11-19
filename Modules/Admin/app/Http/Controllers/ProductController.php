@@ -68,7 +68,7 @@ class ProductController extends Controller
             $sort_type,
             $limit ?? null,
             $pagination,
-            ['images:id,product_id,image_path', 'variations:id,product_id,inventory']
+            ['images:id,product_id,image_path', 'variations:id,product_id,inventory,price,compare_price']
         );
 
         return response()->json($data, 200);

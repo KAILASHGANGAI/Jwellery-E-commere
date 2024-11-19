@@ -73,15 +73,15 @@
                                     <img src="${secondaryImage}" alt="${product.title}">
                                 </a>
                                 <div class="quick_button">
-                                    <!-- Quick View button with dynamic product data -->
+                                    <!-- Quick View button with dynamic product data    data-description="{product.description}"  -->
                                     <a href="javascript:void(0)" class="quick_view_button" 
                                     data-toggle="modal" data-target="#modal_box"
                                     data-id="${product.id}" 
                                     data-slug="${product.slug}"
                                     data-name="${product.title}" 
-                                    data-price="${product.price}" 
-                                    data-old-price="${product.compare_price}" 
-                                    data-description="${product.description}" 
+                                    data-price="${product.variations[0].price}" 
+                                    data-old-price="${product.variations[0].compare_price}" 
+                                   
                                     data-sku="${product.variations[0].sku}"
                                     data-varination-id="${product.variations[0].id}"
                                     data-images='${JSON.stringify(product.images)}'>
@@ -95,8 +95,8 @@
                                 </div>
                                 <h3><a href="${viewUrl}">${product.title}</a></h3>
                                 <div class="price_box">
-                                    <span class="old_price">Rs. ${product.compare_price}</span>
-                                    <span class="current_price">Rs. ${product.price}</span>
+                                    <span class="old_price">Rs. ${product.variations[0].compare_price}</span>
+                                    <span class="current_price">Rs. ${product.variations[0].price}</span>
                                 </div>
                                 <div class="product_hover">
                                     <div class="product_ratings">

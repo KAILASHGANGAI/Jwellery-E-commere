@@ -264,26 +264,24 @@
             $('#modal_box #modal_variation_id').val(productVariationId);
             $('#modal_box #see_all').attr('href', viewUrl);
             // Update product images in the modal
-
-
             var imageHtml = '';
             var thumbnailHtml = '';
             $.each(productImages, function(index, image) {
                 const imageSrc = '{{ asset('') }}' + image.image_path ??
                     '{{ asset('images/default-img.jpg') }}';
                 imageHtml += `
-    <div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="tab${index + 1}" role="tabpanel">
-        <div class="modal_tab_img">
-            <a href="#"><img src="${imageSrc}" alt="${productName}"></a>
-        </div>
-    </div>`;
-                thumbnailHtml += `
-    <li style="cursor: pointer; width: 50px; height: 50px;" class="nav-item">
-        <a href="#tab${index + 1}" class="nav-link ${index === 0 ? 'active' : ''}" data-toggle="tab" role="tab"
-            aria-controls="tab${index + 1}" aria-selected="${index === 0}">
-            <img src="${imageSrc}" height="50" alt="Product Thumbnail">
-        </a>
-    </li>`;
+                    <div class="tab-pane fade ${index === 0 ? 'show active' : ''}" id="tab${index + 1}" role="tabpanel">
+                        <div class="modal_tab_img">
+                            <a href="#"><img src="${imageSrc}" alt="${productName}"></a>
+                        </div>
+                    </div>`;
+                                thumbnailHtml += `
+                    <li style="cursor: pointer; width: 50px; height: 50px;" class="nav-item">
+                        <a href="#tab${index + 1}" class="nav-link ${index === 0 ? 'active' : ''}" data-toggle="tab" role="tab"
+                            aria-controls="tab${index + 1}" aria-selected="${index === 0}">
+                            <img src="${imageSrc}" height="50" alt="Product Thumbnail">
+                        </a>
+                    </li>`;
             });
 
             // Append images to the modal

@@ -43,13 +43,16 @@ class ProductController extends Controller
     public function ajaxIndex(Request $request)
     {
 
-        $select = ['id', 'title', 'slug', 'price', 'compare_price', 'description', 'collections', 'tags'];
+        $select = ['id', 'title', 'slug', 'description', 'collections', 'tags'];
         $condition = ['status' => 'active', 'display' => 1];
         $request->order ?? $request['order'] = 'id';
         $request->orderType ?? $request['orderType'] = 'asc';
         $request->orderType ?? 'asc';
         $tag = $request->tag ?? null;
-        $query = Product::query()->with(['images:id,product_id,image_path', 'variations:id,product_id,sku,barcode,inventory']);
+        $query = Product::query()->with([
+            'images:id,product_id,image_path', 
+            'variations:id,product_id,sku,barcode,inventory,price,compare_price,weight,weight_unit'
+        ]);
 
         if ($tag) {
             $query->where('tags', 'like', '%' . $tag . '%');
