@@ -88,15 +88,15 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td data-unit-price="${product.price}">${product.price}</td>
+                                        <td data-unit-price="${product.variations[0].price}">${product.variations[0].price}</td>
                                         <td class="text-center">
                                             <div class="input-group d-flex justify-content-center">
-                                                <button class="btn btn-outline-secondary btn-quantity" type="button" onclick="updateQuantity(this, -1, '${product.price}')">-</button>
+                                                <button class="btn btn-outline-secondary btn-quantity" type="button" onclick="updateQuantity(this, -1, '${product.variations[0].price}')">-</button>
                                                 <input type="text" class="quantity-input  text-center" value="1" readonly>
-                                                <button class="btn btn-outline-secondary btn-quantity " type="button"  onclick="updateQuantity(this, 1, '${product.price}')">+</button>
+                                                <button class="btn btn-outline-secondary btn-quantity " type="button"  onclick="updateQuantity(this, 1, '${product.variations[0].price}')">+</button>
                                             </div>
                                         </td>
-                                        <td class="total-price">NRS ${product.price}</td>
+                                        <td class="total-price">NRS ${product.variations[0].price}</td>
                                         <td>
                                             <button class="btn btn-danger btn-remove" type="button" onclick="removeFromWishlist('${product.id}')">Remove</button>
                                         </td>

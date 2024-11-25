@@ -111,7 +111,7 @@ class ProductController extends Controller
         $products = $this->comm->getData(
             Product::query()->with([
                 'images:id,product_id,image_path',
-                'variations:id,product_id,sku,barcode,inventory'
+                'variations:id,product_id,sku,barcode,inventory,price,compare_price,weight,weight_unit'
             ])
                 ->where($condition)
                 ->where(function ($query) use ($search) {

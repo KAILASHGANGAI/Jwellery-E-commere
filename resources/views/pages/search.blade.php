@@ -56,9 +56,9 @@
                                 <!-- Quick View button with dynamic product data -->
                                 <a href="javascript:void(0)" class="quick_view_button" data-toggle="modal"
                                     data-target="#modal_box" data-id="{{ $product->id }}" data-slug="{{ $product->slug }}"
-                                    data-name="{{ $product->title }}" data-price="{{ $product->price }}"
-                                    data-old-price="{{ $product->compare_price }}"
-                                    data-description="{{ $product->description }}"
+                                    data-name="{{ $product->title }}" data-price="{{ $product->variations[0]->price }}"
+                                    data-old-price="{{ $product->variations[0]->compare_price }}"
+                                    data-description=""
                                     data-sku="{{ $product->variations[0]->sku }}"
                                     data-varination-id="{{ $product->variations[0]->id }}"
                                     data-images='{{ json_encode($product->images) }}'>
@@ -72,8 +72,8 @@
                             </div>
                             <h3><a href="{{ route('product-details', $product->slug) }}">{{ $product->title }}</a></h3>
                             <div class="price_box">
-                                <span class="old_price">Rs. {{ $product->compare_price }}</span> <br>
-                                <span class="current_price">Rs. {{ $product->price }}</span>
+                                <span class="old_price">Rs. {{ $product->variations[0]->compare_price }}</span> <br>
+                                <span class="current_price">Rs. {{ $product->variations[0]->price }}</span>
                             </div>
                             <div class="product_hover">
                                 <div class="product_ratings">
@@ -100,7 +100,7 @@
                                         <!-- Add to Cart button with dynamic product data -->
                                         <li class="add_to_cart">
                                             <a href="javascript:void(0)" data-id="{{ $product->id }}"
-                                                data-price="{{ $product->price }}" data-sku="{{ $product->variations[0]->sku }}" data-varination-id="{{ $product->variations[0]->id }}"
+                                                data-price="{{ $product->variations[0]->price }}" data-sku="{{ $product->variations[0]->sku }}" data-varination-id="{{ $product->variations[0]->id }}"
                                                 class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
                                         </li>
                                     </ul>

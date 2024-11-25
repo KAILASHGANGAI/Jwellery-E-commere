@@ -70,9 +70,9 @@
                                 data-id="${product.id}" 
                                 data-slug="${product.slug}"
                                 data-name="${product.title}" 
-                                data-price="${product.price}" 
-                                data-old-price="${product.compare_price}" 
-                                data-description="${product.description}" 
+                                data-price="${product.variations[0].price}" 
+                                data-old-price="${product.variations[0].compare_price}" 
+                                data-description="" 
                                 data-sku="${product.variations[0].sku}"
                                 data-varination-id="${product.variations[0].id}"
                                 data-images='${JSON.stringify(product.images)}'>
@@ -86,8 +86,8 @@
                             </div>
                             <h3><a href="${viewUrl}">${product.title}</a></h3>
                             <div class="price_box">
-                                <span class="old_price">Rs. ${product.compare_price}</span>
-                                <span class="current_price">Rs. ${product.price}</span>
+                                <span class="old_price">Rs. ${product.variations[0].compare_price}</span>
+                                <span class="current_price">Rs. ${product.variations[0].price}</span>
                             </div>
                             <div class="product_hover">
                                 <div class="product_ratings">
@@ -105,7 +105,7 @@
                                         <li><a id="wishlist-btn" class="add_to_wishlist" href="javascript:void(0)"  data-placement="top" data-product-id="${product.id}" title="Add to Wishlist" data-toggle="tooltip"><span class="ion-heart"></span></a></li>
                                         <!-- Add to Cart button with dynamic product data -->
                                         <li class="add_to_cart">
-                                            <a href="javascript:void(0)" data-id="${product.id}" data-price="${product.price}" data-sku="${product.variations[0].sku}" data-varination-id="${product.variations[0].id}" class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
+                                            <a href="javascript:void(0)" data-id="${product.id}" data-price="${product.variations[0].price}" data-sku="${product.variations[0].sku}" data-varination-id="${product.variations[0].id}" class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
                                         </li>
                                     
                                     </ul>

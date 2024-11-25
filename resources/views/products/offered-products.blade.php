@@ -105,7 +105,7 @@
                                             <li><a id="wishlist-btn" class="add_to_wishlist" href="javascript:void(0)"  data-placement="top" data-product-id="${product.id}" title="Add to Wishlist" data-toggle="tooltip"><span class="ion-heart"></span></a></li>
                                             <!-- Add to Cart button with dynamic product data -->
                                             <li class="add_to_cart">
-                                                <a href="javascript:void(0)" data-id="${product.id}" data-price="${product.price}" data-sku="${product.variations[0].sku}" data-varination-id="${product.variations[0].id}" class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
+                                                <a href="javascript:void(0)" data-id="${product.id}" data-price="${product.variations[0].price}" data-sku="${product.variations[0].sku}" data-varination-id="${product.variations[0].id}" class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
                                             </li>
                                         
                                         </ul>
