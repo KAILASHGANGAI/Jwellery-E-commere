@@ -17,13 +17,18 @@ class ProductController extends Controller
     public function index(Request $request)
     {
 
-        $select = ['id', 'title', 'slug', 'price', 'compare_price', 'description', 'collections', 'tags'];
+        $select = ['id', 'title', 'slug', 'description', 'collections', 'tags'];
         $condition = ['status' => 'active', 'display' => 1];
         $request->order ?? $request['order'] = 'id';
         $request->orderType ?? $request['orderType'] = 'asc';
         $request->orderType ?? 'asc';
         $tag = $request->tag ?? null;
-        $query = Product::query()->with(['images:id,product_id,image_path', 'variations:id,product_id,sku,barcode,inventory']);
+        $query = Product::query()->with([
+            'images:id,product_id,image_path',
+            'variations'=> function ($query) {
+                $query->select('id', 'product_id', 'sku', 'barcode', 'inventory', 'price', 'compare_price', 'weight', 'weight_unit');
+            }
+        ]);
         $request->pagination ?? $request['pagination'] = 20;
         if ($tag) {
             $query->where('tags', 'like', '%' . $tag . '%');
@@ -36,7 +41,7 @@ class ProductController extends Controller
             $limitflag,
             $request
         );
-  
+
         return view('pages.collection', compact('products'));
     }
 
@@ -50,7 +55,7 @@ class ProductController extends Controller
         $request->orderType ?? 'asc';
         $tag = $request->tag ?? null;
         $query = Product::query()->with([
-            'images:id,product_id,image_path', 
+            'images:id,product_id,image_path',
             'variations:id,product_id,sku,barcode,inventory,price,compare_price,weight,weight_unit'
         ]);
 
@@ -70,11 +75,11 @@ class ProductController extends Controller
     public function show($slug)
     {
 
-        $select = ['id', 'title', 'slug', 'description', 'collections','hasVariation','options', 'tags'];
+        $select = ['id', 'title', 'slug', 'description', 'collections', 'hasVariation', 'options', 'tags'];
         $condition = ['status' => 'active', 'display' => 1, 'slug' => $slug];
         $data = $this->comm->getSingleData(
             Product::query()->with([
-                'images:id,product_id,image_path', 
+                'images:id,product_id,image_path',
                 'variations:id,name,product_id,sku,barcode,inventory,price,compare_price,weight,weight_unit'
             ]),
             $select,
@@ -120,6 +125,6 @@ class ProductController extends Controller
             $request
         );
 
-       return  view('pages.search', compact('products'));  
+        return  view('pages.search', compact('products'));
     }
 }

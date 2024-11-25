@@ -39,74 +39,79 @@
                         </div>
                     @endif
                     @foreach ($products as $product)
-                    <div class="single_product col-lg-2 col-sm-3 col-md-2  mx-auto">
-                        <div class="product_thumb">
-                            <!-- Dynamically populate primary image (first image in the array) -->
-                            <a href="{{ route('product-details', $product->slug) }}" class="primary_img">
-                                <img src="{{ asset($product->images[0]->image_path) }}">
-                            </a>
-                            <!-- Dynamically populate secondary image (second image in the array if exists) -->
-                            <a href="{{ route('product-details', $product->slug) }}" class="secondary_img">
-                                <img src="{{ asset($product->images[1]->image_path ?? $product->images[0]->image_path) }}"
-                                    alt="{{ $product->title }}">
-                            </a>
-
-                            <div class="quick_button">
-                                <!-- Quick View button with dynamic product data -->
-                                <a href="javascript:void(0)" class="quick_view_button" data-toggle="modal"
-                                    data-target="#modal_box" data-id="{{ $product->id }}" data-slug="{{ $product->slug }}"
-                                    data-name="{{ $product->title }}" data-price="{{ $product->price }}"
-                                    data-old-price="{{ $product->compare_price }}"
-                                    data-description="{{ $product->description }}"
-                                    data-sku="{{ $product->variations[0]->sku }}"
-                                    data-varination-id="{{ $product->variations[0]->id }}"
-                                    data-images='{{ json_encode($product->images) }}'>
-                                    Quick View
+                        <div class="single_product col-lg-2 col-sm-3 col-md-2  mx-auto">
+                            <div class="product_thumb">
+                                <!-- Dynamically populate primary image (first image in the array) -->
+                                <a href="{{ route('product-details', $product->slug) }}" class="primary_img">
+                                    <img src="{{ asset($product->images[0]->image_path) }}">
                                 </a>
-                            </div>
-                        </div>
-                        <div class="product_content">
-                            <div class="tag_cate">
-                                <a href="#">{{ $product->collections }}</a>
-                            </div>
-                            <h3><a href="{{ route('product-details', $product->slug) }}">{{ $product->title }}</a></h3>
-                            <div class="price_box">
-                                <span class="old_price">Rs. {{ $product->compare_price }}</span> <br>
-                                <span class="current_price">Rs. {{ $product->price }}</span>
-                            </div>
-                            <div class="product_hover">
-                                <div class="product_ratings">
-                                    <ul>
-                                        <li><a href="javascript:void(0)"><i
-                                                    class="ion-ios-star-outline text-warning"></i></a></li>
-                                        <li><a href="javascript:void(0)"><i
-                                                    class="ion-ios-star-outline text-warning"></i></a></li>
-                                        <li><a href="javascript:void(0)"><i
-                                                    class="ion-ios-star-outline text-warning"></i></a></li>
-                                        <li><a href="javascript:void(0)"><i
-                                                    class="ion-ios-star-outline text-warning"></i></a></li>
-                                        <li><a href="javascript:void(0)"><i
-                                                    class="ion-ios-star-outline text-warning"></i></a></li>
-                                    </ul>
-                                </div>
+                                <!-- Dynamically populate secondary image (second image in the array if exists) -->
+                                <a href="{{ route('product-details', $product->slug) }}" class="secondary_img">
+                                    <img src="{{ asset($product->images[1]->image_path ?? $product->images[0]->image_path) }}"
+                                        alt="{{ $product->title }}">
+                                </a>
 
-                                <div class="action_links">
-                                    <ul>
-                                        <li><a id="wishlist-btn" class="add_to_wishlist" href="javascript:void(0)"
-                                                data-placement="top" data-product-id="${{ $product->id }}"
-                                                title="Add to Wishlist" data-toggle="tooltip"><span
-                                                    class="ion-heart"></span></a></li>
-                                        <!-- Add to Cart button with dynamic product data -->
-                                        <li class="add_to_cart">
-                                            <a href="javascript:void(0)" data-id="{{ $product->id }}"
-                                                data-price="{{ $product->price }}" data-sku="{{ $product->variations[0]->sku }}" data-varination-id="{{ $product->variations[0]->id }}"
-                                                class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
-                                        </li>
-                                    </ul>
+                                <div class="quick_button">
+                                    <!-- Quick View button with dynamic product data -->
+                                    <a href="javascript:void(0)" class="quick_view_button" data-toggle="modal"
+                                        data-target="#modal_box" data-id="{{ $product->id }}"
+                                        data-slug="{{ $product->slug }}" data-name="{{ $product->title }}"
+                                        data-price="{{ $product->variations[0]->price }}"
+                                        data-old-price="{{ $product->variations[0]->compare_price }}"
+                                        data-description="{{ $product->description }}"
+                                        data-sku="{{ $product->variations[0]->sku }}"
+                                        data-varination-id="{{ $product->variations[0]->id }}"
+                                        data-images='{{ json_encode($product->images) }}'>
+                                        Quick View
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="product_content">
+                                <div class="tag_cate">
+                                    <a href="#">{{ $product->collections }}</a>
+                                </div>
+                                <h3><a href="{{ route('product-details', $product->slug) }}">{{ $product->title }}</a>
+                                </h3>
+                                <div class="price_box">
+                                    <span class="old_price">Rs. {{ $product->variations[0]->compare_price }}</span> <br>
+                                    <span class="current_price">Rs. {{ $product->variations[0]->price }}</span>
+                                </div>
+                                <div class="product_hover">
+                                    <div class="product_ratings">
+                                        <ul>
+                                            <li><a href="javascript:void(0)"><i
+                                                        class="ion-ios-star-outline text-warning"></i></a></li>
+                                            <li><a href="javascript:void(0)"><i
+                                                        class="ion-ios-star-outline text-warning"></i></a></li>
+                                            <li><a href="javascript:void(0)"><i
+                                                        class="ion-ios-star-outline text-warning"></i></a></li>
+                                            <li><a href="javascript:void(0)"><i
+                                                        class="ion-ios-star-outline text-warning"></i></a></li>
+                                            <li><a href="javascript:void(0)"><i
+                                                        class="ion-ios-star-outline text-warning"></i></a></li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="action_links">
+                                        <ul>
+                                            <li><a id="wishlist-btn" class="add_to_wishlist" href="javascript:void(0)"
+                                                    data-placement="top" data-product-id="${{ $product->id }}"
+                                                    title="Add to Wishlist" data-toggle="tooltip"><span
+                                                        class="ion-heart"></span></a></li>
+                                            <!-- Add to Cart button with dynamic product data -->
+                                            <li class="add_to_cart">
+                                                <span   class="current_price">Rs. {{ $product->variations[0]->price }}</span>
+                                                <a href="javascript:void(0)" data-id="{{ $product->id }}" 
+                                                    data-price="{{ $product->variations[0]->price }}"
+                                                    data-sku="{{ $product->variations[0]->sku }}"
+                                                    data-varination-id="{{ $product->variations[0]->id }}"
+                                                    class="add_to_cart_button" title="Add to Cart">Add to Cart</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                     {{-- @if ($products->count() > 0)
                     <div class="d-flex justify-content-center">

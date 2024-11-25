@@ -116,20 +116,20 @@
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="details" role="tabpane1">
-                                <div class="product_container">
+                                <div class="product_container container">
                                     {!! !empty($data->description) ? $data->description : 'No description' !!}
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="policies" role="tabpane1">
-                                <div class="product_container">
+                                <div class="product_container container">
 
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, voluptate</p>
+                                    {{-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, voluptate</p> --}}
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="review" role="tabpane1">
-                                <div class="product_container">
+                                <div class="product_container container">
 
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, voluptate</p>
+                                    {{-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, voluptate</p> --}}
                                 </div>
                             </div>
                         </div>

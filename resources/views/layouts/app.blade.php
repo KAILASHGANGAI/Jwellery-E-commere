@@ -76,9 +76,9 @@
                                         </form>
 
                                     </div>
-                                    <div class="modal_description mb-15">
+                                    {{-- <div class="modal_description mb-15">
                                         <p id="modal_product_description">Description will be here</p>
-                                    </div>
+                                    </div> --}}
                                     <div class="modal_social">
                                         <h2>Share this Product</h2>
                                         <ul>

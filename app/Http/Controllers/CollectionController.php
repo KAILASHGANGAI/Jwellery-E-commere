@@ -111,29 +111,13 @@ class CollectionController extends Controller
         $products = $this->comm->getData(
             Product::query()->with([
                 'images:id,product_id,image_path',
-                'variations:id,product_id,sku,barcode,inventory'
+                'variations:id,product_id,sku,barcode,inventory,price,compare_price,weight,weight_unit'
             ]),
             $productselect,
             $productCondition,
             1
         );
-//         $products2 = $this->comm->getData(
-//             Product::query()->with([
-//                 'images:id,product_id,image_path',
-//                 'variations:id,product_id,sku,barcode,inventory'
-//             ])
-//                 // Filter products that match collection_id
-//                 ->orWhere(function ($query) use ($tags) {
-//                     foreach ($tags as $tag) {
-//                         $query->orWhere('tags', 'like', '%' . trim($tag) . '%');
-//                     }
-//                 }),
-//             $productselect,
-//             null,
-//             1
-//         );
-// dd($products1, $products2);
-//         $products = array_merge($products1, $products2);
+
 
         return view('pages.collection', compact('collection', 'products'));
     }
