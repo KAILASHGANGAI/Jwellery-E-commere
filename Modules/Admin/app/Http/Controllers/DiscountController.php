@@ -187,8 +187,9 @@ class DiscountController extends Controller
             $discount = $this->comRepo->update($id,$data);
             if ($request->discount_on == 'products') {
                 $desabled = DiscountProduct::where('discount_id', $discount->id)->update(['status'=> '0']);
+                
                 foreach ($request->ids as $id) {
-                    $desabled->update(['status' => '0']);
+                    
                     DiscountProduct::updateOrCreate([
                         'discount_id' => $discount->id,
                         'product_id' => $id,

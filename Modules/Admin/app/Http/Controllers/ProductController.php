@@ -91,7 +91,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         try {
-        //    DD($request->all());
+        //    dd($request->all());
             DB::beginTransaction();
             $collectionID = $this->adminService->findByField(
                 Collection::class,
@@ -115,6 +115,14 @@ class ProductController extends Controller
                 'collections' => $request->collections,
                 'collection_id' => $collectionID ? $collectionID->id : 0,
                 'tags' => $request->tags,
+                'new'=>$request->new ?? 0,
+                'featured'=>$request->featured ?? 0,
+                'sale'=>$request->best_sale ?? 0,
+                'offered'=>$request->offered ?? 0,
+                'meta_title' => $request->meta_title ?? $request->title,
+                'meta_description' => $request->meta_description ?? $request->description,
+                'meta_keywords' => $request->meta_keywords ?? $request->tags,
+                'video_url' => $request->video_url ?? null,
             ];
             $product = $this->comReo->create($products);
             foreach ($request->variants as  $variant) {
@@ -269,6 +277,15 @@ class ProductController extends Controller
                 'collections' => $request->collections,
                 'collection_id' => $collectionID ? $collectionID->id : 0,
                 'tags' => $request->tags,
+                'tags' => $request->tags,
+                'new'=>$request->new ?? 0,
+                'featured'=>$request->featured ?? 0,
+                'sale'=>$request->best_sale ?? 0,
+                'offered'=>$request->offered ?? 0,
+                'meta_title' => $request->meta_title ?? $request->title,
+                'meta_description' => $request->meta_description ?? $request->description,
+                'meta_keywords' => $request->meta_keywords ?? $request->tags,
+                'video_url' => $request->video_url ?? null,
             ];
             $product = $this->comReo->update($id,$products);
             $product->variations()->update(['isdeleted'=> 1]);
@@ -312,7 +329,7 @@ class ProductController extends Controller
                 }
             }
             DB::commit();
-            return back()->with('success', 'Product created successfully');
+            return back()->with('success', 'Product updated successfully');
         } catch (Exception $e) {
             DB::rollBack();
             dd($e);

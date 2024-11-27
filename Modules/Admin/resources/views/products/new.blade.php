@@ -265,6 +265,31 @@
                                 </div>
                             </div>
 
+                            <div class="meta_desctiption">
+                                <div class="form-section">
+                                    <label for="meta_description">Meta Title</label>
+                                    <input type="text" id="meta_description" name="meta_description"
+                                        value="{{ old('meta_description') }}" placeholder="Short sleeve t-shirt">
+                                </div>
+
+                                <div class="form-section">
+                                    <label for="meta_description">Meta Description</label>
+                                   <textarea name="meta_description" >{{ old('meta_description') }}</textarea>
+                                </div>
+                                <div class="form-section">
+                                    <label for="meta_keywords">Meta KeyWords</label>
+                                    <input type="text" id="meta_keywords" name="meta_keywords"
+                                        value="{{ old('meta_keywords') }}" placeholder="Short sleeve t-shirt" >
+                                </div>
+                                <div class="form-section">
+                                    <label for="video_url">Video Url</label>
+                                    <input type="text" id="video_url" name="video_url"
+                                        value="{{ old('video_url') }}" placeholder="Short sleeve t-shirt" >
+                                </div>
+
+
+                            </div>
+
 
                             <div class="form-section">
 
@@ -281,15 +306,14 @@
                                                 </label>
                                             </div>
                                             @if (config('setting.variationsEnabled') == true)
-                                                
-                                            <div class="form-check d-flex">
-                                                <input class="" {{ old('hasVariation') == '1' ? 'checked' : '' }}
-                                                type="radio" name="hasVariation" id="has-variations" value="1">
-                                                <label class="mx-3" for="has-variations">
-                                                    Yes (Matrix Product)
-                                                </label>
-                                            </div>
-                                            
+                                                <div class="form-check d-flex">
+                                                    <input class="" {{ old('hasVariation') == '1' ? 'checked' : '' }}
+                                                        type="radio" name="hasVariation" id="has-variations"
+                                                        value="1">
+                                                    <label class="mx-3" for="has-variations">
+                                                        Yes (Matrix Product)
+                                                    </label>
+                                                </div>
                                             @endif
                                         </div>
 
@@ -299,17 +323,17 @@
                             </div>
                             {{-- has varinations --}}
                             @if (config('setting.variationsEnabled') == true)
-                            <div id="variations-section" class="variation-section" style="display: none;">
-                                <h5>Product Options</h5>
-                                <div id="options-container">
+                                <div id="variations-section" class="variation-section" style="display: none;">
+                                    <h5>Product Options</h5>
+                                    <div id="options-container">
+
+                                    </div>
+                                    <button type="button" id="add-option" class="add-option-btn mt-3">
+                                        <i class="fas fa-plus"></i> Add New Option
+                                    </button>
+
 
                                 </div>
-                                <button type="button" id="add-option" class="add-option-btn mt-3">
-                                    <i class="fas fa-plus"></i> Add New Option
-                                </button>
-
-
-                            </div>
                             @endif
                             {{-- has no variation --}}
                             <div class="variation-section" id="no-variations-section" style="display: block">
@@ -353,8 +377,8 @@
                                     <div class="col-sm-4 mt-2">
                                         <label for="weight">Weight Unit</label>
                                         <input class="form-control" type="number" id="weight"
-                                            name="variants[0][weight_unit]" placeholder="gram" value="{{ @old('variants')[0]['weight_unit'] }}"
-                                            placeholder="Weight">
+                                            name="variants[0][weight_unit]" placeholder="gram"
+                                            value="{{ @old('variants')[0]['weight_unit'] }}" placeholder="Weight">
                                     </div>
                                 </div>
                             </div>
@@ -397,6 +421,25 @@
                                             style="display: none;"></select>
 
                                     </div>
+                                    <div class="type">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="new" value="1"   {{ old('new') == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckDefault">New Product</label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="featured" value="1"  {{ old('featured') ==1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckDefault">Featured Product</label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="best_sale" value="1"  {{ old('best_sale') ==1  ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Best Sale Product</label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="offered" value="1"  {{ old('offered') == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckDisabled">Offered Product</label>
+                                        </div>
+                                    </div>
+
                                     <div class="form-section">
                                         <label for="tags">Tags</label>
                                         <textarea name="tags" id="" placeholder="tag1, tag2"> {{ old('tags') }}</textarea>
@@ -406,50 +449,55 @@
                             </aside>
                         </div>
                         @if (config('setting.variationsEnabled') == true)
-                        <div class="col-sm-12 " id="variants-table">
-                            <h5 class="mt-4">Variants</h5>
-                            <div class="table-responsive">
-                                <table id="variants-table" class="variants-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Variant</th>
-                                            <th>Price</th>
-                                            <th>Compare Price</th>
-                                            <th>SKU</th>
-                                            <th>Barcode</th>
-                                            <th>inventory</th>
-                                            <th>Weight</th>
-                                        </tr>
-                                    </thead>
+                            <div class="col-sm-12 " id="variants-table">
+                                <h5 class="mt-4">Variants</h5>
+                                <div class="table-responsive">
+                                    <table id="variants-table" class="variants-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Variant</th>
+                                                <th>Price</th>
+                                                <th>Compare Price</th>
+                                                <th>SKU</th>
+                                                <th>Barcode</th>
+                                                <th>inventory</th>
+                                                <th>Weight</th>
+                                            </tr>
+                                        </thead>
 
-                                    <tbody id="variants-body">
-                                        @if (old('variants'))
-                                            @foreach (old('variants') as $variant)
-                                                <tr>
-                                                    <td><input type="text" name="variants[{{ $loop->index }}][name]"
-                                                            value="{{ $variant['name'] ?? '' }}"></td>
-                                                    <td><input type="number" name="variants[{{ $loop->index }}][price]"
-                                                            step="0.01" value="{{ $variant['price'] }}"></td>
-                                                    <td><input type="number"
-                                                            name="variants[{{ $loop->index }}][compare_price]"
-                                                            step="0.01" value="{{ $variant['compare_price'] }}"></td>
-                                                    <td><input type="text" name="variants[{{ $loop->index }}][sku]"
-                                                            value="{{ $variant['sku'] }}"></td>
-                                                    <td><input type="text"
-                                                            name="variants[{{ $loop->index }}][barcode]"
-                                                            value="{{ $variant['barcode'] }}"></td>
-                                                    <td><input type="number" name="variants[{{ $loop->index }}][inventory]"
-                                                            value="{{ $variant['inventory'] }}"></td>
-                                                    <td><input type="number"
-                                                            name="variants[{{ $loop->index }}][weight]" step="0.01"
-                                                            value="{{ $variant['weight'] }}"></td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                                </table>
+                                        <tbody id="variants-body">
+                                            @if (old('variants'))
+                                                @foreach (old('variants') as $variant)
+                                                    <tr>
+                                                        <td><input type="text"
+                                                                name="variants[{{ $loop->index }}][name]"
+                                                                value="{{ $variant['name'] ?? '' }}"></td>
+                                                        <td><input type="number"
+                                                                name="variants[{{ $loop->index }}][price]"
+                                                                step="0.01" value="{{ $variant['price'] }}"></td>
+                                                        <td><input type="number"
+                                                                name="variants[{{ $loop->index }}][compare_price]"
+                                                                step="0.01" value="{{ $variant['compare_price'] }}">
+                                                        </td>
+                                                        <td><input type="text"
+                                                                name="variants[{{ $loop->index }}][sku]"
+                                                                value="{{ $variant['sku'] }}"></td>
+                                                        <td><input type="text"
+                                                                name="variants[{{ $loop->index }}][barcode]"
+                                                                value="{{ $variant['barcode'] }}"></td>
+                                                        <td><input type="number"
+                                                                name="variants[{{ $loop->index }}][inventory]"
+                                                                value="{{ $variant['inventory'] }}"></td>
+                                                        <td><input type="number"
+                                                                name="variants[{{ $loop->index }}][weight]"
+                                                                step="0.01" value="{{ $variant['weight'] }}"></td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
                         @endif
                     </div>
                 </form>
@@ -550,14 +598,14 @@
                 </div>
                 <div class="option-values">
                     ${option.values.map((value, valueIndex) => `
-                                            <div class="option-value">
-                                                <span>${value}</span>
-                                                <input type="hidden" name="options[${optionIndex}][values][${valueIndex}]" value="${value}">
-                                                <button type="button" class="remove-value" onclick="removeOptionValue(${optionIndex}, ${valueIndex})">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
-                                            </div>
-                                        `).join('')}
+                                                <div class="option-value">
+                                                    <span>${value}</span>
+                                                    <input type="hidden" name="options[${optionIndex}][values][${valueIndex}]" value="${value}">
+                                                    <button type="button" class="remove-value" onclick="removeOptionValue(${optionIndex}, ${valueIndex})">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            `).join('')}
                 </div>
                 <button type="button" class="add-value-btn mt-2" onclick="addOptionValue(${optionIndex})">
                     <i class="fas fa-plus"></i> Add Value

@@ -15,6 +15,7 @@ use Modules\Admin\Models\DelivaryLocation;
 use Modules\Admin\Models\Order;
 use Symfony\Component\Mailer\Messenger\SendEmailMessage;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Models\Variation;
 
 class CheckOutController extends Controller
 {
@@ -122,9 +123,9 @@ class CheckOutController extends Controller
         $cardItem = AddTOCard::where('user_id', FacadesAuth::user()->id)->get();
         $discount = @$request->coupon_code ? $this->getDiscountAmount($request->coupon_code) : 0;
         $netTotal = $cardItem->sum('total_price') - $discount;
-        $taxAmount = $netTotal * 0.13;
+        // $taxAmount = $netTotal * 0.13;
 
-        $totalAmount = $netTotal + $taxAmount;
+        $totalAmount = $netTotal ; //+ $taxAmount;
 
         $order = [
             'customer_id' => $customerID,
@@ -137,7 +138,7 @@ class CheckOutController extends Controller
             'payment_method' => $request->payment_method,
             'nettotal' => $netTotal,  // total amount without tax but with discount
             'discount' => $discount,
-            'taxAmount' => $taxAmount,
+            'taxAmount' => 0,
             'coupon_code' => $request->coupon_code,
             'order_date' => now(),
         ];
@@ -170,6 +171,8 @@ class CheckOutController extends Controller
                 'discount_amount' => $item->discount ?? 0,
                 'discountCode' => $item->discountCode ?? '',
             ];
+
+            Variation::where('id', $item->variation_id)->decrement('inventory', $item->quantity);
         }
         return DB::table('order_products')->insert($orderProducts);
     }

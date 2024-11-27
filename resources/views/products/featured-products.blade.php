@@ -62,7 +62,7 @@
                         viewUrl = viewUrl.replace('slug', product.slug);
 
                         $('#product-container').append(`
-                            <div class="single_product  col-sm-6  col-md-4 col-lg-2 mx-auto">
+                            <div class="single_product  col-sm-6  col-md-4 col-lg-3 mx-auto">
                             <div class="product_thumb">
                                 <!-- Dynamically populate primary image (first image in the array) -->
                                 <a href="${viewUrl}" class="primary_img">

@@ -39,7 +39,7 @@
                         </div>
                     @endif
                     @foreach ($products as $product)
-                        <div class="single_product col-lg-2 col-sm-3 col-md-2  mx-auto">
+                        <div class="single_product  col-sm-6 col-md-4 col-lg-3 mx-auto">
                             <div class="product_thumb">
                                 <!-- Dynamically populate primary image (first image in the array) -->
                                 <a href="{{ route('product-details', $product->slug) }}" class="primary_img">

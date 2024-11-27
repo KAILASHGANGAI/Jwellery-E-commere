@@ -58,8 +58,8 @@
                                 <span id="subtotal">NPR. 0.00</span>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <span>Sales Tax (13% VAT):</span>
-                                <span id="salesTax">NPR. 0.00</span>
+                                {{-- <span>Sales Tax (13% VAT):</span> --}}
+                                {{-- <span id="salesTax">NPR. 0.00</span> --}}
                             </div>
                         </div>
                         {{-- <div class="mb-3">
@@ -170,13 +170,13 @@
         function updateTotals(items) {
             console.log(items)
             const subtotal = items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
-            const salesTax = subtotal * 0.13; // Assuming 13% sales tax
-            const grandTotal = subtotal + salesTax;
+            // const salesTax = subtotal * 0.13; // Assuming 13% sales tax
+            const grandTotal = subtotal; // + salesTax;
 
             document.getElementById('subtotal').textContent = `NPR. ${subtotal.toFixed(2)}`;
             // update cart-total on nav 
             document.getElementById('cart-total').textContent = `NPR. ${subtotal.toFixed(2)}`;
-            document.getElementById('salesTax').textContent = `NPR. ${salesTax.toFixed(2)}`;
+            // document.getElementById('salesTax').textContent = `NPR. ${salesTax.toFixed(2)}`;
             document.getElementById('grandTotal').textContent = `NPR. ${grandTotal.toFixed(2)}`;
         }
 

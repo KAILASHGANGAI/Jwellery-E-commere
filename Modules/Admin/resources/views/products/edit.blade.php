@@ -276,7 +276,30 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="meta_desctiption">
+                                <div class="form-section">
+                                    <label for="meta_description">Meta Title</label>
+                                    <input type="text" id="meta_description" name="meta_description"
+                                        value="{{ old('meta_description', $product->meta_description) }}" placeholder="Short sleeve t-shirt">
+                                </div>
 
+                                <div class="form-section">
+                                    <label for="meta_description">Meta Description</label>
+                                   <textarea name="meta_description" >{{ old('meta_description', $product->meta_description) }}</textarea>
+                                </div>
+                                <div class="form-section">
+                                    <label for="meta_keywords">Meta KeyWords</label>
+                                    <input type="text" id="meta_keywords" name="meta_keywords"
+                                        value="{{ old('meta_keywords', $product->meta_keywords) }}" placeholder="Short sleeve t-shirt" >
+                                </div>
+                                <div class="form-section">
+                                    <label for="video_url">Video Url</label>
+                                    <input type="text" id="video_url" name="video_url"
+                                        value="{{ old('video_url', $product->video_url) }}" placeholder="Short sleeve t-shirt" >
+                                </div>
+
+
+                            </div>
 
                             <div class="form-section">
 
@@ -412,6 +435,24 @@
                                         <select id="collection-options" class="form-select" size="5"
                                             style="display: none;"></select>
 
+                                    </div>
+                                    <div class="type">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="new" value="1"   {{ old('new', $product->new) == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckDefault">New Product</label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="featured" value="1"  {{ old('featured', $product->featured) ==1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckDefault">Featured Product</label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="best_sale" value="1"  {{ old('best_sale', $product->sale) ==1  ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Best Sale Product</label>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="offered" value="1"  {{ old('offered', $product->offered) == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="flexSwitchCheckDisabled">Offered Product</label>
+                                        </div>
                                     </div>
                                     <div class="form-section">
                                         <label for="tags">Tags</label>
